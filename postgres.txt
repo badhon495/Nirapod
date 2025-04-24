@@ -1,0 +1,61 @@
+# PostgreSQL Common Commands
+
+# 1. Access the database
+PGPASSWORD=postgres psql -U postgres -h localhost -p 5432 -d nirapod
+
+# 2. List all databases
+\l
+
+# 3. Connect to a database
+\c nirapod
+
+# 4. List all tables
+\dt
+
+# 5. Describe a table (show columns)
+\d "User"
+\d "Usr_complain"
+
+# 6. Show all rows in a table
+SELECT * FROM "User";
+SELECT * FROM "Usr_complain";
+
+# 7. Insert a row into a table
+INSERT INTO "User" (
+  NID, Categories, Email, Password, Name, Present_address, Permanent_address, Phone, Passport, Passport_img, Driving_License, Driving_License_img, Utility_bill_customer_ID, Utility_bill_photo, User_photo, NID_photo, priv_user_ID, priv_user_ID_photo
+) VALUES (
+  '1234567890', 'user', 'test@example.com', 'test', 'Test User', 'Address1', 'Address2', '01700000001', 'P12345678', 'passport_img_url', 'DL123456789', 'dl_img_url', 'U123456', 'utility_img_url', 'user_img_url', 'nid_img_url', NULL, NULL
+);
+
+# 8. Update a row in a table
+UPDATE "User" SET Name = 'New Name' WHERE NID = '1234567890';
+
+# 9. Delete a row from a table
+DELETE FROM "User" WHERE NID = '1234567890';
+
+# 10. Add a new column to a table
+ALTER TABLE "User" ADD COLUMN phone TEXT;
+
+# 11. Remove a column from a table
+ALTER TABLE "User" DROP COLUMN phone;
+
+# 12. Drop a table
+DROP TABLE "User";
+
+# 13. Exit psql
+\q
+
+# 14. Get help inside psql
+\?
+
+# Note: Commands starting with \ are run inside the psql prompt.
+
+# 15. To run project
+cd /home/badhon/Documents/Nirapod/frontend
+npm install
+npm start
+cd /home/badhon/Documents/Nirapod/backend
+mvn clean install
+mvn spring-boot:run
+
+# 16. Press Q to exit from the psql prompt

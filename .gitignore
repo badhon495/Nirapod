@@ -1,0 +1,33 @@
+# Node/React
+frontend/node_modules/
+frontend/build/
+frontend/.env
+
+# Java/Spring Boot
+backend/target/
+backend/.env
+backend/.classpath
+backend/.project
+backend/.settings/
+
+# IDE/editor
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploaded files
+uploads/
+
+# Logs
+*.log
+
+# Misc
+*.swp
+*.swo
+
+# Sensitive files
+backend/src/main/resources/application-local.properties
