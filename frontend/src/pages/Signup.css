@@ -236,26 +236,22 @@ html, body {
 }
 
 .signup-footer {
-  width: 100%;
-  background: #181c24;
-  color: #aaa;
+  color: #fff;
+  border: none;
+  box-shadow: none;
+  padding: 16px 0 0 0;
   text-align: center;
-  padding: 1rem 0 0.5rem 0;
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  font-size: 0.98rem;
 }
 
 .footer-link {
-  color: #aaa;
-  text-decoration: none;
-  transition: color 0.2s;
+  color: #fff;
+  margin: 0 16px;
+  text-decoration: underline;
+  font-size: 1rem;
 }
 
 .footer-link:hover {
-  color: #fff;
-  text-decoration: underline;
+  color: #f9d342;
 }
 
 @media (max-width: 900px) {

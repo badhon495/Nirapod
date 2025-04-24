@@ -7,7 +7,7 @@ function Navbar() {
       <Link to="/home" className="logo">Nirapod</Link>
       <div className="nav-links">
         <Link to="/home">Home</Link>
-        <Link to="#">Complain</Link>
+        <Link to="/complain">Complain</Link>
         <Link to="#">Tracker</Link>
         <div className="profile-dropdown">
           <button>Profile ▼</button>

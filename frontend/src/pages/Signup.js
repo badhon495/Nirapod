@@ -215,11 +215,9 @@ function Signup() {
         </div>
       </div>
       <footer className="signup-footer">
-        <a href="#" className="footer-link">Bangla</a>
-        <a href="#" className="footer-link">FAQ</a>
-        <a href="#" className="footer-link">Complain</a>
-        <a href="#" className="footer-link">Contract</a>
-        <a href="#" className="footer-link">Privileged User</a>
+        <a href="/faq" className="footer-link">FAQ</a>
+        <a href="/complain" className="footer-link">Complain</a>
+        <a href="/contact" className="footer-link">Contact</a>
       </footer>
     </div>
   );

@@ -87,18 +87,22 @@ function Login() {
             )}
             {message && <div className="login-error">{message}</div>}
             <div className="login-links">
-              <a href="#" className="login-link" onClick={e => { e.preventDefault(); setStep(3); setMessage(''); }}>Forgotten password?</a>
-              <a href="/signup" className="login-link">Create an account</a>
+              {step !== 3 ? (
+                <>
+                  <a href="#" className="login-link" onClick={e => { e.preventDefault(); setStep(3); setMessage(''); }}>Forgotten password?</a>
+                  <a href="/signup" className="login-link">Create an account</a>
+                </>
+              ) : (
+                <a href="#" className="login-link" onClick={e => { e.preventDefault(); setStep(1); setMessage(''); }}>Remembered password?</a>
+              )}
             </div>
           </div>
         </div>
       </div>
       <footer className="login-footer">
-        <a href="#" className="footer-link">Bangla</a>
-        <a href="#" className="footer-link">FAQ</a>
-        <a href="#" className="footer-link">Complain</a>
-        <a href="#" className="footer-link">Contract</a>
-        <a href="#" className="footer-link">Privileged User</a>
+        <a href="/faq" className="footer-link">FAQ</a>
+        <a href="/complain" className="footer-link">Complain</a>
+        <a href="/contact" className="footer-link">Contact</a>
       </footer>
     </div>
   );

@@ -1,12 +1,12 @@
+/* Complain.css - based on Login.css, tailored for Complain page */
 html, body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: #222831;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #222831;
+}
 
-
-.login-bg {
+.complain-bg {
   height: 100vh;
   min-height: 100vh;
   display: flex;
@@ -14,18 +14,18 @@ html, body {
   justify-content: space-between;
 }
 
-.login-split {
+.complain-split {
   display: flex;
   flex: 1 1 auto;
   height: 100%;
   min-height: 0;
 }
 
-.login-left, .login-right {
+.complain-left, .complain-right {
   height: 100%;
 }
 
-.login-left {
+.complain-left {
   flex: 1;
   color: #fff;
   display: flex;
@@ -34,14 +34,14 @@ html, body {
   justify-content: center;
 }
 
-.login-logo {
+.complain-logo {
   font-size: 3rem;
   font-weight: bold;
   letter-spacing: 2px;
   margin-bottom: 1rem;
 }
 
-.login-logo-img {
+.complain-logo-img {
   width: 200px;
   height: 200px;
   object-fit: contain;
@@ -50,19 +50,19 @@ html, body {
   display: block;
 }
 
-.login-tagline {
+.complain-tagline {
   font-size: 1.3rem;
   opacity: 0.8;
 }
 
-.login-right {
+.complain-right {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.login-form-box {
+.complain-form-box {
   background: #27374d;
   border-radius: 18px;
   box-shadow: 0 4px 24px #0002;
@@ -76,13 +76,14 @@ html, body {
   align-items: stretch;
 }
 
-.login-form-box h2 {
+.complain-form-box h2 {
   text-align: center;
   margin-bottom: 1.5rem;
   font-weight: 600;
 }
 
-.login-form-box input {
+.complain-form-box input,
+.complain-form-box textarea {
   margin-bottom: 1rem;
   padding: 0.7rem 1rem;
   border-radius: 8px;
@@ -92,16 +93,17 @@ html, body {
   font-size: 1rem;
 }
 
-.login-form-box input:focus {
+.complain-form-box input:focus,
+.complain-form-box textarea:focus {
   outline: 2px solid #2563eb;
 }
 
-.login-form-box form {
+.complain-form-box form {
   display: flex;
   flex-direction: column;
 }
 
-.login-btn {
+.complain-btn {
   background: #22c55e;
   color: #fff;
   border: none;
@@ -117,36 +119,17 @@ html, body {
   width: 100%;
 }
 
-.login-btn:hover {
+.complain-btn:hover {
   background: #16a34a;
 }
 
-.login-error {
+.complain-error {
   color: #ff6b6b;
   text-align: center;
   margin-bottom: 1rem;
 }
 
-.login-links {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.login-link {
-  color: #60a5fa;
-  text-decoration: none;
-  font-size: 0.98rem;
-  transition: color 0.2s;
-}
-
-.login-link:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-.login-footer {
+.complain-footer {
   color: #fff;
   border: none;
   box-shadow: none;
@@ -154,26 +137,26 @@ html, body {
   text-align: center;
 }
 
-.footer-link {
+.complain-footer-link {
   color: #fff;
   margin: 0 16px;
   text-decoration: underline;
   font-size: 1rem;
 }
 
-.footer-link:hover {
+.complain-footer-link:hover {
   color: #f9d342;
 }
 
 @media (max-width: 900px) {
-  .login-split {
+  .complain-split {
     flex-direction: column;
   }
-  .login-left, .login-right {
+  .complain-left, .complain-right {
     min-height: 220px;
     flex: unset;
   }
-  .login-form-box {
+  .complain-form-box {
     margin: 2rem auto;
   }
 }
