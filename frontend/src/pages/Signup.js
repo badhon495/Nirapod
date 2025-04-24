@@ -209,7 +209,6 @@ function Signup() {
             )}
             {message && <div className="signup-error">{message}</div>}
             <div className="signup-links">
-              <a href="/signup" className="signup-link">Create Privileged Account</a>
               <a href="/login" className="signup-link">Already has an account?</a>
             </div>
           </div>
