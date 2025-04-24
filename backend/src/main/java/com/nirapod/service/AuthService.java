@@ -14,8 +14,8 @@ public class AuthService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public Optional<User> findByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber);
+    public Optional<User> findByPhoneNumber(String phone) {
+        return userRepository.findByPhone(phone);
     }
 
     public Optional<User> findByEmail(String email) {
@@ -24,7 +24,6 @@ public class AuthService {
 
     public User registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setStatus("PENDING");
         return userRepository.save(user);
     }
 

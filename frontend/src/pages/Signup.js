@@ -7,7 +7,8 @@ const initialForm = {
   name: '', phoneNumber: '', email: '', password: '', confirmPassword: '',
   otp: '', userType: 'NORMAL', nid: '', presentAddress: '', permanentAddress: '',
   drivingLicence: '', passport: '', affiliation: '', identificationNumber: '', registrationNumber: '',
-  nidFile: null, drivingLicenceFile: null, passportFile: null, utilityBillFile: null, photoFile: null, affiliationDocFile: null
+  nidFile: null, drivingLicenceFile: null, passportFile: null, utilityBillFile: null, photoFile: null, affiliationDocFile: null,
+  utilityBillCustomerId: ''
 };
 
 function Signup() {
@@ -57,8 +58,15 @@ function Signup() {
       const formData = new FormData();
       Object.entries(form).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
-          // Only append File objects or non-empty strings/numbers
-          if (value instanceof File || (typeof value === 'string' && value !== '') || typeof value === 'number') {
+          if (key === 'utilityBillFile') {
+            formData.append('utilityBillPhoto', value);
+          } else if (key === 'photoFile') {
+            formData.append('userPhoto', value);
+          } else if (key === 'nidFile') {
+            formData.append('nidPhoto', value);
+          } else if (key === 'userType') {
+            formData.append('categories', value);
+          } else if (value instanceof File || (typeof value === 'string' && value !== '') || typeof value === 'number') {
             formData.append(key, value);
           }
         }
@@ -158,6 +166,7 @@ function Signup() {
                 <input name="permanentAddress" placeholder="Permanent Address" value={form.permanentAddress} onChange={handleChange} required />
                 <input name="drivingLicence" placeholder="Driving Licence (optional)" value={form.drivingLicence} onChange={handleChange} />
                 <input name="passport" placeholder="Passport (optional)" value={form.passport} onChange={handleChange} />
+                <input name="utilityBillCustomerId" placeholder="Utility Bill Customer ID" value={form.utilityBillCustomerId} onChange={handleChange} required />
                 <select name="userType" value={form.userType} onChange={handleChange} required>
                   <option value="NORMAL">Normal User</option>
                   <option value="PRIVILEGED">Privileged User</option>

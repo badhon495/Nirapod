@@ -38,62 +38,55 @@ public class AuthController {
             @RequestParam("phoneNumber") String phoneNumber,
             @RequestParam("email") String email,
             @RequestParam("password") String password,
-            @RequestParam("userType") String userType,
+            @RequestParam("categories") String categories,
             @RequestParam("nid") String nid,
             @RequestParam("presentAddress") String presentAddress,
             @RequestParam("permanentAddress") String permanentAddress,
-            @RequestParam(value = "drivingLicence", required = false) String drivingLicence,
             @RequestParam(value = "passport", required = false) String passport,
-            @RequestParam(value = "affiliation", required = false) String affiliation,
-            @RequestParam(value = "identificationNumber", required = false) String identificationNumber,
-            @RequestParam(value = "registrationNumber", required = false) String registrationNumber,
-            @RequestParam("nidFile") MultipartFile nidFile,
-            @RequestParam(value = "drivingLicenceFile", required = false) MultipartFile drivingLicenceFile,
-            @RequestParam(value = "passportFile", required = false) MultipartFile passportFile,
-            @RequestParam("utilityBillFile") MultipartFile utilityBillFile,
-            @RequestParam("photoFile") MultipartFile photoFile,
-            @RequestParam(value = "affiliationDocFile", required = false) MultipartFile affiliationDocFile
+            @RequestParam(value = "passportImg", required = false) MultipartFile passportImg,
+            @RequestParam(value = "drivingLicense", required = false) String drivingLicense,
+            @RequestParam(value = "drivingLicenseImg", required = false) MultipartFile drivingLicenseImg,
+            @RequestParam("utilityBillCustomerId") String utilityBillCustomerId,
+            @RequestParam("utilityBillPhoto") MultipartFile utilityBillPhoto,
+            @RequestParam("userPhoto") MultipartFile userPhoto,
+            @RequestParam("nidPhoto") MultipartFile nidPhoto,
+            @RequestParam(value = "privUserId", required = false) String privUserId,
+            @RequestParam(value = "privUserIdPhoto", required = false) MultipartFile privUserIdPhoto
     ) {
-        // Check if user exists
         if (authService.findByPhoneNumber(phoneNumber).isPresent() ||
             authService.findByEmail(email).isPresent()) {
             return ResponseEntity.badRequest().body("User already exists");
         }
-        // Save files
         try {
             Path dirPath = Paths.get(uploadDir);
             if (!Files.exists(dirPath)) Files.createDirectories(dirPath);
-            String nidFilePath = saveFile(nidFile, dirPath);
-            String drivingLicenceFilePath = drivingLicenceFile != null && !drivingLicenceFile.isEmpty() ? saveFile(drivingLicenceFile, dirPath) : null;
-            String passportFilePath = passportFile != null && !passportFile.isEmpty() ? saveFile(passportFile, dirPath) : null;
-            String utilityBillFilePath = saveFile(utilityBillFile, dirPath);
-            String photoPath = saveFile(photoFile, dirPath);
-            String affiliationDocPath = affiliationDocFile != null && !affiliationDocFile.isEmpty() ? saveFile(affiliationDocFile, dirPath) : null;
-            // Build user
+            String passportImgPath = passportImg != null && !passportImg.isEmpty() ? saveFile(passportImg, dirPath) : null;
+            String drivingLicenseImgPath = drivingLicenseImg != null && !drivingLicenseImg.isEmpty() ? saveFile(drivingLicenseImg, dirPath) : null;
+            String utilityBillPhotoPath = saveFile(utilityBillPhoto, dirPath);
+            String userPhotoPath = saveFile(userPhoto, dirPath);
+            String nidPhotoPath = saveFile(nidPhoto, dirPath);
+            String privUserIdPhotoPath = privUserIdPhoto != null && !privUserIdPhoto.isEmpty() ? saveFile(privUserIdPhoto, dirPath) : null;
             User user = User.builder()
-                    .name(name)
-                    .phoneNumber(phoneNumber)
+                    .nid(nid)
+                    .categories(categories)
                     .email(email)
                     .password(password)
-                    .userType(userType)
-                    .nid(nid)
+                    .name(name)
+                    .phone(phoneNumber)
                     .presentAddress(presentAddress)
                     .permanentAddress(permanentAddress)
-                    .drivingLicence(drivingLicence)
                     .passport(passport)
-                    .affiliation(affiliation)
-                    .identificationNumber(identificationNumber)
-                    .registrationNumber(registrationNumber)
-                    .status("PENDING")
-                    .nidFilePath("/uploads/" + nidFilePath)
-                    .drivingLicenceFilePath(drivingLicenceFilePath != null ? "/uploads/" + drivingLicenceFilePath : null)
-                    .passportFilePath(passportFilePath != null ? "/uploads/" + passportFilePath : null)
-                    .utilityBillFilePath("/uploads/" + utilityBillFilePath)
-                    .photoPath("/uploads/" + photoPath)
-                    .affiliationDocPath(affiliationDocPath != null ? "/uploads/" + affiliationDocPath : null)
+                    .passportImg(passportImgPath != null ? "/uploads/" + passportImgPath : null)
+                    .drivingLicense(drivingLicense)
+                    .drivingLicenseImg(drivingLicenseImgPath != null ? "/uploads/" + drivingLicenseImgPath : null)
+                    .utilityBillCustomerId(utilityBillCustomerId)
+                    .utilityBillPhoto("/uploads/" + utilityBillPhotoPath)
+                    .userPhoto("/uploads/" + userPhotoPath)
+                    .nidPhoto("/uploads/" + nidPhotoPath)
+                    .privUserId(privUserId)
+                    .privUserIdPhoto(privUserIdPhotoPath != null ? "/uploads/" + privUserIdPhotoPath : null)
                     .build();
             User saved = authService.registerUser(user);
-            // Send signup completion email (not OTP)
             if (email != null && !email.isEmpty()) {
                 SimpleMailMessage message = new SimpleMailMessage();
                 message.setTo(email);
@@ -101,7 +94,7 @@ public class AuthController {
                 message.setText("Your signup has been completed. Login to enjoy your service.");
                 mailSender.send(message);
             }
-            return ResponseEntity.ok(Map.of("message", "Signup completed", "userId", saved.getId()));
+            return ResponseEntity.ok(Map.of("message", "Signup completed", "userId", saved.getNid()));
         } catch (IOException e) {
             return ResponseEntity.status(500).body("File upload failed: " + e.getMessage());
         }

@@ -17,8 +17,8 @@ PGPASSWORD=postgres psql -U postgres -h localhost -p 5432 -d nirapod
 \d "Usr_complain"
 
 # 6. Show all rows in a table
-SELECT * FROM "User";
-SELECT * FROM "Usr_complain";
+SELECT * FROM "usr_user";
+SELECT * FROM "usr_complain";
 
 # 7. Insert a row into a table
 INSERT INTO "User" (

@@ -4,36 +4,64 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "usr_user")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String name;
-    @Column(unique = true)
-    private String phoneNumber;
-    @Column(unique = true)
-    private String email;
-    private String password;
-    private String userType; // NORMAL, PRIVILEGED, ADMIN
+    @Column(name = "NID", length = 10)
     private String nid;
+
+    @Column(name = "Categories", length = 16, nullable = false)
+    private String categories;
+
+    @Column(name = "Email", nullable = false)
+    private String email;
+
+    @Column(name = "Password", nullable = false)
+    private String password;
+
+    @Column(name = "Name", nullable = false)
+    private String name;
+
+    @Column(name = "Phone", nullable = false)
+    private String phone;
+
+    @Column(name = "Present_address", nullable = false)
     private String presentAddress;
+
+    @Column(name = "Permanent_address", nullable = false)
     private String permanentAddress;
-    private String drivingLicence;
+
+    @Column(name = "Passport")
     private String passport;
-    private String affiliation; // Police Dept, Fire Dept, City Corp, Animal Shelter
-    private String identificationNumber;
-    private String registrationNumber;
-    private String status; // PENDING, APPROVED, REJECTED
-    private String photoPath;
-    private String nidFilePath;
-    private String drivingLicenceFilePath;
-    private String passportFilePath;
-    private String utilityBillFilePath;
-    private String affiliationDocPath;
+
+    @Column(name = "Passport_img")
+    private String passportImg;
+
+    @Column(name = "Driving_License")
+    private String drivingLicense;
+
+    @Column(name = "Driving_License_img")
+    private String drivingLicenseImg;
+
+    @Column(name = "Utility_bill_customer_ID", nullable = false)
+    private String utilityBillCustomerId;
+
+    @Column(name = "Utility_bill_photo", nullable = false)
+    private String utilityBillPhoto;
+
+    @Column(name = "User_photo", nullable = false)
+    private String userPhoto;
+
+    @Column(name = "NID_photo", nullable = false)
+    private String nidPhoto;
+
+    @Column(name = "priv_user_ID")
+    private String privUserId;
+
+    @Column(name = "priv_user_ID_photo")
+    private String privUserIdPhoto;
 }
