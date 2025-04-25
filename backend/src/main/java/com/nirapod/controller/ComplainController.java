@@ -69,4 +69,14 @@ public class ComplainController {
         Complain saved = complainRepository.save(complain);
         return ResponseEntity.ok(saved);
     }
+
+    @GetMapping("/{trackingId}")
+    public ResponseEntity<?> getComplainByTrackingId(@PathVariable Long trackingId, @RequestParam("nid") String userNid) {
+        return complainRepository.findById(trackingId)
+                .filter(complain -> complain.getNid().trim().equals(userNid.trim()))
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).body(Complain.builder()
+                        .details("Complain not found for this Tracking ID.")
+                        .build()));
+    }
 }

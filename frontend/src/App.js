@@ -10,6 +10,7 @@ import Contact from './pages/Contact';
 import ReachOut from './pages/ReachOut';
 import Complain from './pages/complain';
 import Level from './pages/Level';
+import Tracker from './pages/Tracker';
 
 function App() {
   const location = useLocation();
@@ -44,6 +45,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/Level" element={<Level />} />
+        <Route path="/tracker" element={<Tracker />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </>

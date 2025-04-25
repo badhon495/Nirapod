@@ -32,7 +32,7 @@ function Navbar() {
       <div className="navbar-btn-group">
         <Link to="/home" className="navbar-btn">Home</Link>
         <Link to="/Complain" className="navbar-btn">Complain</Link>
-        <Link to="#" className="navbar-btn">Tracker</Link>
+        <Link to="/tracker" className="navbar-btn">Tracker</Link>
         <div className="navbar-profile-dropdown" ref={dropdownRef}>
           <button className="navbar-btn" onClick={() => setDropdownOpen(v => !v)}>
             Profile <span style={{marginLeft: 6}}>▼</span>
