@@ -56,6 +56,15 @@ function Signup() {
     } else if (step === 4) {
       // Prepare FormData for all fields and files
       const formData = new FormData();
+      // Map userType/affiliation to backend categories
+      let categories = 'normal';
+      if (form.userType === 'PRIVILEGED') {
+        if (form.affiliation === 'Police Dept') categories = 'police';
+        else if (form.affiliation === 'Fire Dept') categories = 'fire';
+        else if (form.affiliation === 'Animal Shelter') categories = 'animal';
+        else if (form.affiliation === 'City Corp') categories = 'city';
+      }
+      formData.append('categories', categories);
       Object.entries(form).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           if (key === 'utilityBillFile') {
@@ -64,8 +73,8 @@ function Signup() {
             formData.append('userPhoto', value);
           } else if (key === 'nidFile') {
             formData.append('nidPhoto', value);
-          } else if (key === 'userType') {
-            formData.append('categories', value);
+          } else if (key === 'userType' || key === 'affiliation') {
+            // skip, already handled
           } else if (value instanceof File || (typeof value === 'string' && value !== '') || typeof value === 'number') {
             formData.append(key, value);
           }

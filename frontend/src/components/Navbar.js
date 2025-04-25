@@ -4,11 +4,11 @@ import logo from '../image/logo.png';
 import './Navbar.css';
 
 function Navbar() {
+  const categories = localStorage.getItem('categories');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -23,6 +23,22 @@ function Navbar() {
     localStorage.removeItem('nirapod_identifier');
     navigate('/login');
   };
+
+  if (categories === 'police') {
+    return (
+      <nav className="navbar-custom">
+        <div className="navbar-logo-box">
+          <img src={logo} alt="Nirapod Logo" className="navbar-logo-img" />
+        </div>
+        <div className="navbar-btn-group">
+          <a href="/home" className="navbar-btn">Home</a>
+          <a href="/complains" className="navbar-btn">Complains</a>
+          <a href="/investigate" className="navbar-btn">Investigate</a>
+          <a href="/profile" className="navbar-btn">Profile</a>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="navbar-custom">

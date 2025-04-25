@@ -58,6 +58,15 @@ public class AuthController {
             return ResponseEntity.badRequest().body("User already exists");
         }
         try {
+            // Only accept new format for categories
+            String mappedCategory = "normal";
+            if (categories != null) {
+                String cat = categories.trim().toLowerCase();
+                if (cat.equals("police") || cat.equals("fire") || cat.equals("animal") || cat.equals("city") || cat.equals("normal")) {
+                    mappedCategory = cat;
+                }
+            }
+
             Path dirPath = Paths.get(uploadDir);
             if (!Files.exists(dirPath)) Files.createDirectories(dirPath);
             String passportImgPath = passportImg != null && !passportImg.isEmpty() ? saveFile(passportImg, dirPath) : null;
@@ -68,7 +77,7 @@ public class AuthController {
             String privUserIdPhotoPath = privUserIdPhoto != null && !privUserIdPhoto.isEmpty() ? saveFile(privUserIdPhoto, dirPath) : null;
             User user = User.builder()
                     .nid(nid)
-                    .categories(categories)
+                    .categories(mappedCategory)
                     .email(email)
                     .password(password)
                     .name(name)
@@ -143,9 +152,15 @@ public class AuthController {
             message.setSubject("Your Nirapod OTP Code");
             message.setText("Your OTP code is: " + otp);
             mailSender.send(message);
-            return ResponseEntity.ok(Map.of("message", "OTP sent to email"));
+            return ResponseEntity.ok(Map.of(
+                "message", "OTP sent to email",
+                "categories", user.getCategories()
+            ));
         }
-        return ResponseEntity.ok(Map.of("message", "OTP sent"));
+        return ResponseEntity.ok(Map.of(
+            "message", "OTP sent",
+            "categories", user.getCategories()
+        ));
     }
 
     @PostMapping("/verify-otp")

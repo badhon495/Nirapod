@@ -16,10 +16,13 @@ function Login() {
     e.preventDefault();
     setMessage('');
     try {
-      await axios.post('/api/auth/login', {
+      const response = await axios.post('/api/auth/login', {
         phoneNumber: form.phoneNumber,
         password: form.password
       });
+      if (response.data.categories) {
+        localStorage.setItem('categories', response.data.categories);
+      }
       setIdentifier(form.phoneNumber); // Save identifier for OTP step
       localStorage.setItem('nirapod_identifier', form.phoneNumber); // Store identifier for category check
       setStep(2);
