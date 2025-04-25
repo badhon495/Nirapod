@@ -39,6 +39,8 @@ do
   UTIL_ID="U$(shuf -i 100000-999999 -n 1)"
   IMG_URL="https://via.placeholder.com/150"
   PHONE="0170000000${i}"
+  # Ensure PHONE is numeric and 11 digits
+  PHONE_NUM=$(printf "%011d" $((17000000000 + $i)))
   FOLLOW="${NID},1234567890,9876543210"
   PHOTOS="{\"$NID\": [\"$IMG_URL\", \"$IMG_URL\"]}"
   COMMENT="{\"$NID\": \"Sample comment by user $i\"}"
@@ -50,14 +52,14 @@ do
     User_photo, NID_photo, priv_user_ID, priv_user_ID_photo
   ) VALUES (
     '$NID', '$CATEGORIES', '$EMAIL', '$PASSWORD',
-    '$NAME', '$P_ADDRESS', '$PERM_ADDRESS', '$PHONE', '$PASSPORT', '$IMG_URL',
+    '$NAME', '$P_ADDRESS', '$PERM_ADDRESS', $PHONE_NUM, '$PASSPORT', '$IMG_URL',
     '$DL', '$IMG_URL', '$UTIL_ID', '$IMG_URL', '$IMG_URL', '$IMG_URL',
     NULL, NULL
   );"
 
   COMPLAIN_INSERTS+="INSERT INTO \"usr_complain\" (
     NID, Urgency, Complain_to, District, Area, Tags,
-    Details, Photos, Post_on_timeline, Location, Update, Status, follow, comment
+    Details, Photos, Post_on_timeline, Location, Update, Status, Follow, Comment
   ) VALUES (
     '$NID', 'High', 'Police', 'Dhaka', 'Dhanmondi', 'safety,crime',
     'Details about the complaint including text and numbers: 1234.',
@@ -103,8 +105,10 @@ CREATE TABLE "usr_complain" (
     Location TEXT,
     Update TEXT,
     Status INTEGER NOT NULL DEFAULT 0, -- 0: unsolved, 1: in progress, 2: solved
-    follow TEXT, -- Comma separated NIDs
-    comment TEXT -- Key-value pairs: NID:comment
+    Follow TEXT, -- Comma separated NIDs
+    Comment TEXT, -- Key-value pairs: NID:comment
+    Time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Auto-generated time
+    Report TEXT -- Comma separated NIDs of users who reported this post, NULL at first
 );
 
 $USER_INSERTS

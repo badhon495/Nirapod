@@ -27,7 +27,7 @@ function Contact() {
       <footer className="login-footer">
         <a href="/login" className="footer-link">Login</a>
         <a href="/faq" className="footer-link">FAQ</a>
-        <a href="/complain" className="footer-link">Complain</a>
+        <a href="/ReachOut" className="footer-link">Reach out</a>
       </footer>
     </div>
   );

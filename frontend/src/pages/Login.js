@@ -21,6 +21,7 @@ function Login() {
         password: form.password
       });
       setIdentifier(form.phoneNumber); // Save identifier for OTP step
+      localStorage.setItem('nirapod_identifier', form.phoneNumber); // Store identifier for category check
       setStep(2);
     } catch (err) {
       setMessage('Invalid credentials');
@@ -101,7 +102,7 @@ function Login() {
       </div>
       <footer className="login-footer">
         <a href="/faq" className="footer-link">FAQ</a>
-        <a href="/complain" className="footer-link">Complain</a>
+        <a href="/ReachOut" className="footer-link">Reach out</a>
         <a href="/contact" className="footer-link">Contact</a>
       </footer>
     </div>

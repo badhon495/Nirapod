@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './Home.css';
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -158,106 +159,28 @@ function Home() {
   });
 
   return (
-    <div className="home-container">
-      <h2>Timeline</h2>
-      <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
-        <input name="title" placeholder="Title" value={form.title} onChange={handleChange} required />
-        <input name="description" placeholder="Description" value={form.description} onChange={handleChange} required />
-        <input name="location" placeholder="Location" value={form.location} onChange={handleChange} />
-        <input name="tag" placeholder="Tag" value={form.tag} onChange={handleChange} />
-        <button type="submit">Post</button>
-      </form>
-      <div style={{ marginBottom: 16 }}>
-        <input name="location" placeholder="Filter by location" value={filters.location} onChange={handleFilterChange} />
-        <input name="tag" placeholder="Filter by tag" value={filters.tag} onChange={handleFilterChange} />
-        <select name="time" value={filters.time} onChange={handleFilterChange}>
-          <option value="">All Time</option>
-          <option value={1000 * 60 * 60 * 24}>Last 24 hours</option>
-          <option value={1000 * 60 * 60 * 24 * 7}>Last 7 days</option>
-          <option value={1000 * 60 * 60 * 24 * 30}>Last 30 days</option>
-        </select>
-      </div>
+    <div className="home-bg">
+      <div className="home-navbar-spacer" />
       <div className="timeline">
         {filteredPosts.map(post => (
           <div key={post.id} className="post-card">
-            <h3>{post.title}</h3>
-            <p>{post.description}</p>
-            <div><b>Location:</b> {post.location} <b>Tag:</b> {post.tag}</div>
-            <div><small>{post.createdAt}</small></div>
-            {followed.includes(post.id) ? (
-              <button onClick={() => handleUnfollow(post.id)} style={{ color: 'green' }}>Following</button>
-            ) : (
-              <button onClick={() => handleFollow(post.id)}>Follow</button>
-            )}
-            <button onClick={() => handleOpenComments(post.id)}>Comment</button>
-            {openComments[post.id] && (
-              <div className="comments-section">
-                <button onClick={() => handleOpenComments(post.id)}>×</button>
-                <div>
-                  {(comments[post.id] || []).map(c => (
-                    <div key={c.id} className="comment-item">
-                      <b>User {c.userId}:</b> {c.content}
-                    </div>
-                  ))}
-                </div>
-                <input
-                  value={commentInputs[post.id] || ''}
-                  onChange={e => handleCommentInput(post.id, e.target.value)}
-                  placeholder="Add a comment"
-                />
-                <button onClick={() => handleAddComment(post.id)}>Add</button>
+            <div className="post-info-box">
+              <div className="post-location"><b>From:</b> {post.location}</div>
+              <div className="post-context"><b>Context:</b> {post.description}</div>
+              <div className="post-update"><b>Update:</b> fire service working on this issue [Mdpur Fire service - 03:48pm]</div>
+              <div className="post-meta">
+                <span className="post-time">Time: 16-Oct-2026 03:33pm</span>
+                <span className="post-by"><b>By:</b> Badhon</span>
               </div>
-            )}
-            <button onClick={() => handleOpenUpdates(post.id)}>Update</button>
-            {openUpdates[post.id] && (
-              <div className="updates-section">
-                <button onClick={() => handleOpenUpdates(post.id)}>×</button>
-                <div>
-                  {(updates[post.id] || []).map(u => (
-                    <div key={u.id} className="update-item">
-                      <b>User {u.userId}:</b> {u.updateText}
-                    </div>
-                  ))}
-                </div>
-                <input
-                  value={updateInputs[post.id] || ''}
-                  onChange={e => handleUpdateInput(post.id, e.target.value)}
-                  placeholder="Add an update"
-                />
-                <button onClick={() => handleAddUpdate(post.id)}>Add</button>
-              </div>
-            )}
-            <button onClick={() => handleOpenPhotos(post.id)}>Photos</button>
-            {openPhotos[post.id] && (
-              <div className="photos-section">
-                <button onClick={() => handleOpenPhotos(post.id)}>×</button>
-                <div>
-                  {(photos[post.id] || []).map(photo => (
-                    <img key={photo.id} src={photo.filePath} alt="Post" style={{ maxWidth: 120, margin: 4 }} />
-                  ))}
-                </div>
-                <input type="file" onChange={e => handlePhotoFile(post.id, e.target.files[0])} />
-                <button onClick={() => handleUploadPhoto(post.id)}>Upload</button>
-              </div>
-            )}
-            <button onClick={() => handleOpenReport(post.id)}>Report</button>
-            {openReport[post.id] && (
-              <div className="report-popup">
-                <button onClick={() => handleOpenReport(post.id)}>×</button>
-                <div><b>Report Post</b></div>
-                <textarea
-                  placeholder="Reason for reporting"
-                  value={reportReasons[post.id] || ''}
-                  onChange={e => handleReportReason(post.id, e.target.value)}
-                  rows={3}
-                />
-                <div style={{ color: 'red', fontSize: 12, margin: '8px 0' }}>
-                  False reporting may result in account suspension or legal action.
-                </div>
-                <button onClick={() => handleSubmitReport(post.id)}>Submit Report</button>
-                {reportMsg[post.id] && <div>{reportMsg[post.id]}</div>}
-              </div>
-            )}
+            </div>
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Post" className="post-image" />
+            <div className="post-actions">
+              <button className="post-action-btn">Follow</button>
+              <button className="post-action-btn">Comment</button>
+              <button className="post-action-btn">Update</button>
+              <button className="post-action-btn">Photos</button>
+              <button className="post-action-btn">Report</button>
+            </div>
           </div>
         ))}
       </div>

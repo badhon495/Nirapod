@@ -1,41 +1,72 @@
 package com.nirapod.controller;
 
-import com.nirapod.dto.ComplainRequest;
-import jakarta.validation.Valid;
+import com.nirapod.model.Complain;
+import com.nirapod.repository.ComplainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/complain")
 public class ComplainController {
     @Autowired
-    private JavaMailSender mailSender;
+    private ComplainRepository complainRepository;
 
-    @Value("${spring.mail.username}")
-    private String fromEmail;
+    @Value("${file.upload-dir:uploads}")
+    private String uploadDir;
 
     @PostMapping
-    public ResponseEntity<?> submitComplain(@Valid @RequestBody ComplainRequest request) {
-        System.out.println("[ComplainController] Received complaint: " + request);
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("badhon495@gmail.com");
-        message.setSubject("New Complaint Received");
-        message.setText(
-                "Name: " + request.getName() + "\n" +
-                "Phone: " + request.getPhone() + "\n" +
-                "Email: " + request.getEmail() + "\n" +
-                "Details: " + request.getDetails()
-        );
-        try {
-            return ResponseEntity.ok().body("Complaint submitted successfully");
-        } catch (Exception ex) {
-            System.out.println("[ComplainController] Failed to send email: " + ex.getMessage());
-            ex.printStackTrace();
-            return ResponseEntity.status(500).body("Failed to send complaint email. Please try again later.");
+    public ResponseEntity<?> submitComplain(
+            @RequestParam("nid") String nid,
+            @RequestParam("urgency") String urgency,
+            @RequestParam("complainTo") String complainTo,
+            @RequestParam("district") String district,
+            @RequestParam("area") String area,
+            @RequestParam("tag") String tags,
+            @RequestParam("details") String details,
+            @RequestParam(value = "photos", required = false) List<MultipartFile> photos,
+            @RequestParam("postOnTimeline") String postOnTimeline,
+            @RequestParam("location") String location
+    ) throws IOException {
+        List<String> photoPaths = new ArrayList<>();
+        if (photos != null) {
+            Path dirPath = Paths.get(uploadDir);
+            if (!Files.exists(dirPath)) Files.createDirectories(dirPath);
+            for (MultipartFile file : photos) {
+                if (!file.isEmpty()) {
+                    String filename = System.currentTimeMillis() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
+                    Path filePath = dirPath.resolve(filename);
+                    file.transferTo(filePath);
+                    photoPaths.add("/uploads/" + filename);
+                }
+            }
         }
+        Complain complain = Complain.builder()
+                .nid(nid)
+                .urgency(urgency)
+                .complainTo(complainTo)
+                .district(district)
+                .area(area)
+                .tags(tags)
+                .details(details)
+                .photos(String.join(",", photoPaths))
+                .postOnTimeline("1".equals(postOnTimeline))
+                .location(location)
+                .status(0)
+                .follow(nid)
+                .comment("")
+                .build();
+        Complain saved = complainRepository.save(complain);
+        return ResponseEntity.ok(saved);
     }
 }

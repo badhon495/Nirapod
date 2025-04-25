@@ -41,7 +41,7 @@ function FAQ() {
       </div>
       <footer className="login-footer">
       <a href="/login" className="footer-link">Login</a>
-        <a href="/complain" className="footer-link">Complain</a>
+        <a href="/ReachOut" className="footer-link">Reach out</a>
         <a href="/contact" className="footer-link">Contact</a>
       </footer>
     </div>

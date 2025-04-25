@@ -1,0 +1,100 @@
+/* Home.css - homepage design based on provided image */
+.home-bg {
+  background: #222831;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 24px;
+}
+.post-card {
+  background: #232b36;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #0003;
+  margin-bottom: 32px;
+  padding: 0;
+  width: 700px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.post-info-box {
+  background: #f5f6fa;
+  border-radius: 12px 12px 0 0;
+  padding: 16px 24px 8px 24px;
+  width: 100%;
+  font-size: 1.08rem;
+  color: #222;
+  margin-bottom: 0;
+}
+.post-location {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+}
+.post-context {
+  margin-bottom: 2px;
+}
+.post-update {
+  margin-bottom: 2px;
+}
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.98rem;
+  color: #444;
+  margin-top: 4px;
+}
+.post-image {
+  width: 100%;
+  max-height: 340px;
+  object-fit: cover;
+  border-radius: 0 0 18px 18px;
+  margin-bottom: 0;
+}
+.post-actions {
+  position: absolute;
+  right: -120px;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  height: 100%;
+  justify-content: center;
+}
+.post-action-btn {
+  background: #e5e7eb;
+  color: #222;
+  border: none;
+  border-radius: 18px;
+  padding: 10px 28px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #0001;
+  transition: background 0.2s, color 0.2s;
+}
+.post-action-btn:hover {
+  background: #2563eb;
+  color: #fff;
+}
+@media (max-width: 900px) {
+  .post-card {
+    width: 98vw;
+    min-width: 0;
+  }
+  .post-actions {
+    position: static;
+    flex-direction: row;
+    gap: 8px;
+    margin: 12px 0 0 0;
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
