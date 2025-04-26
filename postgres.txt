@@ -59,3 +59,6 @@ mvn clean install
 mvn spring-boot:run
 
 # 16. Press Q to exit from the psql prompt      
+
+git config --global user.email "tawhid.chowdhury@g.bracu.ac.bd"
+git config --global user.name "Tawhid07"
