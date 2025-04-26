@@ -1,7 +1,7 @@
 # PostgreSQL Common Commands
 
 # 1. Access the database
-PGPASSWORD=postgres psql -U postgres -h localhost -p 5432 -d nirapod
+PGPASSWORD=1234 psql -U postgres -h localhost -p 5432 -d nirapod
 
 # 2. List all databases
 \l
@@ -58,4 +58,4 @@ cd /home/badhon/Documents/Nirapod/backend
 mvn clean install
 mvn spring-boot:run
 
-# 16. Press Q to exit from the psql prompt
+# 16. Press Q to exit from the psql prompt      

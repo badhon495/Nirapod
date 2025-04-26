@@ -1,0 +1,132 @@
+.update-profile-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 40px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .page-title {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 28px;
+    color: #2d3748;
+    font-weight: 600;
+  }
+  
+  .update-form label {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #4a5568;
+  }
+  
+  .update-form textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    padding: 10px;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f7fafc;
+    color: #2d3748;
+  }
+  
+  .update-btn {
+    margin-top: 30px;
+    width: 100%;
+    padding: 14px;
+    background-color: #3182ce;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .update-btn:hover {
+    background-color: #2b6cb0;
+  }
+
+.update-profile-bg {
+  min-height: 100vh;
+  background: #222831;
+  font-family: "Fira Mono", monospace;
+  padding: 0;
+}
+
+.update-profile-form {
+  margin: 48px auto 0 auto;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.update-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 0;
+}
+
+.update-profile-row label {
+  color: #fff;
+  font-size: 1.15rem;
+  min-width: 160px;
+  text-align: center;
+}
+
+.update-profile-form input,
+.update-profile-form textarea {
+  flex: 1;
+  background: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-family: inherit;
+  margin: 0;
+  outline: none;
+}
+
+.update-profile-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.update-profile-submit-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.update-profile-submit-row button {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 12px 48px;
+  font-size: 1.15rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.update-profile-submit-row button:hover {
+  background: #16a34a;
+}
+
+.update-profile-message {
+  color: #22c55e;
+  text-align: center;
+  margin-bottom: 12px;
+  font-weight: 600;
+}

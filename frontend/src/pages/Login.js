@@ -24,7 +24,7 @@ function Login() {
       localStorage.setItem('nirapod_identifier', form.phoneNumber); // Store identifier for category check
       setStep(2);
     } catch (err) {
-      setMessage('Invalid credentials');
+      setMessage(err.response?.data || 'Invalid credentials. Please try again.');
     }
   };
 
@@ -38,7 +38,7 @@ function Login() {
       });
       window.location.href = '/home';
     } catch (err) {
-      setMessage('Invalid OTP');
+      setMessage(err.response?.data || 'Invalid OTP. Please try again.');
     }
   };
 

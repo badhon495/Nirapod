@@ -11,6 +11,7 @@ import ReachOut from './pages/ReachOut';
 import Complain from './pages/complain';
 import Level from './pages/Level';
 import Tracker from './pages/Tracker';
+import UpdateProfile from './pages/UpdateProfile';
 
 function App() {
   const location = useLocation();
@@ -31,7 +32,7 @@ function App() {
       .catch(() => setUserCategory(null));
   }, [location.pathname]);
 
-  const hideNavbar = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/faq' || location.pathname === '/contact' || location.pathname === '/complain';
+  const hideNavbar = ['/login', '/signup', '/faq', '/contact', '/complain', '/update-profile'].includes(location.pathname);
 
   return (
     <>
@@ -46,6 +47,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/Level" element={<Level />} />
         <Route path="/tracker" element={<Tracker />} />
+        <Route path="/update-profile" element={<UpdateProfile />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </>
