@@ -34,7 +34,19 @@ function Navbar() {
           <a href="/home" className="navbar-btn">Home</a>
           <a href="/complains" className="navbar-btn">Complains</a>
           <a href="/investigate" className="navbar-btn">Investigate</a>
-          <a href="/profile" className="navbar-btn">Profile</a>
+          <div className="navbar-profile-dropdown" ref={dropdownRef}>
+            <button className="navbar-btn" onClick={() => setDropdownOpen(v => !v)}>
+              Profile <span style={{marginLeft: 6}}>▼</span>
+            </button>
+            {dropdownOpen && (
+              <div className="navbar-dropdown-menu">
+                <Link to="/profile" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Update Profile</Link>
+                <Link to="/complains" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Your Complains</Link>
+                <Link to="/notifications" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Notification</Link>
+                <button className="navbar-dropdown-item" onClick={handleLogout}>Logout</button>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
     );
@@ -47,7 +59,7 @@ function Navbar() {
       </div>
       <div className="navbar-btn-group">
         <Link to="/home" className="navbar-btn">Home</Link>
-        <Link to="/Complain" className="navbar-btn">Complain</Link>
+        <Link to="/CreateComplain" className="navbar-btn">Complain</Link>
         <Link to="/tracker" className="navbar-btn">Tracker</Link>
         <div className="navbar-profile-dropdown" ref={dropdownRef}>
           <button className="navbar-btn" onClick={() => setDropdownOpen(v => !v)}>

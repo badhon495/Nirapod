@@ -1,7 +1,7 @@
 package com.nirapod.controller;
 
-import com.nirapod.model.Complain;
-import com.nirapod.repository.ComplainRepository;
+import com.nirapod.model.CreateComplain;
+import com.nirapod.repository.CreateComplainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/complain")
-public class ComplainController {
+public class CreateComplainController {
     @Autowired
-    private ComplainRepository complainRepository;
+    private CreateComplainRepository createComplainRepository;
 
     @Value("${file.upload-dir:uploads}")
     private String uploadDir;
@@ -51,7 +51,7 @@ public class ComplainController {
                 }
             }
         }
-        Complain complain = Complain.builder()
+        CreateComplain complain = CreateComplain.builder()
                 .nid(nid)
                 .urgency(urgency)
                 .complainTo(complainTo)
@@ -66,16 +66,16 @@ public class ComplainController {
                 .follow(nid)
                 .comment("")
                 .build();
-        Complain saved = complainRepository.save(complain);
+        CreateComplain saved = createComplainRepository.save(complain);
         return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/{trackingId}")
     public ResponseEntity<?> getComplainByTrackingId(@PathVariable Long trackingId, @RequestParam("nid") String userNid) {
-        return complainRepository.findById(trackingId)
+        return createComplainRepository.findById(trackingId)
                 .filter(complain -> complain.getNid().trim().equals(userNid.trim()))
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(404).body(Complain.builder()
+                .orElseGet(() -> ResponseEntity.status(404).body(CreateComplain.builder()
                         .details("Complain not found for this Tracking ID.")
                         .build()));
     }

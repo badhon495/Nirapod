@@ -1,0 +1,121 @@
+.complaint-details-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.complaint-detail-card {
+    background-color: #1c1e25;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 1.5rem;
+    align-items: flex-start;
+}
+
+.detail-label {
+    width: 200px;
+    font-weight: bold;
+    color: #e0e0e0;
+    text-align: right;
+    padding-right: 1rem;
+}
+
+.detail-value {
+    flex: 1;
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 0.8rem 1rem;
+    border-radius: 5px;
+    min-height: 20px;
+}
+
+.detail-multiline {
+    align-items: flex-start;
+}
+
+.detail-text-area {
+    min-height: 100px;
+    white-space: pre-wrap;
+}
+
+.update-section {
+    margin-top: 2rem;
+}
+
+.update-input {
+    width: 100%;
+    min-height: 80px;
+    padding: 0.8rem;
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.update-button {
+    margin-top: 1rem;
+    margin-left: auto;
+    display: block;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.update-button:hover {
+    background-color: #3d8b40;
+}
+
+.update-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.back-button {
+    align-self: flex-start;
+    background-color: transparent;
+    color: #e0e0e0;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 0.6rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.back-button:hover {
+    background-color: #e0e0e0;
+    color: #1c1e25;
+}
+.status-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.status-solved {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.status-unsolved {
+    background-color: #f44336;
+    color: white;
+}
+
+.status-inprogress {
+    background-color: #ffeb3b;
+    color: #333;
+}

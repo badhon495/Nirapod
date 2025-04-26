@@ -50,11 +50,13 @@ DROP TABLE "User";
 
 # Note: Commands starting with \ are run inside the psql prompt.
 
-# 15. To run project
-cd /home/badhon/Documents/Nirapod/frontend
+# 15. Frontend
+cd frontend
 npm install
 npm start
-cd /home/badhon/Documents/Nirapod/backend
+
+# 16. Backend
+cd backend
 mvn clean install
 mvn spring-boot:run
 

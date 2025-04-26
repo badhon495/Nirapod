@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './complain.css';
+import './CreateComplain.css';
 
 function Complain() {
   const [form, setForm] = useState({

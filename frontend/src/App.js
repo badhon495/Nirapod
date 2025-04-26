@@ -8,13 +8,14 @@ import Navbar from './components/Navbar';
 import FAQ from './pages/FAQ';
 import Contact from './pages/Contact';
 import ReachOut from './pages/ReachOut';
-import Complain from './pages/complain';
+import CreateComplain from './pages/CreateComplain';
 import Level from './pages/Level';
 import Tracker from './pages/Tracker';
+import ComplaintList from './pages/ComplaintList';
+import ComplaintDetails from './pages/ComplaintDetails';
 
 function App() {
   const location = useLocation();
-  const [userCategory, setUserCategory] = useState(null);
 
   useEffect(() => {
     // Only check category if not on login/signup/faq/contact/complain
@@ -25,10 +26,7 @@ function App() {
     if (!identifier) return;
     // Try to fetch user by phone or NID
     axios.get(`/api/user/by-identifier?value=${encodeURIComponent(identifier)}`)
-      .then(res => {
-        setUserCategory(res.data.categories);
-      })
-      .catch(() => setUserCategory(null));
+      .catch(() => {});
   }, [location.pathname]);
 
   const hideNavbar = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/faq' || location.pathname === '/contact' || location.pathname === '/complain';
@@ -38,7 +36,7 @@ function App() {
       {!hideNavbar && <Navbar />}
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/Complain" element={<Complain />} />
+        <Route path="/CreateComplain" element={<CreateComplain />} />
         <Route path="/ReachOut" element={<ReachOut />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/faq" element={<FAQ />} />
@@ -46,6 +44,8 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/Level" element={<Level />} />
         <Route path="/tracker" element={<Tracker />} />
+        <Route path="/complains" element={<ComplaintList />} />
+        <Route path="/complaint/:id" element={<ComplaintDetails />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </>

@@ -1,0 +1,82 @@
+.complaint-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* Remove position to avoid stacking context */
+    position: static;
+}
+
+.complaint-card {
+    background-color: #e0e0e0;
+    color: #333;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    min-height: 260px;
+}
+
+.complaint-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.complaint-id {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.complaint-status {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.status-solved {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.status-unsolved {
+    background-color: #f44336;
+    color: white;
+}
+
+.status-inprogress {
+    background-color: #ffeb3b;
+    color: #333;
+}
+
+.complaint-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.label {
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.details-button {
+    margin-left: auto;
+    align-self: flex-end;
+    background-color: #5c8cb5;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0.5rem 2rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    z-index: 2;
+}
+
+.details-button:hover {
+    background-color: #496e8e;
+}
