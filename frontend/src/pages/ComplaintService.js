@@ -34,17 +34,21 @@ const ComplaintService = {
     getComplaintById: async (id) => {
         try {
             const response = await axios.get(`${API_URL}/complaint/${id}`);
-            // Transform data to match frontend expectations
+            // Use backend fields directly
             const complaint = response.data;
             return {
                 ...complaint,
                 trackingId: complaint.trackingId,
-                complainBy: complaint.nid,
-                tag: complaint.tags,
-                subject: complaint.complainTo,
-                details: complaint.details,
-                time: complaint.location,
+                complainBy: complaint.userName, // Show user name
+                nid: complaint.nid,
+                tags: complaint.tags,
                 urgency: complaint.urgency,
+                district: complaint.district,
+                area: complaint.area,
+                location: complaint.location,
+                time: complaint.time, // Use backend time
+                details: complaint.details,
+                photos: complaint.photos,
                 status: complaint.statusText,
                 updateNote: complaint.updateNote
             };
@@ -75,12 +79,16 @@ const ComplaintService = {
             return {
                 ...updatedComplaint,
                 trackingId: updatedComplaint.trackingId,
-                complainBy: updatedComplaint.nid,
-                tag: updatedComplaint.tags,
-                subject: updatedComplaint.complainTo,
-                details: updatedComplaint.details,
-                time: updatedComplaint.location,
+                complainBy: updatedComplaint.userName, // Show user name
+                nid: updatedComplaint.nid,
+                tags: updatedComplaint.tags,
                 urgency: updatedComplaint.urgency,
+                district: updatedComplaint.district,
+                area: updatedComplaint.area,
+                location: updatedComplaint.location,
+                time: updatedComplaint.time, // Use backend time
+                details: updatedComplaint.details,
+                photos: updatedComplaint.photos,
                 status: updatedComplaint.statusText,
                 updateNote: updatedComplaint.updateNote
             };

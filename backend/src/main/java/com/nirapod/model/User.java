@@ -64,4 +64,8 @@ public class User {
 
     @Column(name = "priv_user_ID_photo")
     private String privUserIdPhoto;
+
+    public String getUtilityBillCustomerID() {
+        return this.utilityBillCustomerId;
+    }
 }

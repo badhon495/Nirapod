@@ -37,4 +37,38 @@ public class UserController {
         result.put("name", user.getName());
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchUser(
+            @RequestParam(required = false) String nid,
+            @RequestParam(required = false) String drivingLicence,
+            @RequestParam(required = false) String passport) {
+        Optional<User> userOpt = Optional.empty();
+        if (nid != null && !nid.isEmpty()) {
+            userOpt = userRepository.findByNid(nid);
+        } else if (drivingLicence != null && !drivingLicence.isEmpty()) {
+            userOpt = userRepository.findByDrivingLicense(drivingLicence);
+        } else if (passport != null && !passport.isEmpty()) {
+            userOpt = userRepository.findByPassport(passport);
+        }
+        if (userOpt.isPresent()) {
+            User u = userOpt.get();
+            Map<String, Object> result = new HashMap<>();
+            result.put("name", u.getName());
+            result.put("nid", u.getNid());
+            result.put("passport", u.getPassport());
+            result.put("drivingLicence", u.getDrivingLicense());
+            result.put("presentAddress", u.getPresentAddress());
+            result.put("permanentAddress", u.getPermanentAddress());
+            result.put("email", u.getEmail());
+            result.put("phone", u.getPhone());
+            result.put("utilityBillId", u.getUtilityBillCustomerID());
+            result.put("utilityBillPhoto", u.getUtilityBillPhoto());
+            result.put("userPhoto", u.getUserPhoto());
+            result.put("nidPhoto", u.getNidPhoto());
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(404).body("User not found");
+        }
+    }
 }

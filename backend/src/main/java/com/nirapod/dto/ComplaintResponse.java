@@ -90,4 +90,12 @@ public class ComplaintResponse {
     public void setComment(String comment) { this.comment = comment; }
     public java.time.LocalDateTime getTime() { return time; }
     public void setTime(java.time.LocalDateTime time) { this.time = time; }
+    public String getStatusText() {
+        if (status == null) return "Unsolved";
+        switch (status) {
+            case 2: return "Solved";
+            case 1: return "In Progress";
+            default: return "Unsolved";
+        }
+    }
 }
