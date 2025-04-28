@@ -62,3 +62,18 @@ mvn spring-boot:run
 
 git config --global user.email "tawhid.chowdhury@g.bracu.ac.bd"
 git config --global user.name "Tawhid07"
+
+# 17. Pull from Nirapod main repository on badhon495 GitHub
+git remote add origin https://github.com/badhon495/Nirapod.git
+git fetch origin
+git pull origin main
+
+# 17. Pull from Tawhid's origin
+git remote add tawhid-origin https://github.com/Tawhid07/Nirapod.git
+git fetch tawhid-origin
+git pull tawhid-origin main
+
+# 18. Use Tawhid's main branch
+git remote add tawhid-origin https://github.com/Tawhid07/Nirapod.git
+git fetch tawhid-origin
+git checkout -b tawhid-main tawhid-origin/main
