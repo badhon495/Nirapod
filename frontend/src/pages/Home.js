@@ -289,8 +289,12 @@ function Home() {
                 <div className="post-location"><b>From:</b> {post.area || post.location || 'N/A'}</div>
                 <div className="post-context"><b>Context:</b> {post.details}</div>
                 <div className="post-update"><b>Update:</b> {post.updateNote || 'No update yet.'}</div>
+                <div className="post-progress-row" style={{marginTop:8}}>
+                  <span style={{fontWeight:600}}>Progress: </span>
+                  <span className={`progress-badge ${post.status === 'Solved' ? 'progress-solved' : post.status === 'In Progress' ? 'progress-inprogress' : 'progress-unsolved'}`}>{post.status || 'Unsolved'}</span>
+                </div>
                 <div className="post-meta">
-                  <span className="post-time">Time: {post.time ? new Date(post.time).toLocaleString() : 'N/A'}</span>
+                  <span className="post-time"><b>Time:</b> {post.time ? new Date(post.time).toLocaleString() : 'N/A'}</span>
                   <span className="post-by"><b>By:</b> {post.complainBy || post.userName || 'N/A'}</span>
                   <span className="post-to"><b>To:</b> {post.subject || post.complainTo || 'N/A'}</span>
                 </div>
