@@ -20,6 +20,7 @@ function Complain() {
   });
 
   const [successMsg, setSuccessMsg] = useState('');
+  const [photoError, setPhotoError] = useState('');
 
   const districts = [
     'Dhaka',
@@ -65,6 +66,11 @@ function Complain() {
   const handleSubmit = async e => {
     e.preventDefault();
     setSuccessMsg('');
+    setPhotoError('');
+    if (!form.photos || form.photos.length === 0) {
+      setPhotoError('Please add at least one photo.');
+      return;
+    }
     const formData = new FormData();
     formData.append('nid', form.nid);
     formData.append('urgency', form.urgency);
@@ -162,13 +168,14 @@ function Complain() {
         <div className="complain-photo-row complain-row">
           <label>Photos :</label>
           <label className="complain-photo-btn">
-            Add photos
+            {form.photos && form.photos.length > 0 ? `${form.photos.length} photo${form.photos.length > 1 ? 's' : ''} added` : 'Add photos'}
             <input type="file" name="photos" style={{ display: 'none' }} onChange={handleChange} multiple />
           </label>
           <label className="complain-radio-label">
             <input type="radio" name="postOnTimeline" checked={form.postOnTimeline} onChange={handleChange} />
             Post it on timeline
           </label>
+          {photoError && <div style={{color:'#ef4444', marginTop:8, fontWeight:500}}>{photoError}</div>}
         </div>
         <div className="complain-submit-row">
           <button className="complain-submit-btn" type="submit">Submit</button>

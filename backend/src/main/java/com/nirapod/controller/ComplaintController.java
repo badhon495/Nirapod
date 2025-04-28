@@ -95,14 +95,25 @@ public class ComplaintController {
         if (existingComplaint.isPresent()) {
             Complaint complaint = existingComplaint.get();
 
-            // Handle status conversion
+            // Robust status handling: accept both integer and string
             if (updatedComplaint.getStatus() != null) {
                 complaint.setStatus(updatedComplaint.getStatus());
             } else if (updatedComplaint.getStatusText() != null) {
-                complaint.setStatusText(updatedComplaint.getStatusText());
+                String statusText = updatedComplaint.getStatusText();
+                if (statusText.equalsIgnoreCase("Solved")) {
+                    complaint.setStatus(2);
+                } else if (statusText.equalsIgnoreCase("In Progress")) {
+                    complaint.setStatus(1);
+                } else {
+                    complaint.setStatus(0); // Default to Unsolved
+                }
             }
 
             complaint.setUpdateNote(updatedComplaint.getUpdateNote());
+            // Update comment if present
+            if (updatedComplaint.getComment() != null) {
+                complaint.setComment(updatedComplaint.getComment());
+            }
             Complaint updated = repository.save(complaint);
             logger.info("Complaint with id {} updated successfully", id);
             return ResponseEntity.ok(updated);

@@ -31,6 +31,7 @@
   font-size: 1.08rem;
   color: #222;
   margin-bottom: 0;
+  box-sizing: border-box;
 }
 .post-location {
   font-weight: bold;
@@ -56,16 +57,19 @@
   object-fit: cover;
   border-radius: 0 0 18px 18px;
   margin-bottom: 0;
+  display: block;
 }
 .post-actions {
   position: absolute;
-  right: -120px;
-  top: 0;
+  right: -150px; /* Increased from -120px for more distance */
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  height: 100%;
+  gap: 32px; /* Slightly more gap between buttons */
+  height: auto;
   justify-content: center;
+  margin-left: 64px; /* Increased from 32px for more space */
 }
 .post-action-btn {
   background: #e5e7eb;
@@ -92,9 +96,12 @@
   .post-actions {
     position: static;
     flex-direction: row;
-    gap: 8px;
-    margin: 12px 0 0 0;
+    gap: 16px;
+    margin: 32px 0 0 0;
     width: 100%;
     justify-content: flex-start;
+    transform: none;
+    top: auto;
+    right: auto;
   }
 }
