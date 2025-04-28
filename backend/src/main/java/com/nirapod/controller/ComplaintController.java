@@ -7,9 +7,18 @@ import com.nirapod.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*")
@@ -23,6 +32,9 @@ public class ComplaintController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Value("${file.upload-dir:uploads}")
+    private String uploadDir;
 
     // Fetch all complaints
     @GetMapping("/complaints")
@@ -141,5 +153,40 @@ public class ComplaintController {
             logger.error("Error adding complaint: {}", e.getMessage());
             return ResponseEntity.status(500).build();
         }
+    }
+
+    @PostMapping("/complaint/upload-photos")
+    public ResponseEntity<?> uploadPhotos(
+            @RequestParam("trackingId") Integer trackingId,
+            @RequestParam("nid") String nid,
+            @RequestParam("photos") java.util.List<MultipartFile> photos
+    ) throws IOException {
+        Optional<Complaint> complaintOpt = repository.findById(trackingId);
+        if (complaintOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Complaint not found");
+        }
+        Complaint complaint = complaintOpt.get();
+        // Save files
+        Path dirPath = Paths.get(uploadDir);
+        if (!Files.exists(dirPath)) Files.createDirectories(dirPath);
+        java.util.List<String> photoPaths = new ArrayList<>();
+        for (MultipartFile file : photos) {
+            if (!file.isEmpty()) {
+                String filename = System.currentTimeMillis() + "_" + org.springframework.util.StringUtils.cleanPath(file.getOriginalFilename());
+                Path filePath = dirPath.resolve(filename);
+                file.transferTo(filePath);
+                photoPaths.add("/uploads/" + filename);
+            }
+        }
+        // Append to existing photos
+        String existingPhotos = complaint.getPhotos();
+        String newPhotos = String.join(",", photoPaths);
+        if (existingPhotos != null && !existingPhotos.isBlank()) {
+            complaint.setPhotos(existingPhotos + "," + newPhotos);
+        } else {
+            complaint.setPhotos(newPhotos);
+        }
+        repository.save(complaint);
+        return ResponseEntity.ok(Map.of("success", true, "photos", complaint.getPhotos()));
     }
 }

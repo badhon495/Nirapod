@@ -212,6 +212,17 @@ function Home() {
     formData.append('nid', userNid);
     photoFiles.forEach(f => formData.append('photos', f));
     await axios.post('/api/complaint/upload-photos', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+    // Fetch the latest post data and update the photos in state
+    try {
+      const res = await axios.get(`/api/complaint/${trackingId}`);
+      setPosts(prevPosts =>
+        prevPosts.map(p =>
+          p.trackingId === trackingId ? { ...p, photos: res.data.photos } : p
+        )
+      );
+    } catch {
+      // Optionally handle error
+    }
     setOpenPhotos(null);
   };
   const handleOpenReport = (trackingId) => {
