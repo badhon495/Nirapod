@@ -66,38 +66,40 @@
   max-width: 650px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 18px; /* Adjusted gap for better alignment */
 }
 
 .update-profile-row {
   display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 0;
+  align-items: center; /* Align labels and inputs vertically centered */
+  gap: 18px; /* Add spacing between label and input */
 }
 
 .update-profile-row label {
   color: #fff;
   font-size: 1.15rem;
-  min-width: 160px;
-  text-align: center;
+  min-width: 250px; /* Increased width for better alignment */
+  text-align: left; /* Align text to the left for better readability */
+  line-height: 1.5; /* Ensure proper vertical alignment with inputs */
 }
 
 .update-profile-form input,
 .update-profile-form textarea {
-  flex: 1;
+  flex: 1; /* Ensure inputs take remaining space */
+  width: 100%; /* Ensure all inputs are the same width */
   background: #fff;
   border: none;
   border-radius: 16px;
-  padding: 12px 24px;
+  padding: 12px 24px;/* Match padding with complain page */
   font-size: 1.1rem;
   font-family: inherit;
   margin: 0;
   outline: none;
+  box-sizing: border-box; /* Include padding and border in width calculation */
 }
 
 .update-profile-form textarea {
-  min-height: 120px;
+  min-height: 120px; /* Match height with complain page */
   resize: vertical;
 }
 

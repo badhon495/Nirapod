@@ -79,4 +79,13 @@ public class ComplainController {
                         .details("Complain not found for this Tracking ID.")
                         .build()));
     }
+
+    @GetMapping("/user/{nid}")
+    public ResponseEntity<?> getComplaintsByUser(@PathVariable String nid) {
+        List<Complain> complaints = complainRepository.findByNid(nid);
+        if (complaints.isEmpty()) {
+            return ResponseEntity.status(404).body("No complaints found for the user.");
+        }
+        return ResponseEntity.ok(complaints);
+    }
 }

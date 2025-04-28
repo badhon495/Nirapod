@@ -12,6 +12,7 @@ import Complain from './pages/complain';
 import Level from './pages/Level';
 import Tracker from './pages/Tracker';
 import UpdateProfile from './pages/UpdateProfile';
+import UserComplaints from './pages/UserComplaints';
 
 function App() {
   const location = useLocation();
@@ -48,6 +49,7 @@ function App() {
         <Route path="/Level" element={<Level />} />
         <Route path="/tracker" element={<Tracker />} />
         <Route path="/update-profile" element={<UpdateProfile />} />
+        <Route path="/user-complaints" element={<UserComplaints />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </>

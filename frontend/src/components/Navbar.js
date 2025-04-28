@@ -40,8 +40,9 @@ function Navbar() {
           {dropdownOpen && (
             <div className="navbar-dropdown-menu">
               <Link to="/update-profile" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Update Profile</Link>
-              <Link to="/Complain" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Your Complains</Link>
+           
               <Link to="/notifications" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Notification</Link>
+              <Link to="/user-complaints" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Your Complaints</Link>
               <button className="navbar-dropdown-item" onClick={handleLogout}>Logout</button>
             </div>
           )}

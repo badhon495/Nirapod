@@ -1,0 +1,32 @@
+/* Styling for the User Complaints page */
+.complaints-container {
+  background-color: #222831;
+  color: #fff;
+  padding: 20px;
+  font-family: 'Fira Mono', monospace;
+}
+
+.complaints-category {
+  margin-bottom: 20px;
+}
+
+.complaints-category h2 {
+  text-align: center;
+  color: #fff;
+}
+
+.complaints-list {
+  list-style: none;
+  padding: 0;
+}
+
+.complaints-item {
+  background: #333;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.complaints-item div {
+  margin-bottom: 5px;
+}
