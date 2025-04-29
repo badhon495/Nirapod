@@ -65,7 +65,7 @@ function Signup() {
         else if (form.affiliation === 'City Corp') categories = 'city';
       }
       formData.append('categories', categories);
-      formData.append('phone', form.phoneNumber); // Ensure phone is sent as 'phone'
+      formData.append('phoneNumber', form.phoneNumber); // Changed from 'phone' to 'phoneNumber'
       Object.entries(form).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           if (key === 'utilityBillFile') {
