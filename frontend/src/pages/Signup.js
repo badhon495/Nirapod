@@ -65,6 +65,7 @@ function Signup() {
         else if (form.affiliation === 'City Corp') categories = 'city';
       }
       formData.append('categories', categories);
+      formData.append('phone', form.phoneNumber); // Ensure phone is sent as 'phone'
       Object.entries(form).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           if (key === 'utilityBillFile') {
@@ -73,8 +74,8 @@ function Signup() {
             formData.append('userPhoto', value);
           } else if (key === 'nidFile') {
             formData.append('nidPhoto', value);
-          } else if (key === 'userType' || key === 'affiliation') {
-            // skip, already handled
+          } else if (key === 'userType' || key === 'affiliation' || key === 'phoneNumber') {
+            // skip, already handled or mapped
           } else if (value instanceof File || (typeof value === 'string' && value !== '') || typeof value === 'number') {
             formData.append(key, value);
           }

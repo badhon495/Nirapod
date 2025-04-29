@@ -11,9 +11,10 @@ import ReachOut from './pages/ReachOut';
 import CreateComplain from './pages/CreateComplain';
 import Level from './pages/Level';
 import Tracker from './pages/Tracker';
-import ComplaintList from './pages/ComplaintList';
+import ComplaintList, { UserComplaintList } from './pages/ComplaintList';
 import ComplaintDetails from './pages/ComplaintDetails';
 import Investigate from './pages/Investigate';
+import Profile from './pages/Profile';
 
 function App() {
   const location = useLocation();
@@ -46,8 +47,10 @@ function App() {
         <Route path="/Level" element={<Level />} />
         <Route path="/tracker" element={<Tracker />} />
         <Route path="/complains" element={<ComplaintList />} />
+        <Route path="/my-complains" element={<UserComplaintList />} />
         <Route path="/complaint/:id" element={<ComplaintDetails />} />
         <Route path="/investigate" element={<Investigate />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </>
