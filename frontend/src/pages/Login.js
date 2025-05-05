@@ -24,7 +24,7 @@ function Login() {
         localStorage.setItem('categories', response.data.categories);
       }
       setIdentifier(form.phoneNumber); // Save identifier for OTP step
-      localStorage.setItem('nirapod_identifier', form.phoneNumber); // Store identifier for category check
+      // Do NOT set nirapod_identifier here, only after OTP verification
       setStep(2);
     } catch (err) {
       setMessage('Invalid credentials');
@@ -39,6 +39,11 @@ function Login() {
         identifier: identifier,
         otp: form.otp
       });
+      // Fetch NID and store it
+      const res = await axios.get(`/api/user/by-identifier?value=${encodeURIComponent(identifier)}`);
+      if (res.data && res.data.nid) {
+        localStorage.setItem('nirapod_identifier', res.data.nid);
+      }
       window.location.href = '/home';
     } catch (err) {
       setMessage('Invalid OTP');

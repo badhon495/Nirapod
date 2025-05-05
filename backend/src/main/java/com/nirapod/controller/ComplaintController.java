@@ -104,6 +104,40 @@ public class ComplaintController {
         }
     }
 
+    // Fetch all complaints for a specific user
+    @GetMapping("/complaints/user/{nid}")
+    public List<ComplaintResponse> getComplaintsByUser(@PathVariable String nid) {
+        List<Complaint> complaints = repository.findAll()
+            .stream()
+            .filter(c -> c.getNid().equals(nid))
+            .toList();
+        List<ComplaintResponse> responseList = new ArrayList<>();
+        for (Complaint c : complaints) {
+            String userName = userRepository.findByNid(c.getNid())
+                .map(u -> u.getName())
+                .orElse("");
+            responseList.add(new ComplaintResponse(
+                c.getTrackingId(),
+                userName,
+                c.getUrgency(),
+                c.getComplainTo(),
+                c.getDistrict(),
+                c.getArea(),
+                c.getTags(),
+                c.getDetails(),
+                c.getPhotos(),
+                c.isPostOnTimeline(),
+                c.getLocation(),
+                c.getUpdateNote(),
+                c.getStatus(),
+                c.getFollow(),
+                c.getComment(),
+                c.getTime()
+            ));
+        }
+        return responseList;
+    }
+
     // Update a complaint's status and update note
     @PutMapping("/complaint/update/{id}")
     public ResponseEntity<Complaint> updateComplaint(@PathVariable Integer id, @RequestBody Complaint updatedComplaint) {

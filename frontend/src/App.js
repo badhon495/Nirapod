@@ -11,10 +11,11 @@ import ReachOut from './pages/ReachOut';
 import CreateComplain from './pages/CreateComplain';
 import Level from './pages/Level';
 import Tracker from './pages/Tracker';
-import ComplaintList from './pages/ComplaintList';
+import ComplaintList, { UserComplaintList } from './pages/ComplaintList';
 import ComplaintDetails from './pages/ComplaintDetails';
 import Investigate from './pages/Investigate';
 import Notifications from './pages/Notifications';
+import Profile from './pages/Profile';
 
 function App() {
   const location = useLocation();

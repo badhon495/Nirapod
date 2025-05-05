@@ -61,6 +61,22 @@ const ComplaintService = {
         }
     },
     
+    getUserComplaints: async (nid) => {
+        const response = await axios.get(`/api/complaints/user/${nid}`);
+        return response.data.map(complaint => ({
+            ...complaint,
+            trackingId: complaint.trackingId,
+            complainBy: complaint.nid,
+            tag: complaint.tags,
+            subject: complaint.complainTo,
+            details: complaint.details,
+            time: complaint.time,
+            urgency: complaint.urgency,
+            status: complaint.statusText,
+            updateNote: complaint.updateNote
+        }));
+    },
+
     updateComplaint: async (id, complaintData) => {
         try {
             // Determine whether status is a number or string
