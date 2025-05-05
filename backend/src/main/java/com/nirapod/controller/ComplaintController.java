@@ -2,7 +2,9 @@ package com.nirapod.controller;
 
 import com.nirapod.dto.ComplaintResponse;
 import com.nirapod.model.Complaint;
+import com.nirapod.model.Notification;
 import com.nirapod.repository.ComplaintRepository;
+import com.nirapod.repository.NotificationRepository;
 import com.nirapod.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,9 @@ public class ComplaintController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @Value("${file.upload-dir:uploads}")
     private String uploadDir;
@@ -106,27 +111,44 @@ public class ComplaintController {
         Optional<Complaint> existingComplaint = repository.findById(id);
         if (existingComplaint.isPresent()) {
             Complaint complaint = existingComplaint.get();
+            boolean hasNewComment = false;
+            boolean hasNewUpdate = false;
 
-            // Robust status handling: accept both integer and string
+            // Check if there's a new comment
+            if (updatedComplaint.getComment() != null && !updatedComplaint.getComment().equals(complaint.getComment())) {
+                complaint.setComment(updatedComplaint.getComment());
+                hasNewComment = true;
+            }
+
+            // Check if there's a new update note
+            if (updatedComplaint.getUpdateNote() != null && !updatedComplaint.getUpdateNote().equals(complaint.getUpdateNote())) {
+                complaint.setUpdateNote(updatedComplaint.getUpdateNote());
+                hasNewUpdate = true;
+            }
+
+            // Update status if provided
             if (updatedComplaint.getStatus() != null) {
                 complaint.setStatus(updatedComplaint.getStatus());
             } else if (updatedComplaint.getStatusText() != null) {
-                String statusText = updatedComplaint.getStatusText();
-                if (statusText.equalsIgnoreCase("Solved")) {
-                    complaint.setStatus(2);
-                } else if (statusText.equalsIgnoreCase("In Progress")) {
-                    complaint.setStatus(1);
-                } else {
-                    complaint.setStatus(0); // Default to Unsolved
+                complaint.setStatusText(updatedComplaint.getStatusText());
+            }
+
+            // Save the complaint
+            Complaint updated = repository.save(complaint);
+
+            // Notify followers
+            if (hasNewComment || hasNewUpdate) {
+                String[] followers = complaint.getFollow() != null ? complaint.getFollow().split(",") : new String[0];
+                String tag = complaint.getTags() != null && !complaint.getTags().isEmpty() ? complaint.getTags() : "Untagged Complaint";
+                for (String follower : followers) {
+                    if (follower.trim().isEmpty()) continue;
+                    String message = hasNewComment ? 
+                        String.format("New comment on %s", tag) :
+                        String.format("New update on %s", tag);
+                    notificationRepository.save(new Notification(follower.trim(), id, message));
                 }
             }
 
-            complaint.setUpdateNote(updatedComplaint.getUpdateNote());
-            // Update comment if present
-            if (updatedComplaint.getComment() != null) {
-                complaint.setComment(updatedComplaint.getComment());
-            }
-            Complaint updated = repository.save(complaint);
             logger.info("Complaint with id {} updated successfully", id);
             return ResponseEntity.ok(updated);
         } else {

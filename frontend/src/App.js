@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Login from './pages/Login';
@@ -14,6 +14,7 @@ import Tracker from './pages/Tracker';
 import ComplaintList from './pages/ComplaintList';
 import ComplaintDetails from './pages/ComplaintDetails';
 import Investigate from './pages/Investigate';
+import Notifications from './pages/Notifications';
 
 function App() {
   const location = useLocation();
@@ -33,24 +34,27 @@ function App() {
   const hideNavbar = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/faq' || location.pathname === '/contact' || location.pathname === '/complain';
 
   return (
-    <>
+    <div style={{ minHeight: '100vh' }}>
       {!hideNavbar && <Navbar />}
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/CreateComplain" element={<CreateComplain />} />
-        <Route path="/ReachOut" element={<ReachOut />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/Level" element={<Level />} />
-        <Route path="/tracker" element={<Tracker />} />
-        <Route path="/complains" element={<ComplaintList />} />
-        <Route path="/complaint/:id" element={<ComplaintDetails />} />
-        <Route path="/investigate" element={<Investigate />} />
-        <Route path="/" element={<Navigate to="/login" />} />
-      </Routes>
-    </>
+      <main style={{ marginTop: '60px' }}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/CreateComplain" element={<CreateComplain />} />
+          <Route path="/ReachOut" element={<ReachOut />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/Level" element={<Level />} />
+          <Route path="/tracker" element={<Tracker />} />
+          <Route path="/complains" element={<ComplaintList />} />
+          <Route path="/complaint/:id" element={<ComplaintDetails />} />
+          <Route path="/investigate" element={<Investigate />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 

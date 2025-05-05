@@ -1,16 +1,18 @@
 .navbar-custom {
-  width: 100vw;
+  width: 100%;
   display: flex;
   align-items: center;
   height: 60px;
   padding: 0 0 0 12px;
   box-sizing: border-box;
   justify-content: space-between;
-  position: relative;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  z-index: 4000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #222831 !important;  /* Changed to match theme background */
+  border-bottom: none !important;  /* Removed border */
+  box-shadow: none !important;  /* Removed shadow */
+  z-index: 1000;
 }
 
 .navbar-logo-box {
@@ -100,9 +102,21 @@
 }
 
 .police-navbar {
-  composes: navbar-custom;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 0 0 12px;
+  box-sizing: border-box;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
   background: #1a237e !important; /* Police blue */
   color: #fff !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  z-index: 1000;
 }
 
 .police-navbar .navbar-logo {
@@ -180,4 +194,39 @@
     height: 36px;
     margin-right: 8px;
   }
+}
+
+.notification-link {
+  position: relative;
+}
+
+.notification-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.notification-count-inline {
+  background: #ff4444;
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-left: 8px;
+  font-weight: bold;
+  min-width: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
