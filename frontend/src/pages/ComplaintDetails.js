@@ -84,12 +84,8 @@ function ComplaintDetails() {
       const data = await ComplaintService.getComplaintById(id);
       setComplaint(data);
       if (data.comment) {
-        try {
-          const commentObj = JSON.parse(data.comment);
-          fetchCommentUserNames(commentObj);
-        } catch (err) {
-          console.error('Error parsing comments:', err);
-        }
+        const commentObj = parseJsonSafely(data.comment);
+        fetchCommentUserNames(commentObj);
       }
     } catch (err) {
       setError('Failed to fetch complaint details.');
