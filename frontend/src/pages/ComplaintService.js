@@ -6,12 +6,9 @@ const API_URL = '/api';
 const ComplaintService = {
     getAllComplaints: async () => {
         try {
-            const userCategory = localStorage.getItem('categories');
-            const response = await axios.get(`${API_URL}/complaints`, {
-                headers: {
-                    'X-User-Category': userCategory || ''
-                }
-            });
+            // Remove the user category header since we want to show all complaints
+            const response = await axios.get(`${API_URL}/complaints`);
+            
             // Transform data to match frontend expectations
             return response.data.map(complaint => ({
                 ...complaint,
@@ -20,10 +17,16 @@ const ComplaintService = {
                 tag: complaint.tags,
                 subject: complaint.complainTo,
                 details: complaint.details,
-                time: complaint.time, // <-- FIXED: use complaint.time from backend
+                time: complaint.time,
                 urgency: complaint.urgency,
                 status: complaint.statusText,
-                updateNote: complaint.updateNote
+                updateNote: complaint.updateNote,
+                userName: complaint.userName,
+                district: complaint.district,
+                area: complaint.area,
+                photos: complaint.photos,
+                comment: complaint.comment,
+                location: complaint.location
             }));
         } catch (error) {
             console.error('Error fetching complaints:', error);

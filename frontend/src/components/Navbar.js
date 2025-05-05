@@ -1,26 +1,38 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../image/logo.png';
+import axios from 'axios';
 import './Navbar.css';
+import logo from '../image/logo.png';
 
 function Navbar() {
   const categories = localStorage.getItem('categories');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const userNid = localStorage.getItem('nirapod_identifier');
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
+    if (userNid) {
+      fetchUnreadCount();
+      // Check for new notifications every minute
+      const interval = setInterval(fetchUnreadCount, 60000);
+      return () => clearInterval(interval);
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [userNid]);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const res = await axios.get(`/api/notifications/user/${userNid}/unread-count`);
+      setUnreadCount(res.data);
+    } catch (error) {
+      console.error('Error fetching unread notifications:', error);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('nirapod_identifier');
+    localStorage.removeItem('categories');
     navigate('/login');
   };
 
@@ -51,7 +63,6 @@ function Navbar() {
       </nav>
     );
   }
-
   return (
     <nav className="navbar-custom">
       <div className="navbar-logo-box">
@@ -68,6 +79,13 @@ function Navbar() {
           {dropdownOpen && (
             <div className="navbar-dropdown-menu">
               <Link to="/profile" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Update Profile</Link>
+              <Link to="/Complain" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Your Complains</Link>
+              <Link to="/notifications" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                Notifications
+                {unreadCount > 0 && (
+                  <span className="notification-count-inline">{unreadCount}</span>
+                )}
+              </Link>
               <Link to="/my-complains" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Your Complains</Link>
               <Link to="/notifications" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>Notification</Link>
               <button className="navbar-dropdown-item" onClick={handleLogout}>Logout</button>

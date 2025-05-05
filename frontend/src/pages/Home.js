@@ -61,8 +61,10 @@ function Home() {
     if (!userNid) return;
     try {
       const res = await axios.get(`/api/follows/user/${userNid}`);
-      setFollowed(res.data.map(f => f.postId));
-    } catch {}
+      setFollowed(res.data); // Now directly using the array of IDs
+    } catch (error) {
+      console.error('Error fetching followed posts:', error);
+    }
   };
 
   useEffect(() => {
@@ -141,21 +143,33 @@ function Home() {
   const handleFollow = async (trackingId) => {
     if (!userNid) return;
     try {
-      await axios.post('/api/follows/follow', null, { params: { postId: trackingId, userId: userNid } });
-      setFollowed(prev => [...prev, trackingId]); // Optimistically update
-    } catch (e) {
-      // Optionally show error
+      const res = await axios.post('/api/follows/follow', null, { 
+        params: { postId: trackingId, userId: userNid }
+      });
+      if (res.data.success) {
+        // Only update state if backend call was successful
+        setFollowed(prev => [...prev, trackingId]);
+      }
+    } catch (error) {
+      console.error('Error following post:', error);
     }
   };
+
   const handleUnfollow = async (trackingId) => {
     if (!userNid) return;
     try {
-      await axios.post('/api/follows/unfollow', null, { params: { postId: trackingId, userId: userNid } });
-      setFollowed(prev => prev.filter(id => id !== trackingId)); // Optimistically update
-    } catch (e) {
-      // Optionally show error
+      const res = await axios.post('/api/follows/unfollow', null, { 
+        params: { postId: trackingId, userId: userNid }
+      });
+      if (res.data.success) {
+        // Only update state if backend call was successful
+        setFollowed(prev => prev.filter(id => id !== trackingId));
+      }
+    } catch (error) {
+      console.error('Error unfollowing post:', error);
     }
   };
+
   const handleOpenComment = async (trackingId) => {
     setOpenComment(trackingId);
     setCommentInput('');
@@ -311,7 +325,7 @@ function Home() {
                 </div>
               </div>
               {photoArr.length > 0 && (
-                <img src={`http://localhost:8080/${photoArr[0].replace('/uploads/', '')}`} alt="Post" className="post-image" />
+                <img src={`http://localhost:8080/uploads/${photoArr[0].replace(/^\/?uploads\//, '')}`} alt="Post" className="post-image" />
               )}
               <div className="post-actions">
                 {followed.includes(post.trackingId) ? (
@@ -358,7 +372,7 @@ function Home() {
                     <h3>Photos</h3>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
                       {photoArr.map((p, i) => (
-                        <img key={i} src={`http://localhost:8080/${p.replace('/uploads/', '')}`} alt="photo" style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 8, border: '1px solid #ccc' }} />
+                        <img key={i} src={`http://localhost:8080/uploads/${p.replace(/^\/?uploads\//, '')}`} alt="photo" style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 8, border: '1px solid #ccc' }} />
                       ))}
                     </div>
                     <input type="file" multiple onChange={e => setPhotoFiles(Array.from(e.target.files))} />

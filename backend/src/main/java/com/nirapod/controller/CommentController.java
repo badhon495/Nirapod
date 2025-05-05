@@ -8,7 +8,7 @@ import java.util.*;
 public class CommentController {
     @GetMapping("/post/{postId}")
     public List<Map<String, Object>> getCommentsByPost(@PathVariable Long postId) {
-        // Dummy comments
+
         List<Map<String, Object>> comments = new ArrayList<>();
         Map<String, Object> comment = new HashMap<>();
         comment.put("id", 1L);
@@ -21,7 +21,7 @@ public class CommentController {
 
     @PostMapping
     public Map<String, Object> addComment(@RequestBody Map<String, Object> payload) {
-        // Dummy add comment
+        
         return Map.of("success", true);
     }
 }

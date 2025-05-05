@@ -1,5 +1,6 @@
 /* Home.css - homepage design based on provided image */
 .home-bg {
+  margin-top: 60px;  /* Add margin-top equal to navbar height */
   background: #222831;
   min-height: 100vh;
   padding: 0;
