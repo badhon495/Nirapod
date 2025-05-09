@@ -1,0 +1,155 @@
+.complain-bg {
+  min-height: 100vh;
+  background: #222831;
+  font-family: 'Fira Mono', monospace;
+  padding: 0;
+}
+
+.complain-form {
+  margin: 48px auto 0 auto;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.complain-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 0;
+}
+
+.complain-row label {
+  color: #fff;
+  font-size: 1.15rem;
+  min-width: 160px;
+  text-align: center;
+}
+
+.complain-input {
+  flex: 1;
+  background: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-family: inherit;
+  margin: 0;
+  outline: none;
+}
+
+.complain-textarea {
+  flex: 1;
+  background: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 16px 24px;
+  font-size: 1.08rem;
+  font-family: inherit;
+  min-height: 120px;
+  resize: vertical;
+  margin: 0;
+  outline: none;
+}
+
+.complain-urgency-note {
+  color: #bcbcbc;
+  font-size: 0.95rem;
+  margin-left: 12px;
+}
+
+.complain-photo-row {
+  align-items: center;
+  gap: 18px;
+}
+
+.complain-photo-btn {
+  background: #fff;
+  border-radius: 16px;
+  padding: 8px 8px;
+  font-size: 0.95rem;
+  color: #000 !important; /* The text color of the Add photos button is black for clear visibility on a white background */
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+  margin-right: 8px;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: inline-block;
+  text-align: center;
+}
+.complain-photo-btn:hover {
+  background: #2563eb;
+  color: #fff !important;
+}
+
+.complain-radio-label {
+  color: #fff;
+  font-size: 1.08rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.complain-submit-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.complain-submit-btn {
+  background: #fff;
+  color: #232831;
+  border: none;
+  border-radius: 16px;
+  padding: 12px 48px;
+  font-size: 1.15rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.complain-submit-btn:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+.complain-gps-btn {
+  background: #fff;
+  color: #000;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  margin-left: auto;
+}
+
+.complain-gps-btn:hover {
+  background: #9ACBD0;
+  transform: scale(1.05);
+}
+
+
+
+.complain-gps-btn:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 700px) {
+  .complain-form {
+    max-width: 98vw;
+    padding: 0 4vw;
+  }
+  .complain-row label {
+    min-width: 90px;
+    font-size: 1rem;
+  }
+  .complain-input, .complain-textarea {
+    font-size: 1rem;
+    padding: 10px 12px;
+  }
+}

@@ -1,0 +1,149 @@
+# PostgreSQL Common Commands
+
+# 1. Access the database
+PGPASSWORD=postgres psql -U postgres -h localhost -p 5432 -d nirapod
+
+# 2. List all databases
+\l
+
+# 3. Connect to a database
+\c nirapod
+
+# 4. List all tables
+\dt
+
+# 5. Describe a table (show columns)
+\d "User"
+\d "Usr_complain"
+
+# 6. Show all rows in a table
+SELECT * FROM "usr_user";
+SELECT * FROM "usr_complain";
+
+# 7. Insert a row into a table
+INSERT INTO "User" (
+  NID, Categories, Email, Password, Name, Present_address, Permanent_address, Phone, Passport, Passport_img, Driving_License, Driving_License_img, Utility_bill_customer_ID, Utility_bill_photo, User_photo, NID_photo, priv_user_ID, priv_user_ID_photo
+) VALUES (
+  '1234567890', 'user', 'test@example.com', 'test', 'Test User', 'Address1', 'Address2', '01700000001', 'P12345678', 'passport_img_url', 'DL123456789', 'dl_img_url', 'U123456', 'utility_img_url', 'user_img_url', 'nid_img_url', NULL, NULL
+);
+
+# 8. Update a row in a table
+UPDATE "User" SET Name = 'New Name' WHERE NID = '1234567890';
+
+# 9. Delete a row from a table
+DELETE FROM "User" WHERE NID = '1234567890';
+
+# 10. Add a new column to a table
+ALTER TABLE "User" ADD COLUMN phone TEXT;
+
+# 11. Remove a column from a table
+ALTER TABLE "User" DROP COLUMN phone;
+
+# 12. Drop a table
+DROP TABLE "User";
+
+# 13. Exit psql
+\q
+
+# 14. Get help inside psql
+\?
+
+# Note: Commands starting with \ are run inside the psql prompt.
+
+# 15. Frontend
+cd frontend
+npm install
+npm install leaflet
+npm install leaflet-control-geocoder
+npm install @react-oauth/google
+npm start
+
+# 16. Backend
+cd backend
+mvn clean install
+mvn spring-boot:run
+
+
+##run this in the backend  
+npm install ws
+
+
+## live chat server
+node livechat-server.js
+# 16. Press Q to exit from the psql prompt
+
+project name 
+
+CSE470_Nirapod-all-in-fast-response-service-
+
+
+
+# DELETE SOME DATA FROM DATABASE 
+
+
+-- Delete related rows in usr_complain
+DELETE FROM "usr_complain" WHERE "nid" = '1212121212';
+-- Now delete the user
+DELETE FROM "usr_user" WHERE "nid" = '1212121212';
+
+
+
+
+set JAVA_HOME=C:\Program Files\Java\jdk-17
+set PATH=%JAVA_HOME%\bin;%PATH%
+
+
+
+
+
+
+
+
+-- =================================================================
+-- GENERATE N numbers of dummy data for usr_complain fied--
+
+-- use postgres query tool after selecting nirapod database
+-- =================================================================
+-- Generate 100 dummy rows for the usr_complain table
+DO $$
+DECLARE
+    i INT;
+    max_tracking_id INT;
+    urgency_levels TEXT[] := ARRAY['High', 'Medium', 'Low'];
+    complain_to_options TEXT[] := ARRAY['police', 'fire', 'city', 'animal'];
+    districts TEXT[] := ARRAY['Dhaka', 'Chattogram', 'Khulna', 'Barisal', 'Rajshahi', 'Sylhet', 'Rangpur', 'Mymensingh'];
+    dhaka_areas TEXT[] := ARRAY['Dhanmondi', 'Gulshan', 'Mirpur', 'Uttara', 'Banani', 'Mohammadpur', 'Motijheel', 'Bashundhara', 'Tejgaon', 'Shahbagh', 'Farmgate', 'Paltan', 'Khilgaon', 'Badda', 'Rampura', 'Shyamoli', 'Malibagh', 'Mohakhali', 'Jatrabari', 'Savar', 'Keraniganj', 'Demra', 'Kamalapur', 'Hazaribagh', 'Lalbagh', 'Azimpur', 'Khilkhet', 'Turag', 'Adabor', 'Cantonment', 'Dohar', 'Nawabganj'];
+    tags TEXT[] := ARRAY['Theft', 'Chintai', 'Brac taka nia gese', 'Robbery', 'Accident'];
+    details TEXT[] := ARRAY['aaaaaaaaaaaaaaaaa', 'sssssssssss', 'aaaaaaaaaaaaaaaaaaaaaaaaaaa', 'sssssssssssssssss', 'aaaaaaaaaaaaa'];
+    photos TEXT[] := ARRAY['/uploads/1746460542231_image-39.jpg', '/uploads/1746461176556_image-39.jpg', '/uploads/1746461570748_image-59.jpg', '/uploads/1746461617903_image-21.jpg', '/uploads/1746461649337_image-40.jpg'];
+    locations TEXT[] := ARRAY['23.7710948,90.3542522', '23.7808875,90.2792371', '23.810331,90.412521', '23.756634,90.389012', '23.728783,90.393791'];
+BEGIN
+    -- Get the current maximum tracking_id in the table
+    SELECT COALESCE(MAX(tracking_id), 0) INTO max_tracking_id FROM "usr_complain";
+
+    FOR i IN 1..1000 LOOP
+        INSERT INTO "usr_complain" (
+            tracking_id, nid, urgency, complain_to, district, area, tags, details, photos, post_on_timeline, location, note, status, follow, comment, time, report, update
+        ) VALUES (
+            max_tracking_id + i, -- Ensure unique tracking_id
+            '2121212121', -- nid
+            urgency_levels[FLOOR(RANDOM() * 3 + 1)], -- urgency
+            complain_to_options[FLOOR(RANDOM() * 4 + 1)], -- complain_to
+            districts[FLOOR(RANDOM() * 8 + 1)], -- district
+            dhaka_areas[FLOOR(RANDOM() * 32 + 1)], -- area
+            tags[FLOOR(RANDOM() * 5 + 1)], -- tags
+            details[FLOOR(RANDOM() * 5 + 1)], -- details
+            photos[FLOOR(RANDOM() * 5 + 1)], -- photos
+            TRUE, -- post_on_timeline
+            locations[FLOOR(RANDOM() * 5 + 1)], -- location
+            NULL, -- note
+            0, -- status
+            '2121212121', -- follow
+            NULL, -- comment
+            NOW() + (i || ' minutes')::INTERVAL, -- time (as timestamp)
+            NULL, -- report
+            NULL -- update
+        );
+    END LOOP;
+END $$;
+
