@@ -35,3 +35,4 @@ backend/src/main/resources/application-local.properties
 node_modules
 
 log.txt
+log.txt
