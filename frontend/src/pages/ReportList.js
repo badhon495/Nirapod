@@ -52,7 +52,7 @@ const ReportList = () => {
     const fetchReports = async () => {
         try {
             setLoading(true);
-            const res = await axios.get('/api/complaints/reported');
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/complaints/reported`);
             setReports(res.data);
             setLoading(false);
         } catch (err) {
@@ -66,7 +66,7 @@ const ReportList = () => {
         const names = [];
         for (const nid of nids) {
             try {
-                const res = await axios.get(`/api/user/by-identifier?value=${nid}`);
+                const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/user/by-identifier?value=${nid}`);
                 names.push(res.data.name || nid);
             } catch {
                 names.push(nid);

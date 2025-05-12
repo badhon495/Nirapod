@@ -14,7 +14,7 @@ function Complain() {
     setLoading(true);
     setMessage('');
     try {
-      await fetch('/api/complain', {
+      await fetch(`${process.env.REACT_APP_API_URL}/api/complain`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

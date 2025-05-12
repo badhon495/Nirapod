@@ -25,7 +25,7 @@ function Profile() {
   const [pwMsg, setPwMsg] = useState('');
 
   useEffect(() => {
-    axios.get(`/api/user/${userId}`).then(res => {
+    axios.get(`${process.env.REACT_APP_API_URL}/api/user/${userId}`).then(res => {
       setUser(res.data);
       setForm({
         name: res.data.name || '',
@@ -56,7 +56,7 @@ function Profile() {
     Object.entries(form).forEach(([key, value]) => formData.append(key, value));
     Object.entries(files).forEach(([key, value]) => { if (value) formData.append(key, value); });
     try {
-      await axios.put(`/api/user/${userId}/profile`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/user/${userId}/profile`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
       setMessage('Profile updated successfully.');
     } catch {
       setMessage('Failed to update profile.');
@@ -72,7 +72,7 @@ function Profile() {
       return;
     }
     try {
-      await axios.post(`/api/user/${userId}/change-password`, pwForm);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/user/${userId}/change-password`, pwForm);
       setPwMsg('Password changed successfully.');
       setPwForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
     } catch {

@@ -25,7 +25,7 @@ function Signup() {
   const handleGoogleSignup = async (credentialResponse) => {
     try {
       const idToken = credentialResponse.credential;
-      const res = await axios.post('/api/auth/google-signup', { idToken });
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/google-signup`, { idToken });
       if (res.data && res.data.user) {
         setForm(f => ({
           ...f,
@@ -66,7 +66,7 @@ function Signup() {
         return;
       }
       try {
-        await axios.post('/api/auth/send-otp', {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/send-otp`, {
           email: form.email,
         });
         setStep(2);
@@ -116,7 +116,7 @@ function Signup() {
         }
       });
       try {
-        await axios.post('/api/auth/signup', formData, {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signup`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
           maxContentLength: 20 * 1024 * 1024, // 20MB
           maxBodyLength: 20 * 1024 * 1024 // 20MB

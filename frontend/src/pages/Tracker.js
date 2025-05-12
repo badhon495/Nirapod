@@ -22,10 +22,10 @@ function Tracker() {
         return;
       }
       // 2. Fetch user info to get NID
-      const userRes = await axios.get(`/api/user/by-identifier?value=${encodeURIComponent(identifier)}`);
+      const userRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/user/by-identifier?value=${encodeURIComponent(identifier)}`);
       const userNid = userRes.data.nid;
       // 3. Fetch complain by trackingId and NID
-      const res = await axios.get(`/api/complain/${trackingId}?nid=${encodeURIComponent(userNid)}`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/complain/${trackingId}?nid=${encodeURIComponent(userNid)}`);
       setComplain(res.data);
     } catch (err) {
       setError('Complain not found for this Tracking ID.');
