@@ -1,0 +1,13 @@
+[build]
+  base = "."
+  publish = "build"
+  command = "npm run build"
+
+[build.environment]
+  CI = "false"
+
+# Uncomment below if you want to redirect all requests to index.html (for React Router)
+# [[redirects]]
+#   from = "/*"
+#   to = "/index.html"
+#   status = 200
