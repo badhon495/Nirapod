@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 const searchOptions = [
   { label: 'NID', value: 'nid', placeholder: 'Enter NID' },
   { label: 'Driving License', value: 'drivingLicence', placeholder: 'Enter Driving License' },
@@ -64,7 +67,7 @@ function Investigate() {
             {(() => {
               let photo = user.userPhoto || '';
               if (photo.startsWith('/uploads/')) photo = photo.replace('/uploads/', '');
-              const backendUrl = 'http://localhost:8080';
+              const backendUrl = process.env.REACT_APP_API_URL;
               const src = photo ? `${backendUrl}/${photo}` : '';
               return src ? (
                 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: 18 }}>
@@ -85,7 +88,7 @@ function Investigate() {
             <div style={{ marginBottom: 8 }}><b>Utility Bill Photo :</b> {(() => {
               let photo = user.utilityBillPhoto || '';
               if (photo.startsWith('/uploads/')) photo = photo.replace('/uploads/', '');
-              const backendUrl = 'http://localhost:8080';
+              const backendUrl = process.env.REACT_APP_API_URL;
               const src = photo ? `${backendUrl}/${photo}` : '';
               return src ? (
                 <a href={src} target="_blank" rel="noopener noreferrer" style={{ color: '#22c55e', textDecoration: 'underline' }}>View</a>
@@ -97,7 +100,7 @@ function Investigate() {
             <div style={{ marginBottom: 8 }}><b>NID Photo :</b> {(() => {
               let photo = user.nidPhoto || '';
               if (photo.startsWith('/uploads/')) photo = photo.replace('/uploads/', '');
-              const backendUrl = 'http://localhost:8080';
+              const backendUrl = process.env.REACT_APP_API_URL;
               const src = photo ? `${backendUrl}/${photo}` : '';
               return src ? (
                 <a href={src} target="_blank" rel="noopener noreferrer" style={{ color: '#22c55e', textDecoration: 'underline' }}>View</a>

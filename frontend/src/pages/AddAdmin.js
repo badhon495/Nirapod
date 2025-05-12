@@ -3,6 +3,9 @@ import axios from 'axios';
 import './Signup.css';
 import logo from '../image/logo.png';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 const initialForm = {
   name: '', phoneNumber: '', email: '', password: '', confirmPassword: '',
   otp: '', nid: '', presentAddress: '', permanentAddress: '',

@@ -5,6 +5,9 @@ import { GoogleLogin, googleLogout } from '@react-oauth/google';
 import logo from '../image/logo.png';
 import googleIcon from '../image/google-icon.png';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 function Login() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({ phoneNumber: '', password: '', otp: '', forgotEmail: '' });

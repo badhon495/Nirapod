@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 function Tracker() {
   const [trackingId, setTrackingId] = useState('');
   const [complain, setComplain] = useState(null);

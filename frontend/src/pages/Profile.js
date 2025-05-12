@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 function Profile() {
   const userId = localStorage.getItem('nirapod_identifier'); // Use NID from localStorage
   const [user, setUser] = useState(null);
@@ -88,7 +91,7 @@ function Profile() {
         <label htmlFor="photo" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 12, minHeight: 130 }}>
           {user.userPhoto && user.userPhoto !== 'null' && user.userPhoto !== '' ? (
             <img
-              src={user.userPhoto.startsWith('/uploads/') ? `http://localhost:8080/${user.userPhoto.replace('/uploads/', '')}` : `http://localhost:8080/${user.userPhoto}`}
+              src={user.userPhoto && user.userPhoto.startsWith('/uploads/') ? `${process.env.REACT_APP_API_URL}/${user.userPhoto.replace('/uploads/', '')}` : user.userPhoto ? `${process.env.REACT_APP_API_URL}/${user.userPhoto}` : ''}
               alt="Profile"
               style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', marginBottom: 12, border: '2px solid #232b36' }}
             />

@@ -4,6 +4,9 @@ import logo from '../image/logo.png';
 import './Navbar.css';
 import axios from 'axios';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 function Navbar() {
   const categories = localStorage.getItem('categories');
   const [dropdownOpen, setDropdownOpen] = useState(false);

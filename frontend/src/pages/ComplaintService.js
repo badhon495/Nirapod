@@ -1,6 +1,9 @@
 // src/services/ComplaintService.js
 import axios from 'axios';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 const API_URL = '/api';
 
 const ComplaintService = {

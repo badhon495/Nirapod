@@ -3,6 +3,9 @@ import axios from 'axios';
 import './Login.css';
 import logo from '../image/logo.png';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 function LiveChat() {
   const [messages, setMessages] = useState(() => {
     // Load messages from sessionStorage if available

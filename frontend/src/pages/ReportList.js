@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ComplaintList.css';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 const ReportList = () => {
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);

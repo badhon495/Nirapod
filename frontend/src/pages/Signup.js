@@ -5,6 +5,9 @@ import logo from '../image/logo.png';
 import { GoogleLogin, googleLogout } from '@react-oauth/google';
 import googleIcon from '../image/google-icon.png';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 const initialForm = {
   name: '', phoneNumber: '', email: '', password: '', confirmPassword: '',
   otp: '', userType: 'NORMAL', nid: '', presentAddress: '', permanentAddress: '',

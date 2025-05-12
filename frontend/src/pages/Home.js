@@ -4,6 +4,9 @@ import ComplaintService from './ComplaintService';
 import axios from 'axios';
 import './Home.css';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 const urgencyOptions = [
   { label: 'All', value: '' },
   { label: 'High', value: 'High' },
@@ -404,7 +407,7 @@ function Home() {
                 </div>
               </div>
               {photoArr.length > 0 && (
-                <img src={`http://localhost:8080/${photoArr[0].replace('/uploads/', '')}`} alt="Post" className="post-image" />
+                <img src={`${process.env.REACT_APP_API_URL}/${photoArr[0].replace('/uploads/', '')}`} alt="Post" className="post-image" />
               )}
               <div className="post-actions">
                 {followed.includes(post.trackingId) ? (
@@ -451,7 +454,7 @@ function Home() {
                     <h3>Photos</h3>
                     <div className="photo-box">
                       {photoArr.map((p, i) => (
-                        <img key={i} src={`http://localhost:8080/${p.replace('/uploads/', '')}`} alt="" className="photo-item" />
+                        <img key={i} src={`${process.env.REACT_APP_API_URL}/${p.replace('/uploads/', '')}`} alt="" className="photo-item" />
                       ))}
                     </div>
                     <input type="file" multiple onChange={e => setPhotoFiles(Array.from(e.target.files))} />

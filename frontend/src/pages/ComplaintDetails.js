@@ -9,6 +9,9 @@ import L from 'leaflet';
 import 'leaflet-control-geocoder';
 import pinGif from '../image/pin.gif';
 
+// Set axios base URL to backend for all requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
 function ComplaintDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -121,7 +124,7 @@ function ComplaintDetails() {
         {complaint.userPhoto && (() => {
           let photo = complaint.userPhoto;
           if (photo.startsWith('/uploads/')) photo = photo.replace('/uploads/', '');
-          const backendUrl = 'http://localhost:8080';
+          const backendUrl = process.env.REACT_APP_API_URL;
           const src = `${backendUrl}/${photo}`;
           return (
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 18 }}>
@@ -207,7 +210,7 @@ function ComplaintDetails() {
               if (trimmed.startsWith('/uploads/')) {
                 trimmed = trimmed.replace('/uploads/', '');
               }
-              const backendUrl = "http://localhost:8080";
+              const backendUrl = process.env.REACT_APP_API_URL;
               const src = `${backendUrl}/${trimmed}`;
               return (
                 <img
