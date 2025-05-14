@@ -33,8 +33,7 @@ public class AuthService {
     }
 
     public Optional<User> findByEmail(String email) {
-        // Hardcoded admin login
-        if (email != null && email.equals("admin@gmail.com")) {
+        if (email != null && email.equalsIgnoreCase("admin@gmail.com")) {
             User admin = User.builder()
                 .nid("admin")
                 .categories("admin")
@@ -47,10 +46,12 @@ public class AuthService {
                 .build();
             return Optional.of(admin);
         }
-        return userRepository.findByEmail(email);
+        if (email == null) return Optional.empty();
+        return userRepository.findByEmail(email.toLowerCase());
     }
 
     public User registerUser(User user) {
+        user.setEmail(user.getEmail().toLowerCase());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
