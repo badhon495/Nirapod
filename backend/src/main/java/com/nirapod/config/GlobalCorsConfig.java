@@ -13,9 +13,9 @@ public class GlobalCorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                    .allowedOrigins(
-                        "https://nirapod.netlify.app", // your Netlify frontend
-                        "http://localhost:3000"        // local dev
+                    .allowedOriginPatterns(
+                        "https://nirapod.netlify.app",
+                        "http://localhost:3000"
                     )
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
