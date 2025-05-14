@@ -18,7 +18,7 @@ public class GlobalCorsConfig {
                         "http://localhost:3000"
                     )
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                    .allowedHeaders("Authorization", "Content-Type", "X-Requested-With", "Accept")
+                    .allowedHeaders("*")
                     .exposedHeaders("Authorization")
                     .allowCredentials(true);
             }
