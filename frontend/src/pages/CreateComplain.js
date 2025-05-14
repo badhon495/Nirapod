@@ -86,6 +86,7 @@ function Complain() {
     formData.append('details', form.details);
     formData.append('postOnTimeline', form.postOnTimeline ? '1' : '0');
     formData.append('location', form.location);
+    formData.append('time', new Date().toISOString());
     if (form.photos && form.photos.length > 0) {
       for (let i = 0; i < form.photos.length; i++) {
         formData.append('photos', form.photos[i]);
