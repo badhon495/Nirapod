@@ -1,8 +1,24 @@
 {
-  "dependencies": {
-    "@react-oauth/google": "^0.12.1",
-    "leaflet": "^1.9.4",
-    "leaflet-control-geocoder": "^3.1.0",
-    "ws": "^8.18.2"
+  "name": "nirapod",
+  "version": "1.0.0",
+  "description": "Nirapod full-stack application",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm install --workspaces",
+    "postinstall": "echo 'All dependencies installed successfully!'",
+    "start:frontend": "npm run start --workspace=frontend",
+    "start:backend": "npm run start --workspace=backend",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "build:frontend": "npm run build --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "clean": "rm -rf node_modules frontend/node_modules backend/node_modules",
+    "reinstall": "npm run clean && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }

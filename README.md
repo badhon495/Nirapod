@@ -1,5 +1,17 @@
-# Nirapod Project
+<div align="center">
+
+# Nirapod
+
+![React](https://img.shields.io/badge/React-18+-61DAFB?style=flat-square&logo=react)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-6DB33F?style=flat-square&logo=spring-boot)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-316192?style=flat-square&logo=postgresql)
+![Maven](https://img.shields.io/badge/Maven-C71A36?style=flat-square&logo=apache-maven)
+
 This is a full-stack web application built with Spring Boot for the backend and React for the frontend. The application includes features such as user authentication, file uploads, live location sharing and a live chat system. User can complain to the privileged person and the privileged person takes action on the complaint.
+
+
+
+</div>
 
 ## Project Structure
 
@@ -7,7 +19,6 @@ This is a full-stack web application built with Spring Boot for the backend and 
 - frontend/ (React frontend)
 - db_creation.sh (Postgres DB setup)
 
----
 
 ## Backend Setup (Spring Boot)
 
@@ -15,17 +26,21 @@ This is a full-stack web application built with Spring Boot for the backend and 
    ```bash
    cd backend
    ```
-2. Build the project (requires Java 17+ and Maven):
+2. Copy the example environment file:
+   ```bash
+   cp src/main/resources/application.properties.example src/main/resources/application.properties
+   ```
+3. Edit `application.properties` to set your database, email, and Google credentials.
+4. Build the project (requires Java 17+ and Maven):
    ```bash
    mvn clean install
    ```
-3. Run the backend:
+5. Run the backend:
    ```bash
    mvn spring-boot:run
    ```
-4. The backend will run on `http://localhost:8080` by default.
+6. The backend will run on `http://localhost:8080` by default.
 
----
 
 ## Frontend Setup (React)
 
@@ -33,27 +48,16 @@ This is a full-stack web application built with Spring Boot for the backend and 
    ```bash
    cd frontend
    ```
-2. Install dependencies:
+2. Copy the example environment file:
    ```bash
-   npm install
+   cp .env.example .env
    ```
-3. Install Map dependencies:
-   ```bash
-   npm install leaflet
-
-   npm install leaflet-control-geocoder
-   ```
-
-4. Install Google auth dependencies:
-   ```bash
-   npm install @react-oauth/google
-   ```
-
-5. Start the frontend:
+3. Edit the `.env` file to set your environment variables.
+4. Start the frontend (dependencies are already installed from root):
    ```bash
    npm start
    ```
-6. The frontend will run on `http://localhost:3000` by default.
+5. The frontend will run on `http://localhost:3000` by default.
 
 ---
 
@@ -63,16 +67,10 @@ This is a full-stack web application built with Spring Boot for the backend and 
    ```bash
    cd backend
    ```
-2. Install the required package:
+2. Start the live chat server (ws package is already installed from root):
    ```bash
-   - Install the required package:
-     ```bash
-     npm install ws
-     ```
-   - Start the live chat server:
-     ```bash
-     node livechat-server.js
-     ```
+   node livechat-server.js
+   ```
 
 ---
 
@@ -104,7 +102,6 @@ To set up your environment variables and configuration files:
      ```
    - Edit `.env` and fill in your real secrets and environment variables.
 
----
 
 ## Notes
 - Update backend `application.properties` for DB credentials if needed.
