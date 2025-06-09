@@ -124,8 +124,8 @@ function ComplaintDetails() {
           const backendUrl = 'http://localhost:8080';
           const src = `${backendUrl}/${photo}`;
           return (
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 18 }}>
-              <img src={src} alt="User" style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', border: '3px solid #fff', background: '#eee' }} />
+            <div className="user-photo-container">
+              <img src={src} alt="User" className="user-photo" />
             </div>
           );
         })()}
@@ -161,27 +161,26 @@ function ComplaintDetails() {
         <div className="detail-row">
           <span className="detail-label">Location : </span>
           <span className="detail-value">{complaint.location}</span>
-        </div>
-
-        <div className="detail-row">
+        </div>        <div className="detail-row">
           <span className="detail-label">Map :</span>
-          <div className="detail-value" style={{ height: '300px', width: '100%', border: '1px solid #ccc', borderRadius: '8px' }}>
-            {(() => {
-              const location = complaint.location;
-              if (!location) return <div>Location not found in the map</div>;
+          <div className="detail-value">
+            <div className="map-container">
+              {(() => {
+                const location = complaint.location;
+                if (!location) return <div>Location not found in the map</div>;
 
-              const [latitude, longitude] = location.split(',').map(coord => parseFloat(coord.trim()));
+                const [latitude, longitude] = location.split(',').map(coord => parseFloat(coord.trim()));
 
-              if (!isNaN(latitude) && !isNaN(longitude)) {
-                return (
-                  <div id="map" style={{ height: '100%', width: '100%' }}></div>
-                );
-              } else {
-                return <div>Please Use GPS Coordinates to load the map correctly !</div>;
-              }
-            })()}
+                if (!isNaN(latitude) && !isNaN(longitude)) {
+                  return (
+                    <div id="map"></div>
+                  );
+                } else {
+                  return <div>Please Use GPS Coordinates to load the map correctly !</div>;
+                }
+              })()}
+            </div>
           </div>
-
         </div>
         <div className="detail-row">
           <span className="detail-label">Timestamp :</span>
@@ -200,25 +199,27 @@ function ComplaintDetails() {
         </div>
         <div className="detail-row">
           <span className="detail-label">Photos :</span>
-          <span className="detail-value">
-            {complaint.photos && complaint.photos.split(',').map((photo, idx) => {
-              let trimmed = photo.trim();
-              // Do not include /uploads in the image URL
-              if (trimmed.startsWith('/uploads/')) {
-                trimmed = trimmed.replace('/uploads/', '');
-              }
-              const backendUrl = "http://localhost:8080";
-              const src = `${backendUrl}/${trimmed}`;
-              return (
-                <img
-                  key={idx}
-                  src={src}
-                  alt={`complaint-photo-${idx}`}
-                  style={{ maxWidth: 180, maxHeight: 180, marginRight: 8, borderRadius: 8, border: '1px solid #ccc' }}
-                />
-              );
-            })}
-          </span>
+          <div className="detail-value">
+            <div className="photos-container">
+              {complaint.photos && complaint.photos.split(',').map((photo, idx) => {
+                let trimmed = photo.trim();
+                // Do not include /uploads in the image URL
+                if (trimmed.startsWith('/uploads/')) {
+                  trimmed = trimmed.replace('/uploads/', '');
+                }
+                const backendUrl = "http://localhost:8080";
+                const src = `${backendUrl}/${trimmed}`;
+                return (
+                  <img
+                    key={idx}
+                    src={src}
+                    alt={`complaint-photo-${idx}`}
+                    className="complaint-photo"
+                  />
+                );
+              })}
+            </div>
+          </div>
         </div>
         {/* Current Status */}
         <div className="detail-row">
@@ -235,15 +236,19 @@ function ComplaintDetails() {
           </div>
         )}
         {/* Update Component and Admin Delete Buttons */}
-        <div className="update-complaint-container" style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+        <div className="update-complaint-container">
           <UpdateComplaint 
             complaint={complaint} 
             onUpdateSuccess={handleUpdateSuccess} 
           />
           {isAdmin && (
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 16, marginTop: 0 }}>
-              <button className="update-button" style={{ background: '#f59e42' }} onClick={handleDeleteReport}>Delete Report</button>
-              <button className="update-button" style={{ background: '#e74c3c' }} onClick={handleDeletePost}>Delete Post</button>
+            <div className="admin-actions">
+              <button className="admin-btn delete-report-btn" onClick={handleDeleteReport}>
+                Delete Report
+              </button>
+              <button className="admin-btn delete-post-btn" onClick={handleDeletePost}>
+                Delete Post
+              </button>
             </div>
           )}
         </div>

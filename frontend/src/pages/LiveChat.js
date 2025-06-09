@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import './Login.css';
+import './LiveChat.css';
 import logo from '../image/logo.png';
 
 function LiveChat() {
@@ -126,49 +126,80 @@ function LiveChat() {
   };
 
   return (
-    <div className="login-bg">
-      <div className="login-split">
-        <div className="login-left">
-          <img src={logo} alt="Nirapod Logo" className="login-logo-img" />
-          <div className="login-logo">Nirapod</div>
-          <div className="login-tagline">Global Live Chat</div>
+    <div className="livechat-container">
+      <div className="livechat-header">
+        <div className="livechat-logo-section">
+          <img src={logo} alt="Nirapod Logo" className="livechat-logo-img" />
+          <div className="livechat-title">
+            <div className="livechat-logo-text">Nirapod</div>
+            <div className="livechat-subtitle">Global Live Chat</div>
+          </div>
         </div>
-        <div className="login-right">
-          <div className="login-form-box" style={{ minHeight: 420, maxWidth: 420 }}>
-            <h2>Live Chat</h2>
-            {!joined ? (
-              <div style={{ color: '#aaa', textAlign: 'center', marginTop: 40 }}>
-                Loading chat...
+        <div className="livechat-status">
+          <div className={`connection-indicator ${joined ? 'connected' : 'connecting'}`}></div>
+          <span className="connection-text">{joined ? 'Connected' : 'Connecting...'}</span>
+        </div>
+      </div>
+
+      <div className="livechat-main">
+        <div className="livechat-box">
+          <div className="livechat-header-bar">
+            <h2 className="livechat-title-text">Live Chat</h2>
+            {joined && (
+              <div className="user-info">
+                Welcome, <span className="username-display">{username}</span>
               </div>
-            ) : (
-              <>
-                <div style={{ background: '#1e2233', borderRadius: 12, padding: 12, height: 260, overflowY: 'auto', marginBottom: 16, color: '#fff', fontSize: 15 }}>
-                  {messages.length === 0 && <div style={{ color: '#aaa', textAlign: 'center' }}>No messages yet. Say hi!</div>}
-                  {messages.map((msg, i) => (
-                    <div key={i} style={{ marginBottom: 8, wordBreak: 'break-word' }}>
-                      <span style={{ color: '#60a5fa', fontWeight: 600 }}>{msg.user}</span>
-                      <span style={{ color: '#aaa', fontSize: 12, marginLeft: 8 }}>{msg.time}</span>
-                      <div style={{ marginLeft: 8 }}>{msg.text}</div>
+            )}
+          </div>
+
+          {!joined ? (
+            <div className="loading-state">
+              <div className="loading-spinner"></div>
+              <div className="loading-text">Loading chat...</div>
+            </div>
+          ) : (
+            <>
+              <div className="chat-messages">
+                {messages.length === 0 && (
+                  <div className="empty-chat">
+                    <div className="empty-icon">💬</div>
+                    <div className="empty-text">No messages yet. Say hi!</div>
+                  </div>
+                )}
+                {messages.map((msg, i) => (
+                  <div key={i} className="message-item">
+                    <div className="message-header">
+                      <span className="message-user">{msg.user}</span>
+                      <span className="message-time">{msg.time}</span>
                     </div>
-                  ))}
-                  <div ref={chatEndRef} />
-                </div>
-                <form onSubmit={handleSend} style={{ display: 'flex', gap: 8 }}>
+                    <div className="message-text">{msg.text}</div>
+                  </div>
+                ))}
+                <div ref={chatEndRef} />
+              </div>
+              
+              <form onSubmit={handleSend} className="message-input-form">
+                <div className="input-container">
                   <input
+                    type="text"
                     placeholder="Type a message..."
                     value={input}
                     onChange={e => setInput(e.target.value)}
-                    style={{ flex: 1 }}
+                    className="message-input"
                     autoFocus
                   />
-                  <button className="login-btn" type="submit" style={{ minWidth: 80 }}>Send</button>
-                </form>
-              </>
-            )}
-          </div>
+                  <button type="submit" className="send-button">
+                    <span className="send-icon">➤</span>
+                    Send
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
         </div>
       </div>
-      <footer className="login-footer">
+
+      <footer className="livechat-footer">
         <a href="/faq" className="footer-link">FAQ</a>
         <a href="/ReachOut" className="footer-link">Reach out</a>
         <a href="/contact" className="footer-link">Contact</a>

@@ -1,4 +1,4 @@
-import axios from 'axios';
+// filepath: /home/badhon/Documents/Nirapod/frontend/src/index.js
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -62,21 +62,6 @@ const AppWithProviders = () => {
     </BrowserRouter>
   );
 };
-
-// Configure axios defaults
-// Set the base URL for API requests
-axios.defaults.baseURL = 'http://localhost:8080';
-
-// Add request interceptor to include authentication headers
-axios.interceptors.request.use(
-  (config) => {
-    // You can add auth headers here if needed
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<AppWithProviders />);

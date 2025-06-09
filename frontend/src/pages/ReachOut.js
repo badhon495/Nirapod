@@ -14,15 +14,21 @@ function Complain() {
     setLoading(true);
     setMessage('');
     try {
-      await fetch('/api/complain', {
+      const response = await fetch('/api/complain', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
       });
-      setMessage('Your complaint has been submitted. Thank you!');
-      setForm({ name: '', phone: '', email: '', details: '' });
-    } catch {
-      setMessage('Failed to submit complaint. Please try again.');
+      
+      if (response.ok) {
+        setMessage('✅ Your complaint has been submitted successfully. Thank you!');
+        setForm({ name: '', phone: '', email: '', details: '' });
+      } else {
+        setMessage('❌ Failed to submit complaint. Please try again.');
+      }
+    } catch (error) {
+      console.error('Submit error:', error);
+      setMessage('❌ Network error. Please check your connection and try again.');
     }
     setLoading(false);
   };
@@ -37,15 +43,51 @@ function Complain() {
         </div>
         <div className="complain-right">
           <div className="complain-form-box">
-            <h2>Submit a Complaint</h2>
+            <h2>📝 Submit a Complaint</h2>
             <form onSubmit={handleSubmit}>
-              <input name="name" placeholder="Your Name" value={form.name} onChange={handleChange} required />
-              <input name="phone" placeholder="Phone Number" value={form.phone} onChange={handleChange} required />
-              <input name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-              <textarea name="details" placeholder="Details about your complaint" value={form.details} onChange={handleChange} required rows={4} />
-              <button className="complain-btn" type="submit" disabled={loading}>{loading ? 'Submitting...' : 'Submit'}</button>
+              <input 
+                name="name" 
+                placeholder="Enter your full name" 
+                value={form.name} 
+                onChange={handleChange} 
+                required 
+                minLength={2}
+              />
+              <input 
+                name="phone" 
+                placeholder="Enter your phone number" 
+                value={form.phone} 
+                onChange={handleChange} 
+                required 
+                pattern="[0-9+\-\s\(\)]+"
+                title="Please enter a valid phone number"
+              />
+              <input 
+                name="email" 
+                type="email"
+                placeholder="Enter your email address" 
+                value={form.email} 
+                onChange={handleChange} 
+                required 
+              />
+              <textarea 
+                name="details" 
+                placeholder="Describe your complaint in detail. Include relevant information like date, time, location, and any other important details." 
+                value={form.details} 
+                onChange={handleChange} 
+                required 
+                rows={5}
+                minLength={10}
+              />
+              <button className="complain-btn" type="submit" disabled={loading}>
+                {loading ? '📤 Submitting...' : '🚀 Submit Complaint'}
+              </button>
             </form>
-            {message && <div className="complain-error">{message}</div>}
+            {message && (
+              <div className={`complain-error ${message.includes('❌') ? 'error' : ''}`}>
+                {message}
+              </div>
+            )}
           </div>
         </div>
       </div>

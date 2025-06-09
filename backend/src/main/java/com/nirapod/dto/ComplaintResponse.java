@@ -18,6 +18,7 @@ public class ComplaintResponse {
     private String comment;
     private java.time.LocalDateTime time;
     private String report;
+    private String userProfileImage;
 
     public ComplaintResponse() {}
 
@@ -58,7 +59,27 @@ public class ComplaintResponse {
         this.time = time;
     }
 
-    public ComplaintResponse(Integer trackingId, String userName, String urgency, String complainTo, String district, String area, String tags, String details, String photos, Boolean postOnTimeline, String location, String updateNote, Integer status, String follow, String comment, java.time.LocalDateTime time, String report) {
+    public ComplaintResponse(Integer trackingId, String userName, String urgency, String complainTo, String district, String area, String tags, String details, String photos, Boolean postOnTimeline, String location, String updateNote, Integer status, String follow, String comment, java.time.LocalDateTime time, String userProfileImage) {
+        this.trackingId = trackingId;
+        this.userName = userName;
+        this.urgency = urgency;
+        this.complainTo = complainTo;
+        this.district = district;
+        this.area = area;
+        this.tags = tags;
+        this.details = details;
+        this.photos = photos;
+        this.postOnTimeline = postOnTimeline;
+        this.location = location;
+        this.updateNote = updateNote;
+        this.status = status;
+        this.follow = follow;
+        this.comment = comment;
+        this.time = time;
+        this.userProfileImage = userProfileImage;
+    }
+
+    public ComplaintResponse(Integer trackingId, String userName, String urgency, String complainTo, String district, String area, String tags, String details, String photos, Boolean postOnTimeline, String location, String updateNote, Integer status, String follow, String comment, java.time.LocalDateTime time, String report, String userProfileImage) {
         this.trackingId = trackingId;
         this.userName = userName;
         this.urgency = urgency;
@@ -76,6 +97,7 @@ public class ComplaintResponse {
         this.comment = comment;
         this.time = time;
         this.report = report;
+        this.userProfileImage = userProfileImage;
     }
 
     // Getters and setters for all fields
@@ -113,6 +135,8 @@ public class ComplaintResponse {
     public void setTime(java.time.LocalDateTime time) { this.time = time; }
     public String getReport() { return report; }
     public void setReport(String report) { this.report = report; }
+    public String getUserProfileImage() { return userProfileImage; }
+    public void setUserProfileImage(String userProfileImage) { this.userProfileImage = userProfileImage; }
     public String getStatusText() {
         if (status == null) return "Unsolved";
         switch (status) {

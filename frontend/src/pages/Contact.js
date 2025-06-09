@@ -1,30 +1,40 @@
 import React from 'react';
-import './Login.css';
+import './Contact.css';
 import logo from '../image/logo.png';
 
 function Contact() {
   return (
-    <div className="login-bg">
-      <div className="login-split">
-        <div className="login-left">
-          <img src={logo} alt="Logo" className="login-logo-img" />
-          <div className="login-logo">Nirapod</div>
-          <div className="login-tagline">Contact Us</div>
+    <div className="contact-bg">
+      <div className="contact-split">
+        <div className="contact-left">
+          <img src={logo} alt="Logo" className="contact-logo-img" />
+          <div className="contact-logo">Nirapod</div>
+          <div className="contact-tagline">Get in Touch</div>
         </div>
-        <div className="login-right">
-          <div className="login-form-box">
+        <div className="contact-right">
+          <div className="contact-form-box">
             <h2>Contact Information</h2>
-            <div style={{ color: '#fff', textAlign: 'left' }}>
-              <b>Email:</b> support@nirapod.com<br />
-              <b>Phone:</b> +880 1700-000000<br />
-              <b>Address:</b> 123 Nirapod Avenue, Dhaka, Bangladesh<br />
-              <b>Facebook:</b> <a href="https://facebook.com/nirapodbd" target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa' }}>facebook.com/nirapodbd</a><br />
-              <b>Twitter:</b> <a href="https://twitter.com/nirapodbd" target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa' }}>@nirapodbd</a><br />
+            <div className="contact-info">
+              <div className="contact-info-item">
+                <b>Email:</b> support@nirapod.com
+              </div>
+              <div className="contact-info-item">
+                <b>Phone:</b> +880 1700-000000
+              </div>
+              <div className="contact-info-item">
+                <b>Address:</b> 123 Nirapod Avenue, Dhaka, Bangladesh
+              </div>
+              <div className="contact-info-item">
+                <b>Facebook:</b> <a href="https://facebook.com/nirapodbd" target="_blank" rel="noopener noreferrer">facebook.com/nirapodbd</a>
+              </div>
+              <div className="contact-info-item">
+                <b>Twitter:</b> <a href="https://twitter.com/nirapodbd" target="_blank" rel="noopener noreferrer">@nirapodbd</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <footer className="login-footer">
+      <footer className="contact-footer">
         <a href="/login" className="footer-link">Login</a>
         <a href="/faq" className="footer-link">FAQ</a>
         <a href="/ReachOut" className="footer-link">Reach out</a>

@@ -1,54 +1,286 @@
 .complain-bg {
+  /* Modern CreateComplain Component Styles */
+.complain-bg {
   min-height: 100vh;
-  background: #222831;
-  font-family: 'Fira Mono', monospace;
-  padding: 0;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  padding: 2rem;
+  position: relative;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.complain-bg::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(120, 255, 198, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .complain-form {
-  margin: 48px auto 0 auto;
-  max-width: 650px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  margin: 0 auto;
+  max-width: 800px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  animation: slideInUp 0.6s ease-out;
+}
+
+.complain-form h1 {
+  text-align: center;
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .complain-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 180px 1fr;
   align-items: center;
-  gap: 18px;
-  margin-bottom: 0;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .complain-row label {
-  color: #fff;
-  font-size: 1.15rem;
-  min-width: 160px;
-  text-align: center;
+  color: #e2e8f0;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: right;
 }
 
-.complain-input {
-  flex: 1;
-  background: #fff;
-  border: none;
-  border-radius: 16px;
-  padding: 12px 24px;
-  font-size: 1.1rem;
+.complain-input,
+.complain-textarea {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0.875rem 1.25rem;
+  font-size: 1rem;
+  color: #ffffff;
   font-family: inherit;
-  margin: 0;
+  transition: all 0.3s ease;
   outline: none;
 }
 
+.complain-input::placeholder,
+.complain-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.complain-input:focus,
+.complain-textarea:focus {
+  border-color: #60a5fa;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+  transform: translateY(-1px);
+}
+
 .complain-textarea {
-  flex: 1;
-  background: #fff;
-  border: none;
-  border-radius: 16px;
-  padding: 16px 24px;
-  font-size: 1.08rem;
-  font-family: inherit;
   min-height: 120px;
   resize: vertical;
+  grid-column: 2;
+}
+
+.complain-input:read-only {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: not-allowed;
+}
+
+.complain-urgency-note {
+  grid-column: 2;
+  margin-top: 0.5rem;
+}
+
+.complain-urgency-note a {
+  color: #60a5fa;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.complain-urgency-note a:hover {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+.complain-photo-row {
+  grid-template-columns: 180px 1fr auto;
+  align-items: center;
+}
+
+.complain-photo-btn {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 0.875rem 1.25rem;
+  color: #60a5fa;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: inline-block;
+}
+
+.complain-photo-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.5);
+  transform: translateY(-1px);
+}
+
+.complain-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.complain-checkbox-label input[type="checkbox"] {
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: #60a5fa;
+}
+
+.complain-gps-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.complain-gps-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.complain-submit-row {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.complain-submit-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 3rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.complain-submit-btn:hover {
+  background: linear-gradient(135deg, #5b21b6, #7c3aed);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+.complain-submit-btn:active {
+  transform: translateY(0);
+}
+
+.success-message {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  color: #22c55e;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  grid-column: 2;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .complain-bg {
+    padding: 1rem;
+  }
+  
+  .complain-form {
+    padding: 2rem;
+  }
+  
+  .complain-form h1 {
+    font-size: 2rem;
+  }
+  
+  .complain-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .complain-row label {
+    text-align: left;
+    font-weight: 600;
+  }
+  
+  .complain-photo-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .complain-checkbox-label {
+    margin-left: 0;
+    justify-self: start;
+  }
+}
   margin: 0;
   outline: none;
 }

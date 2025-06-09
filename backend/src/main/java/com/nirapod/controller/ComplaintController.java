@@ -77,6 +77,9 @@ public class ComplaintController {
             String userName = userRepository.findByNid(c.getNid())
                     .map(u -> u.getName())
                     .orElse("");
+            String userProfileImage = userRepository.findByNid(c.getNid())
+                    .map(u -> u.getUserPhoto())
+                    .orElse(null);
             responseList.add(new ComplaintResponse(
                     c.getTrackingId(),
                     userName,
@@ -93,7 +96,8 @@ public class ComplaintController {
                     c.getStatus(),
                     c.getFollow(),
                     c.getComment(),
-                    c.getTime() // <-- Make sure this is c.getTime()
+                    c.getTime(), // <-- Make sure this is c.getTime()
+                    userProfileImage
             ));
         }
         return responseList;
@@ -118,6 +122,9 @@ public class ComplaintController {
                 String userName = userRepository.findByNid(c.getNid())
                         .map(u -> u.getName())
                         .orElse("");
+                String userProfileImage = userRepository.findByNid(c.getNid())
+                        .map(u -> u.getUserPhoto())
+                        .orElse(null);
                 responseList.add(new ComplaintResponse(
                         c.getTrackingId(),
                         userName,
@@ -135,7 +142,8 @@ public class ComplaintController {
                         c.getFollow(),
                         c.getComment(),
                         c.getTime(),
-                        c.getReport() // Add report field for frontend
+                        c.getReport(), // Add report field for frontend
+                        userProfileImage
                 ));
             }
         }
@@ -168,6 +176,9 @@ public class ComplaintController {
             String userName = userRepository.findByNid(c.getNid())
                     .map(u -> u.getName())
                     .orElse("");
+            String userProfileImage = userRepository.findByNid(c.getNid())
+                    .map(u -> u.getUserPhoto())
+                    .orElse(null);
             responseList.add(new ComplaintResponse(
                     c.getTrackingId(),
                     userName,
@@ -184,7 +195,8 @@ public class ComplaintController {
                     c.getStatus(),
                     c.getFollow(),
                     c.getComment(),
-                    c.getTime()));
+                    c.getTime(),
+                    userProfileImage));
         }
         return responseList;
     }
