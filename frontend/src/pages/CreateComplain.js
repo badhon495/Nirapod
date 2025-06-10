@@ -201,7 +201,7 @@ function Complain() {
                 }
               }}
             >
-              📍 Get Location
+            Get Location
             </button>
           </div>
         </div>
@@ -233,8 +233,8 @@ function Complain() {
           <label>Evidence Photos:</label>
           <label className="complain-photo-btn">
             {form.photos && form.photos.length > 0 ? 
-              `📸 ${form.photos.length} photo${form.photos.length > 1 ? 's' : ''} selected` : 
-              '📷 Add Photos'
+              `${form.photos.length} photo${form.photos.length > 1 ? 's' : ''} selected` : 
+              'Add Photos'
             }
             <input type="file" name="photos" style={{ display: 'none' }} onChange={handleChange} multiple accept="image/*" />
           </label>
@@ -252,7 +252,7 @@ function Complain() {
         
         <div className="complain-submit-row">
           <button className="complain-submit-btn" type="submit">
-            🚀 Submit Complaint
+            Submit Complaint
           </button>
         </div>
       </form>

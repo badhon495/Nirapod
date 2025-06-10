@@ -157,9 +157,9 @@ function Navbar() {
               Notifications
             </DropdownItem>
             <DropdownItem to="/livechat" icon={MessageSquare}>Live Chat</DropdownItem>
-            {categories !== 'admin' && (
+            {!categories || (!['admin', 'police', 'fire', 'city', 'animal'].includes(categories)) ? (
               <DropdownItem to="/my-complains" icon={FileText}>My Complaints</DropdownItem>
-            )}
+            ) : null}
           </div>
           
           <div className="dropdown-section">

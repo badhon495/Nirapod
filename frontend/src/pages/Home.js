@@ -26,13 +26,13 @@ function Home() {
   const [photoFiles, setPhotoFiles] = useState([]);
   const [openReport, setOpenReport] = useState(null);
   const [followed, setFollowed] = useState([]);
-  const [sortOpen, setSortOpen] = useState(false);
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
   const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [], currentIndex: 0 });
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState({});
   const observer = useRef();
   const userNid = localStorage.getItem('nirapod_identifier');
   const filterBtnRef = useRef(null);
-  const filterDropdownRef = useRef(null);
+  const filterPanelRef = useRef(null);
   const location = useLocation();
 
   // Fetch posts with filters and pagination
@@ -43,13 +43,15 @@ function Home() {
       const res = await ComplaintService.getAllComplaints();
       // Only show posts where postOnTimeline is true
       let filtered = res.filter(p => p.postOnTimeline === true);
+      
+      // Apply filters
       if (filters.area) filtered = filtered.filter(p => (p.area || '').toLowerCase().includes(filters.area.toLowerCase()));
       if (filters.urgency) filtered = filtered.filter(p => (p.urgency || '').toLowerCase() === filters.urgency.toLowerCase());
       if (filters.district) filtered = filtered.filter(p => (p.district || '').toLowerCase().includes(filters.district.toLowerCase()));
       if (filters.tags) filtered = filtered.filter(p => (p.tags || '').toLowerCase().includes(filters.tags.toLowerCase()));
-      // Date range filter
       if (filters.fromDate) filtered = filtered.filter(p => p.time && new Date(p.time) >= new Date(filters.fromDate));
       if (filters.toDate) filtered = filtered.filter(p => p.time && new Date(p.time) <= new Date(filters.toDate + 'T23:59:59'));
+      
       // Pagination (simulate infinite scroll)
       const pageSize = 5;
       const start = reset ? 0 : page * pageSize;
@@ -88,21 +90,22 @@ function Home() {
     // eslint-disable-next-line
   }, []);
 
+  // Handle filter panel click outside
   useEffect(() => {
-    if (!sortOpen) return;
+    if (!filterPanelOpen) return;
     function handleClickOutside(event) {
       if (
-        filterDropdownRef.current &&
-        !filterDropdownRef.current.contains(event.target) &&
+        filterPanelRef.current &&
+        !filterPanelRef.current.contains(event.target) &&
         filterBtnRef.current &&
         !filterBtnRef.current.contains(event.target)
       ) {
-        setSortOpen(false);
+        setFilterPanelOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [sortOpen]);
+  }, [filterPanelOpen]);
 
   useEffect(() => {
     if (openComment || openPhotos || openReport || photoViewer.isOpen) {
@@ -371,8 +374,18 @@ function Home() {
     }));
   };
 
-  // Filter bar handlers
-  const handleFilterChange = e => setFilters({ ...filters, [e.target.name]: e.target.value });
+  // Filter handlers
+  const handleFilterChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+
+  const handleClearFilters = () => {
+    setFilters({ area: '', urgency: '', district: '', tags: '', fromDate: '', toDate: '' });
+  };
+
+  const getActiveFilterCount = () => {
+    return Object.values(filters).filter(value => value !== '').length;
+  };
 
   return (
     <div className="home-container">
@@ -384,105 +397,139 @@ function Home() {
             <div className="filter-container">
               <button
                 ref={filterBtnRef}
-                className="filter-btn"
-                onClick={() => setSortOpen(o => !o)}
+                className={`modern-filter-btn ${filterPanelOpen ? 'active' : ''}`}
+                onClick={() => setFilterPanelOpen(!filterPanelOpen)}
               >
-                <span className="filter-icon">🎯</span>
-                Filter Posts
+                <div className="filter-btn-content">
+                  <span className="filter-icon">🎯</span>
+                  <span className="filter-text">Filter Posts</span>
+                  {getActiveFilterCount() > 0 && (
+                    <span className="filter-badge">{getActiveFilterCount()}</span>
+                  )}
+                  <span className={`filter-chevron ${filterPanelOpen ? 'rotated' : ''}`}>▼</span>
+                </div>
               </button>
               
-              {sortOpen && (
-                <div ref={filterDropdownRef} className="filter-dropdown">
-                  <div className="filter-header">
-                    <h3>Filter Posts</h3>
-                  </div>
-                  
-                  <div className="filter-group">
-                    <label className="filter-label">Area</label>
-                    <input 
-                      name="area" 
-                      placeholder="Enter area..." 
-                      value={filters.area} 
-                      onChange={handleFilterChange} 
-                      className="filter-input"
-                    />
-                  </div>
-                  
-                  <div className="filter-group">
-                    <label className="filter-label">Urgency</label>
-                    <select 
-                      name="urgency" 
-                      value={filters.urgency} 
-                      onChange={handleFilterChange} 
-                      className="filter-select"
-                    >
-                      {urgencyOptions.map(opt => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div className="filter-group">
-                    <label className="filter-label">District</label>
-                    <input 
-                      name="district" 
-                      placeholder="Enter district..." 
-                      value={filters.district} 
-                      onChange={handleFilterChange} 
-                      className="filter-input"
-                    />
-                  </div>
-                  
-                  <div className="filter-group">
-                    <label className="filter-label">Tags</label>
-                    <input 
-                      name="tags" 
-                      placeholder="Enter tags..." 
-                      value={filters.tags} 
-                      onChange={handleFilterChange} 
-                      className="filter-input"
-                    />
-                  </div>
-                  
-                  <div className="filter-row">
-                    <div className="filter-group">
-                      <label className="filter-label">From Date</label>
-                      <input 
-                        name="fromDate" 
-                        type="date" 
-                        value={filters.fromDate} 
-                        onChange={handleFilterChange} 
-                        className="filter-input"
-                      />
-                    </div>
-                    <div className="filter-group">
-                      <label className="filter-label">To Date</label>
-                      <input 
-                        name="toDate" 
-                        type="date" 
-                        value={filters.toDate} 
-                        onChange={handleFilterChange} 
-                        className="filter-input"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="filter-actions">
+              {/* Modern Filter Panel */}
+              {filterPanelOpen && (
+                <div ref={filterPanelRef} className="modern-filter-panel">
+                  <div className="filter-panel-header">
+                    <h3 className="filter-panel-title">Filter Posts</h3>
                     <button 
-                      className="btn btn-primary" 
-                      onClick={() => setSortOpen(false)}
+                      className="filter-panel-close"
+                      onClick={() => setFilterPanelOpen(false)}
                     >
-                      Apply Filters
+                      ✕
                     </button>
-                    <button 
-                      className="btn btn-secondary" 
-                      onClick={() => { 
-                        setFilters({ area: '', urgency: '', district: '', tags: '', fromDate: '', toDate: '' }); 
-                        setSortOpen(false); 
-                      }}
-                    >
-                      Reset
-                    </button>
+                  </div>
+                  
+                  <div className="filter-panel-content">
+                    <div className="filter-grid">
+                      <div className="filter-item">
+                        <label className="filter-label">
+                          <span className="filter-label-icon">📍</span>
+                          Area
+                        </label>
+                        <input 
+                          name="area" 
+                          placeholder="Enter area..." 
+                          value={filters.area} 
+                          onChange={handleFilterChange} 
+                          className="modern-filter-input"
+                        />
+                      </div>
+                      
+                      <div className="filter-item">
+                        <label className="filter-label">
+                          <span className="filter-label-icon">⚡</span>
+                          Urgency
+                        </label>
+                        <select 
+                          name="urgency" 
+                          value={filters.urgency} 
+                          onChange={handleFilterChange} 
+                          className="modern-filter-select"
+                        >
+                          <option value="">All Urgency Levels</option>
+                          <option value="High">🔴 High Priority</option>
+                          <option value="Medium">🟡 Medium Priority</option>
+                          <option value="Low">🟢 Low Priority</option>
+                        </select>
+                      </div>
+                      
+                      <div className="filter-item">
+                        <label className="filter-label">
+                          <span className="filter-label-icon">🏘️</span>
+                          District
+                        </label>
+                        <input 
+                          name="district" 
+                          placeholder="Enter district..." 
+                          value={filters.district} 
+                          onChange={handleFilterChange} 
+                          className="modern-filter-input"
+                        />
+                      </div>
+                      
+                      <div className="filter-item">
+                        <label className="filter-label">
+                          <span className="filter-label-icon">#️⃣</span>
+                          Tags
+                        </label>
+                        <input 
+                          name="tags" 
+                          placeholder="Enter tags..." 
+                          value={filters.tags} 
+                          onChange={handleFilterChange} 
+                          className="modern-filter-input"
+                        />
+                      </div>
+                      
+                      <div className="filter-item">
+                        <label className="filter-label">
+                          <span className="filter-label-icon">📅</span>
+                          From Date
+                        </label>
+                        <input 
+                          name="fromDate" 
+                          type="date" 
+                          value={filters.fromDate} 
+                          onChange={handleFilterChange} 
+                          className="modern-filter-input"
+                        />
+                      </div>
+                      
+                      <div className="filter-item">
+                        <label className="filter-label">
+                          <span className="filter-label-icon">📅</span>
+                          To Date
+                        </label>
+                        <input 
+                          name="toDate" 
+                          type="date" 
+                          value={filters.toDate} 
+                          onChange={handleFilterChange} 
+                          className="modern-filter-input"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="filter-panel-actions">
+                      <button 
+                        className="filter-action-btn secondary"
+                        onClick={handleClearFilters}
+                      >
+                        <span className="btn-icon">🗑️</span>
+                        Clear All
+                      </button>
+                      <button 
+                        className="filter-action-btn primary"
+                        onClick={() => setFilterPanelOpen(false)}
+                      >
+                        <span className="btn-icon">✨</span>
+                        Apply Filters
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

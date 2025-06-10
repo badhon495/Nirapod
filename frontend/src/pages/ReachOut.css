@@ -13,6 +13,7 @@
   flex-direction: column;
   position: relative;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  padding-top: calc(70px + 2rem); /* Add navbar height + original padding */
 }
 
 .complain-bg::before {

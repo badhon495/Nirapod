@@ -38,6 +38,8 @@ function Profile() {
         passport: res.data.passport || '',
         drivingLicense: res.data.drivingLicense || '',
       });
+    }).catch(err => {
+      console.error('Error loading user data:', err);
     });
   }, [userId]);
 
@@ -104,8 +106,40 @@ function Profile() {
                 className="profile-photo"
               />
             ) : (
-              <div className="profile-photo-placeholder">
-                No Photo
+              <div 
+                className="social-avatar-fallback profile-photo-placeholder"
+                style={{
+                  background: (() => {
+                    const name = user.name || 'User';
+                    const colors = [
+                      'linear-gradient(135deg, #667eea, #764ba2)',
+                      'linear-gradient(135deg, #f093fb, #f5576c)',
+                      'linear-gradient(135deg, #4facfe, #00f2fe)',
+                      'linear-gradient(135deg, #a8edea, #fed6e3)',
+                      'linear-gradient(135deg, #ffecd2, #fcb69f)',
+                      'linear-gradient(135deg, #667eea, #764ba2)',
+                      'linear-gradient(135deg, #ff9a9e, #fecfef)',
+                      'linear-gradient(135deg, #a18cd1, #fbc2eb)',
+                      'linear-gradient(135deg, #fad0c4, #ffd1ff)',
+                      'linear-gradient(135deg, #84fab0, #8fd3f4)'
+                    ];
+                    let hash = 0;
+                    for (let i = 0; i < name.length; i++) {
+                      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                    }
+                    return colors[Math.abs(hash) % colors.length];
+                  })()
+                }}
+              >
+                {(() => {
+                  const name = user.name || 'User';
+                  const initials = name.split(' ')
+                    .map(word => word.charAt(0))
+                    .join('')
+                    .toUpperCase()
+                    .slice(0, 2);
+                  return initials || 'U';
+                })()}
               </div>
             )}
           </div>

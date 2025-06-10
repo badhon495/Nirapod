@@ -16,6 +16,7 @@ function ComplaintDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
+  const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [], currentIndex: 0 });
 
   // Admin-only actions
   const isAdmin = localStorage.getItem('categories') === 'admin';
@@ -67,6 +68,37 @@ function ComplaintDetails() {
     }
   }, [complaint]);
 
+  // Handle photo viewer body overflow and keyboard navigation
+  useEffect(() => {
+    if (photoViewer.isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [photoViewer.isOpen]);
+
+  // Keyboard navigation for photo viewer
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (!photoViewer.isOpen) return;
+      
+      if (e.key === 'Escape') {
+        handleClosePhotoViewer();
+      } else if (e.key === 'ArrowLeft') {
+        handlePrevPhoto();
+      } else if (e.key === 'ArrowRight') {
+        handleNextPhoto();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [photoViewer.isOpen]);
+
   const handleUpdateSuccess = (updatedComplaint) => {
     setComplaint(updatedComplaint);
     alert('Complaint updated successfully!');
@@ -74,6 +106,36 @@ function ComplaintDetails() {
 
   const handleBackToList = () => {
     navigate('/complains');
+  };
+
+  // Photo viewer handlers
+  const handleOpenPhotoViewer = (photos, index = 0) => {
+    const processedPhotos = photos.map(photo => {
+      const cleanPhoto = photo.replace('/uploads/', '');
+      return {
+        primary: `http://localhost:8080/uploads/${cleanPhoto}`,
+        fallback: `http://localhost:8080/${cleanPhoto}`
+      };
+    });
+    setPhotoViewer({ isOpen: true, photos: processedPhotos, currentIndex: index });
+  };
+
+  const handleClosePhotoViewer = () => {
+    setPhotoViewer({ isOpen: false, photos: [], currentIndex: 0 });
+  };
+
+  const handleNextPhoto = () => {
+    setPhotoViewer(prev => ({
+      ...prev,
+      currentIndex: (prev.currentIndex + 1) % prev.photos.length
+    }));
+  };
+
+  const handlePrevPhoto = () => {
+    setPhotoViewer(prev => ({
+      ...prev,
+      currentIndex: prev.currentIndex === 0 ? prev.photos.length - 1 : prev.currentIndex - 1
+    }));
   };
 
   useEffect(() => {
@@ -215,6 +277,10 @@ function ComplaintDetails() {
                     src={src}
                     alt={`complaint-photo-${idx}`}
                     className="complaint-photo"
+                    onClick={() => {
+                      const photoArray = complaint.photos.split(',').map(p => p.trim());
+                      handleOpenPhotoViewer(photoArray, idx);
+                    }}
                   />
                 );
               })}
@@ -253,6 +319,68 @@ function ComplaintDetails() {
           )}
         </div>
       </div>
+
+      {/* Photo Viewer Modal */}
+      {photoViewer.isOpen && (
+        <div className="photo-viewer-overlay" onClick={handleClosePhotoViewer}>
+          <div className="photo-viewer-content" onClick={(e) => e.stopPropagation()}>
+            <button className="photo-viewer-close" onClick={handleClosePhotoViewer}>
+              ×
+            </button>
+            
+            {photoViewer.photos.length > 1 && (
+              <button className="photo-nav photo-nav-prev" onClick={handlePrevPhoto}>
+                ‹
+              </button>
+            )}
+            
+            <div className="photo-viewer-main">
+              <img 
+                src={photoViewer.photos[photoViewer.currentIndex]?.primary} 
+                alt={`Photo ${photoViewer.currentIndex + 1}`}
+                className="photo-viewer-image"
+                onError={(e) => {
+                  const fallbackSrc = photoViewer.photos[photoViewer.currentIndex]?.fallback;
+                  if (fallbackSrc && e.target.src !== fallbackSrc) {
+                    e.target.src = fallbackSrc;
+                  }
+                }}
+              />
+            </div>
+            
+            {photoViewer.photos.length > 1 && (
+              <button className="photo-nav photo-nav-next" onClick={handleNextPhoto}>
+                ›
+              </button>
+            )}
+            
+            {photoViewer.photos.length > 1 && (
+              <div className="photo-viewer-counter">
+                {photoViewer.currentIndex + 1} / {photoViewer.photos.length}
+              </div>
+            )}
+            
+            {photoViewer.photos.length > 1 && (
+              <div className="photo-viewer-thumbnails">
+                {photoViewer.photos.map((photo, index) => (
+                  <img
+                    key={index}
+                    src={photo.primary}
+                    alt={`Thumbnail ${index + 1}`}
+                    className={`photo-thumbnail ${index === photoViewer.currentIndex ? 'active' : ''}`}
+                    onClick={() => setPhotoViewer(prev => ({ ...prev, currentIndex: index }))}
+                    onError={(e) => {
+                      if (e.target.src !== photo.fallback) {
+                        e.target.src = photo.fallback;
+                      }
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

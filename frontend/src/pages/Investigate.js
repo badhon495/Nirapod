@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './Investigate.css';
 
 const searchOptions = [
-  { label: 'NID', value: 'nid', placeholder: 'Enter NID' },
-  { label: 'Driving License', value: 'drivingLicence', placeholder: 'Enter Driving License' },
-  { label: 'Passport', value: 'passport', placeholder: 'Enter Passport' },
+  { label: '🆔 NID', value: 'nid', placeholder: 'Enter National ID Number', icon: '🆔' },
+  { label: '🚗 Driving License', value: 'drivingLicence', placeholder: 'Enter Driving License Number', icon: '🚗' },
+  { label: '🛂 Passport', value: 'passport', placeholder: 'Enter Passport Number', icon: '🛂' },
 ];
 
 function Investigate() {
@@ -18,93 +19,253 @@ function Investigate() {
     e.preventDefault();
     setError('');
     setUser(null);
-    if (!searchValue) return;
+    
+    if (!searchValue.trim()) {
+      setError('Please enter a search value');
+      return;
+    }
+    
     setLoading(true);
     try {
       const params = {};
-      params[searchBy] = searchValue;
+      params[searchBy] = searchValue.trim();
       const res = await axios.get('/api/user/search', { params });
       setUser(res.data);
     } catch (err) {
-      setError('User not found.');
+      console.error('Search error:', err);
+      setError('User not found or you do not have permission to view this information.');
     }
     setLoading(false);
   };
 
   const selectedOption = searchOptions.find(opt => opt.value === searchBy);
 
+  const renderPhoto = (photoPath, alt = 'Photo') => {
+    if (!photoPath) return null;
+    
+    let photo = photoPath;
+    if (photo.startsWith('/uploads/')) {
+      photo = photo.replace('/uploads/', '');
+    }
+    const backendUrl = 'http://localhost:8080';
+    const src = `${backendUrl}/${photo}`;
+    
+    return (
+      <img 
+        src={src} 
+        alt={alt}
+        className="user-document-photo"
+        onClick={() => window.open(src, '_blank')}
+      />
+    );
+  };
+
+  const renderDocumentLink = (photoPath, label) => {
+    if (!photoPath) {
+      return <span className="document-unavailable">Not Available</span>;
+    }
+    
+    let photo = photoPath;
+    if (photo.startsWith('/uploads/')) {
+      photo = photo.replace('/uploads/', '');
+    }
+    const backendUrl = 'http://localhost:8080';
+    const src = `${backendUrl}/${photo}`;
+    
+    return (
+      <a 
+        href={src} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="document-link"
+      >
+        📎 View {label}
+      </a>
+    );
+  };
+
   return (
-    <div style={{ background: '#232831', minHeight: '100vh', padding: 0, fontFamily: 'Fira Mono, monospace' }}>
-      <div style={{ paddingTop: 60, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 18 }}>
-          <span style={{ color: '#fff', fontSize: 22, letterSpacing: 1, marginRight: 18 }}>Looking for :</span>
-          <select
-            value={searchBy}
-            onChange={e => { setSearchBy(e.target.value); setSearchValue(''); }}
-            style={{ fontSize: 20, borderRadius: 12, border: 'none', padding: '8px 32px', textAlign: 'center', background: '#f5f6fa' }}
-          >
-            {searchOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </div>
-        <form onSubmit={handleSearch} style={{ marginBottom: 32 }}>
-          <input
-            value={searchValue}
-            onChange={e => setSearchValue(e.target.value)}
-            placeholder={selectedOption.placeholder}
-            style={{ fontSize: 20, borderRadius: 12, border: 'none', padding: '8px 32px', textAlign: 'center', background: '#f5f6fa', marginBottom: 8 }}
-          />
-          <button type="submit" style={{ marginLeft: 16, padding: '8px 24px', borderRadius: 12, border: 'none', background: '#22c55e', color: '#fff', fontWeight: 600, fontSize: 18, cursor: 'pointer' }} disabled={loading}>{loading ? 'Loading...' : 'Search'}</button>
-        </form>
-        {error && <div style={{ color: '#ff6b6b', marginBottom: 18 }}>{error}</div>}
-        {user && (
-          <div style={{ background: '#232b36', borderRadius: 18, color: '#fff', padding: 32, minWidth: 340, maxWidth: 540, fontSize: 18, boxShadow: '0 4px 24px #0003', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            {/* Centered user photo at the top */}
-            {(() => {
-              let photo = user.userPhoto || '';
-              if (photo.startsWith('/uploads/')) photo = photo.replace('/uploads/', '');
-              const backendUrl = 'http://localhost:8080';
-              const src = photo ? `${backendUrl}/${photo}` : '';
-              return src ? (
-                <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: 18 }}>
-                  <img src={src} alt="User" style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', border: '3px solid #fff', background: '#eee', margin: '0 auto' }} />
-                </div>
-              ) : null;
-            })()}
-            {/* Name as a normal detail row, left-aligned */}
-            <div style={{ marginBottom: 8 }}><b>Name :</b> <span style={{ background: '#000', borderRadius: 8, padding: '2px 16px', marginLeft: 8 }}>{user.name}</span></div>
-            <div style={{ marginBottom: 8 }}><b>Address :</b> <span style={{ background: '#000', borderRadius: 8, padding: '2px 16px', marginLeft: 8 }}>{user.presentAddress}</span></div>
-            <div style={{ marginBottom: 8 }}><b>Phone :</b> <span style={{ background: '#000', borderRadius: 8, padding: '2px 16px', marginLeft: 8 }}>{user.phone}</span></div>
-            <div style={{ marginBottom: 8 }}><b>NID :</b> <span style={{ background: '#000', borderRadius: 8, padding: '2px 16px', marginLeft: 8 }}>{user.nid}</span></div>
-            {user.passport && <div style={{ marginBottom: 8 }}><b>Passport :</b> <span style={{ background: '#000', borderRadius: 8, padding: '2px 16px', marginLeft: 8 }}>{user.passport}</span></div>}
-            {user.drivingLicence && <div style={{ marginBottom: 8 }}><b>Driving License :</b> <span style={{ background: '#000', borderRadius: 8, padding: '2px 16px', marginLeft: 8 }}>{user.drivingLicence}</span></div>}
-            <div style={{ marginBottom: 8 }}><b>E-mail :</b> <span style={{ background: '#000', borderRadius: 8, padding: '2px 16px', marginLeft: 8 }}>{user.email}</span></div>
-            <div style={{ marginBottom: 8 }}><b>Permanent Address :</b> <span style={{ background: '#000', borderRadius: 8, padding: '2px 16px', marginLeft: 8 }}>{user.permanentAddress}</span></div>
-            <div style={{ marginBottom: 8 }}><b>Utility Bill ID :</b> <span style={{ background: '#000', borderRadius: 8, padding: '2px 16px', marginLeft: 8 }}>{user.utilityBillId}</span></div>
-            <div style={{ marginBottom: 8 }}><b>Utility Bill Photo :</b> {(() => {
-              let photo = user.utilityBillPhoto || '';
-              if (photo.startsWith('/uploads/')) photo = photo.replace('/uploads/', '');
-              const backendUrl = 'http://localhost:8080';
-              const src = photo ? `${backendUrl}/${photo}` : '';
-              return src ? (
-                <a href={src} target="_blank" rel="noopener noreferrer" style={{ color: '#22c55e', textDecoration: 'underline' }}>View</a>
-              ) : (
-                <span style={{ color: '#aaa' }}>N/A</span>
-              );
-            })()}
+    <div className="investigate-container">
+      <div className="investigate-content">
+        <h1 className="investigate-title">🕵️ User Investigation Portal</h1>
+        <p className="investigate-subtitle">
+          Search for user information using various identification methods
+        </p>
+        
+        <div className="search-form-container">
+          <div className="search-type-selector">
+            <span className="search-type-label">Search by:</span>
+            <div className="search-options">
+              {searchOptions.map(option => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={`search-option-btn ${searchBy === option.value ? 'active' : ''}`}
+                  onClick={() => {
+                    setSearchBy(option.value);
+                    setSearchValue('');
+                    setError('');
+                    setUser(null);
+                  }}
+                >
+                  <span className="search-option-icon">{option.icon}</span>
+                  <span className="search-option-text">{option.label.replace(/🆔|🚗|🛂/g, '').trim()}</span>
+                </button>
+              ))}
             </div>
-            <div style={{ marginBottom: 8 }}><b>NID Photo :</b> {(() => {
-              let photo = user.nidPhoto || '';
-              if (photo.startsWith('/uploads/')) photo = photo.replace('/uploads/', '');
-              const backendUrl = 'http://localhost:8080';
-              const src = photo ? `${backendUrl}/${photo}` : '';
-              return src ? (
-                <a href={src} target="_blank" rel="noopener noreferrer" style={{ color: '#22c55e', textDecoration: 'underline' }}>View</a>
+          </div>
+          
+          <form className="investigate-form" onSubmit={handleSearch}>
+            <div className="investigate-input-group">
+              <input
+                className="investigate-input"
+                value={searchValue}
+                onChange={e => setSearchValue(e.target.value)}
+                placeholder={selectedOption.placeholder}
+                required
+              />
+            </div>
+            <button 
+              type="submit" 
+              className="investigate-button" 
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="loading-spinner"></span> Searching...
+                </>
               ) : (
-                <span style={{ color: '#aaa' }}>N/A</span>
-              );
-            })()}
+                <>
+                  <span className="button-icon">🔍</span>
+                  Search User
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+        
+        {error && <div className="investigate-error">⚠️ {error}</div>}
+        
+        {user && (
+          <div className="user-result">
+            <div className="user-header">
+              <span className="user-header-icon">👤</span>
+              <h2 className="user-header-title">User Information</h2>
+            </div>
+            
+            {user.userPhoto && (
+              <div className="user-photo-section">
+                <div className="user-photo-container">
+                  {renderPhoto(user.userPhoto, 'User Photo')}
+                </div>
+              </div>
+            )}
+            
+            <div className="user-details">
+              <div className="user-detail-row" style={{'--animation-order': 1}}>
+                <div className="detail-label">
+                  <span className="detail-icon">👤</span>
+                  Full Name
+                </div>
+                <div className="detail-value">{user.name}</div>
+              </div>
+              
+              <div className="user-detail-row" style={{'--animation-order': 2}}>
+                <div className="detail-label">
+                  <span className="detail-icon">🏠</span>
+                  Present Address
+                </div>
+                <div className="detail-value">{user.presentAddress}</div>
+              </div>
+              
+              <div className="user-detail-row" style={{'--animation-order': 3}}>
+                <div className="detail-label">
+                  <span className="detail-icon">📞</span>
+                  Phone Number
+                </div>
+                <div className="detail-value">{user.phone}</div>
+              </div>
+              
+              <div className="user-detail-row" style={{'--animation-order': 4}}>
+                <div className="detail-label">
+                  <span className="detail-icon">🆔</span>
+                  National ID
+                </div>
+                <div className="detail-value">{user.nid}</div>
+              </div>
+              
+              {user.passport && (
+                <div className="user-detail-row" style={{'--animation-order': 5}}>
+                  <div className="detail-label">
+                    <span className="detail-icon">🛂</span>
+                    Passport
+                  </div>
+                  <div className="detail-value">{user.passport}</div>
+                </div>
+              )}
+              
+              {user.drivingLicence && (
+                <div className="user-detail-row" style={{'--animation-order': 6}}>
+                  <div className="detail-label">
+                    <span className="detail-icon">🚗</span>
+                    Driving License
+                  </div>
+                  <div className="detail-value">{user.drivingLicence}</div>
+                </div>
+              )}
+              
+              <div className="user-detail-row" style={{'--animation-order': 7}}>
+                <div className="detail-label">
+                  <span className="detail-icon">📧</span>
+                  Email Address
+                </div>
+                <div className="detail-value">{user.email}</div>
+              </div>
+              
+              <div className="user-detail-row" style={{'--animation-order': 8}}>
+                <div className="detail-label">
+                  <span className="detail-icon">🏡</span>
+                  Permanent Address
+                </div>
+                <div className="detail-value">{user.permanentAddress}</div>
+              </div>
+              
+              <div className="user-detail-row" style={{'--animation-order': 9}}>
+                <div className="detail-label">
+                  <span className="detail-icon">⚡</span>
+                  Utility Bill ID
+                </div>
+                <div className="detail-value">{user.utilityBillId}</div>
+              </div>
+            </div>
+            
+            <div className="documents-section">
+              <h3 className="documents-title">
+                <span className="documents-icon">📄</span>
+                Document Attachments
+              </h3>
+              
+              <div className="documents-grid">
+                <div className="document-item">
+                  <div className="document-label">
+                    <span className="document-icon">⚡</span>
+                    Utility Bill
+                  </div>
+                  <div className="document-value">
+                    {renderDocumentLink(user.utilityBillPhoto, 'Utility Bill')}
+                  </div>
+                </div>
+                
+                <div className="document-item">
+                  <div className="document-label">
+                    <span className="document-icon">🆔</span>
+                    NID Document
+                  </div>
+                  <div className="document-value">
+                    {renderDocumentLink(user.nidPhoto, 'NID')}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}

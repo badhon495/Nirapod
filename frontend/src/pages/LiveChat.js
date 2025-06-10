@@ -128,81 +128,74 @@ function LiveChat() {
   return (
     <div className="livechat-container">
       <div className="livechat-header">
-        <div className="livechat-logo-section">
-          <img src={logo} alt="Nirapod Logo" className="livechat-logo-img" />
-          <div className="livechat-title">
-            <div className="livechat-logo-text">Nirapod</div>
-            <div className="livechat-subtitle">Global Live Chat</div>
-          </div>
+        <div className="livechat-header-left">
+          <img src={logo} alt="Nirapod Logo" className="livechat-logo" />
+          <div className="livechat-title">Nirapod Live Chat</div>
         </div>
-        <div className="livechat-status">
-          <div className={`connection-indicator ${joined ? 'connected' : 'connecting'}`}></div>
-          <span className="connection-text">{joined ? 'Connected' : 'Connecting...'}</span>
+        <div className="livechat-connection-status">
+          <div className={`livechat-status-indicator ${joined ? '' : 'disconnected'}`}></div>
+          <span>{joined ? 'Connected' : 'Connecting...'}</span>
         </div>
       </div>
 
       <div className="livechat-main">
-        <div className="livechat-box">
-          <div className="livechat-header-bar">
-            <h2 className="livechat-title-text">Live Chat</h2>
-            {joined && (
-              <div className="user-info">
-                Welcome, <span className="username-display">{username}</span>
-              </div>
-            )}
-          </div>
-
+        <div className="livechat-messages">
           {!joined ? (
-            <div className="loading-state">
-              <div className="loading-spinner"></div>
-              <div className="loading-text">Loading chat...</div>
+            <div className="livechat-empty-state">
+              <div className="livechat-empty-icon">💬</div>
+              <div className="livechat-empty-title">Loading chat...</div>
+              <div className="livechat-empty-subtitle">Connecting to the chat server...</div>
+            </div>
+          ) : messages.length === 0 ? (
+            <div className="livechat-empty-state">
+              <div className="livechat-empty-icon">💬</div>
+              <div className="livechat-empty-title">No messages yet</div>
+              <div className="livechat-empty-subtitle">Say hi to start the conversation!</div>
             </div>
           ) : (
-            <>
-              <div className="chat-messages">
-                {messages.length === 0 && (
-                  <div className="empty-chat">
-                    <div className="empty-icon">💬</div>
-                    <div className="empty-text">No messages yet. Say hi!</div>
-                  </div>
-                )}
-                {messages.map((msg, i) => (
-                  <div key={i} className="message-item">
-                    <div className="message-header">
-                      <span className="message-user">{msg.user}</span>
-                      <span className="message-time">{msg.time}</span>
-                    </div>
-                    <div className="message-text">{msg.text}</div>
-                  </div>
-                ))}
-                <div ref={chatEndRef} />
-              </div>
-              
-              <form onSubmit={handleSend} className="message-input-form">
-                <div className="input-container">
-                  <input
-                    type="text"
-                    placeholder="Type a message..."
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    className="message-input"
-                    autoFocus
-                  />
-                  <button type="submit" className="send-button">
-                    <span className="send-icon">➤</span>
-                    Send
-                  </button>
+            messages.map((msg, i) => (
+              <div key={i} className={`livechat-message ${msg.user === username ? 'own' : 'other'}`}>
+                <div className="livechat-message-header">
+                  <span className="livechat-message-username">{msg.user}</span>
+                  <span className="livechat-message-time">{msg.time}</span>
                 </div>
-              </form>
-            </>
+                <div className="livechat-message-bubble">{msg.text}</div>
+              </div>
+            ))
           )}
+          <div ref={chatEndRef} />
         </div>
+        
+        {joined && (
+          <div className="livechat-input-container">
+            <form onSubmit={handleSend} className="livechat-input-form">
+              <input
+                type="text"
+                placeholder="Type a message..."
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                className="livechat-input"
+                autoFocus
+              />
+              <button type="submit" className="livechat-send-btn" disabled={!input.trim()}>
+                <span>✈️</span>
+              </button>
+            </form>
+          </div>
+        )}
       </div>
 
       <footer className="livechat-footer">
-        <a href="/faq" className="footer-link">FAQ</a>
-        <a href="/ReachOut" className="footer-link">Reach out</a>
-        <a href="/contact" className="footer-link">Contact</a>
+        <div className="livechat-user-info">
+          {joined && (
+            <>
+              <span>Welcome, <strong>{username}</strong></span>
+              <button onClick={handleLogoutClick} className="livechat-logout-btn">
+                Logout
+              </button>
+            </>
+          )}
+        </div>
       </footer>
     </div>
   );
