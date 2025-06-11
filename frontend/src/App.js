@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Login from './pages/Login';
@@ -21,6 +21,13 @@ import AdminHome from './pages/AdminHome';
 import ReportList from './pages/ReportList';
 import AddAdmin from './pages/AddAdmin';
 
+// Loading component for Suspense fallback
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+  </div>
+);
+
 function App() {
   const location = useLocation();
 
@@ -41,28 +48,32 @@ function App() {
   return (
     <>
       {!hideNavbar && <Navbar />}
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/CreateComplain" element={<CreateComplain />} />
-        <Route path="/ReachOut" element={<ReachOut />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/Level" element={<Level />} />
-        <Route path="/tracker" element={<Tracker />} />
-        <Route path="/complains" element={<ComplaintList />} />
-        <Route path="/my-complains" element={<UserComplaintList />} />
-        <Route path="/complaint/:id" element={<ComplaintDetails />} />
-        <Route path="/investigate" element={<Investigate />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/livechat" element={<LiveChat />} />
-        <Route path="/admin" element={<AdminHome />} />
-        <Route path="/reports" element={<ReportList />} />
-        <Route path="/add-admin" element={<AddAdmin />} />
-        <Route path="/" element={<Navigate to="/login" />} />
-      </Routes>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/CreateComplain" element={<CreateComplain />} />
+          <Route path="/ReachOut" element={<ReachOut />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/Level" element={<Level />} />
+          <Route path="/tracker" element={<Tracker />} />
+          <Route path="/complains" element={<ComplaintList />} />
+          <Route path="/my-complains" element={<UserComplaintList />} />
+          <Route path="/complaint/:id" element={<ComplaintDetails />} />
+          <Route path="/investigate" element={<Investigate />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/livechat" element={<LiveChat />} />
+          <Route path="/admin" element={<AdminHome />} />
+          <Route path="/reports" element={<ReportList />} />
+          <Route path="/add-admin" element={<AddAdmin />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+          {/* Catch-all route for undefined paths */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }

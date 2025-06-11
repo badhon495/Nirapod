@@ -6,8 +6,8 @@
 [build.environment]
   CI = "false"
 
-# Uncomment below if you want to redirect all requests to index.html (for React Router)
-# [[redirects]]
-#   from = "/*"
-#   to = "/index.html"
-#   status = 200
+# Enable React Router - redirect all requests to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
