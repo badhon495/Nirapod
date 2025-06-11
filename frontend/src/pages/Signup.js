@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './Signup.css';
 import logo from '../image/logo.png';
@@ -20,15 +20,6 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isGoogleSignup, setIsGoogleSignup] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(true);
-
-  // Simulate Google button loading delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setGoogleLoading(false);
-    }, 2000); // 2 seconds delay
-    return () => clearTimeout(timer);
-  }, []);
 
   // Google Signup handler
   const handleGoogleSignup = async (credentialResponse) => {
@@ -168,25 +159,20 @@ function Signup() {
                 <div className="google-separator">
                   Sign up with Google
                 </div>
-                {googleLoading ? (
-                  <div className="google-button-skeleton"></div>
-                ) : (
-                  <div className="google-login-container">
-                    <GoogleLogin
-                      onSuccess={handleGoogleSignup}
-                      onError={() => setMessage('Google signup failed')}
-                      width="280"
-                      text="signup_with"
-                      useOneTap={false}
-                      theme="outline"
-                      shape="rectangular"
-                      logo_alignment="left"
-                      ux_mode="popup"
-                      size="large"
-                      auto_select={false}
-                    />
-                  </div>
-                )}
+                <div className="google-login-container">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSignup}
+                    onError={() => setMessage('Google signup failed')}
+                    width="100%"
+                    text="signup_with"
+                    useOneTap={false}
+                    theme="filled_blue"
+                    shape="rectangular"
+                    logo_alignment="left"
+                    ux_mode="popup"
+                    size="large"
+                  />
+                </div>
                 {/* Custom Google Button with proper icon */}
                 <button 
                   type="button" 

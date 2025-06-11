@@ -376,138 +376,42 @@ html, body {
   right: -80px;
 }
 
-/* Google Button Styling - Prevent shape changes */
+/* Google Login Button Styling */
 .google-btn-wrapper [data-testid="google-login-button"] {
-  width: 280px !important;
-  max-width: 280px !important;
-  min-width: 280px !important;
-  height: 48px !important;
-  overflow: hidden !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .google-btn-wrapper iframe {
-  width: 280px !important;
-  max-width: 280px !important;
-  min-width: 280px !important;
-  height: 48px !important;
+  width: 100% !important;
   border-radius: 12px !important;
   overflow: hidden !important;
-  border: none !important;
 }
 
-/* Ensure consistent button appearance */
-.google-btn-wrapper > div {
-  width: 280px !important;
-  max-width: 280px !important;
-  height: 48px !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-}
-
-/* Loading skeleton for Google button */
-.google-button-skeleton {
-  width: 280px;
-  height: 48px;
-  background: #ffffff;
-  border: 1px solid #dadce0;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-.google-button-skeleton::before {
-  content: '';
-  width: 20px;
-  height: 20px;
-  background: #f0f0f0;
-  border-radius: 50%;
-}
-
-.google-button-skeleton::after {
-  content: '';
-  width: 120px;
-  height: 16px;
-  background: #f0f0f0;
-  border-radius: 4px;
-}
-
-@keyframes pulse {
-  0%, 100% { 
-    opacity: 1; 
-  }
-  50% { 
-    opacity: 0.7; 
-  }
-}
-
-/* Google Login Container Styling */
 .google-login-container {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 48px; /* Reserve space for the button */
-  position: relative;
 }
 
 .google-login-container > div {
   width: 100% !important;
   max-width: 100% !important;
-  display: flex !important;
-  justify-content: center !important;
 }
 
 /* Override Google Button iframe styling */
 .google-login-container iframe {
-  width: 280px !important; /* Fixed width to prevent size changes */
-  min-width: 280px !important;
-  max-width: 280px !important;
-  height: 48px !important; /* Fixed height */
+  width: 100% !important;
+  min-width: 100% !important;
   border-radius: 12px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
   transition: all 0.3s ease !important;
-  border: none !important;
 }
 
 .google-login-container iframe:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
   transform: translateY(-1px) !important;
-}
-
-/* Prevent layout shift during loading */
-.google-btn-wrapper {
-  margin-bottom: 1.5rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  min-height: 80px; /* Reserve space to prevent layout shift */
-}
-
-/* Loading state for Google button */
-.google-login-container::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 280px;
-  height: 48px;
-  background: #ffffff;
-  border: 1px solid #dadce0;
-  border-radius: 12px;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.google-login-container:empty::before {
-  opacity: 1;
 }
 
 .login-footer {
@@ -621,20 +525,6 @@ html, body {
   
   .login-tagline {
     font-size: 1.1rem;
-  }
-
-  /* Mobile Google button adjustments */
-  .google-login-container iframe,
-  .google-btn-wrapper [data-testid="google-login-button"],
-  .google-btn-wrapper iframe,
-  .google-button-skeleton {
-    width: 250px !important;
-    max-width: 250px !important;
-    min-width: 250px !important;
-  }
-
-  .google-login-container::before {
-    width: 250px;
   }
 }
 
