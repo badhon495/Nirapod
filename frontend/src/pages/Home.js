@@ -271,10 +271,12 @@ function Home() {
         )
       );
 
-      // Clear input and close comment box
+      // Update the current comment post with new comments
+      setCurrentCommentPost(prev => prev ? { ...prev, comment: JSON.stringify(commentObj) } : null);
+
+      // Clear input but keep comment overlay open
       setCommentInput('');
-      setOpenComment(null);
-      setCurrentCommentPost(null);
+      // Don't close the comment overlay - user can manually close it when done
 
     } catch (err) {
       console.error('Error adding comment:', err);
@@ -297,19 +299,22 @@ function Home() {
     formData.append('nid', userNid);
     photoFiles.forEach(f => formData.append('photos', f));
     await axios.post('/api/complaint/upload-photos', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-    // Fetch the latest post data and update the photos in state
+    // Fetch the latest upload photos and update in state
     try {
-      const res = await axios.get(`/api/complaint/${trackingId}`);
+      const res = await axios.get(`/api/complaint/${trackingId}/upload-photos`);
       setPosts(prevPosts =>
         prevPosts.map(p =>
-          p.trackingId === trackingId ? { ...p, photos: res.data.photos } : p
+          p.trackingId === trackingId ? { ...p, uploadPhotos: res.data.uploadPhotos.join(',') } : p
         )
       );
+      // Update the current photo post to reflect the new uploaded photos
+      setCurrentPhotoPost(prev => prev ? { ...prev, uploadPhotos: res.data.uploadPhotos.join(',') } : null);
     } catch {
       // Optionally handle error
     }
-    setOpenPhotos(null);
-    setCurrentPhotoPost(null);
+    // Clear the file input but keep the photo gallery open
+    setPhotoFiles([]);
+    // Keep openPhotos and currentPhotoPost open so the gallery stays visible
   };
 
   const handleOpenReport = (trackingId) => {
@@ -338,11 +343,25 @@ function Home() {
         fallback: `http://localhost:8080/${cleanPhoto}`
       };
     });
+    
+    // Close photo gallery overlay temporarily to prevent layering issues
+    // But keep currentPhotoPost so we can reopen it later
+    if (openPhotos) {
+      setOpenPhotos(null);
+      // Don't clear currentPhotoPost here - we need it to reopen the gallery
+    }
+    
     setPhotoViewer({ isOpen: true, photos: processedPhotos, currentIndex: index });
   };
 
   const handleClosePhotoViewer = () => {
     setPhotoViewer({ isOpen: false, photos: [], currentIndex: 0 });
+    
+    // Reopen the photo gallery if user was viewing gallery photos
+    // This ensures the gallery stays open when closing the photo viewer
+    if (currentPhotoPost) {
+      setOpenPhotos(currentPhotoPost.trackingId);
+    }
   };
 
   const handleNextPhoto = () => {
@@ -919,18 +938,30 @@ function Home() {
               ×
             </button>
             <div className="photo-gallery-header">
-              <h3>Photos</h3>
+              <h3>User Uploaded Photos</h3>
             </div>
             <div className="photo-gallery-main">
               {(() => {
-                const photoArr = currentPhotoPost.photos ? currentPhotoPost.photos.split(',').map(p => p.trim()).filter(Boolean) : [];
-                return photoArr.map((p, i) => (
+                // Show upload photos instead of original complaint photos
+                const uploadPhotoArr = currentPhotoPost.uploadPhotos ? currentPhotoPost.uploadPhotos.split(',').map(p => p.trim()).filter(Boolean) : [];
+                console.log('Upload photos:', currentPhotoPost.uploadPhotos);
+                console.log('Upload photo array:', uploadPhotoArr);
+                
+                if (uploadPhotoArr.length === 0) {
+                  return (
+                    <div className="no-photos-message">
+                      <p>No user-uploaded photos yet. Use the upload button below to add photos.</p>
+                    </div>
+                  );
+                }
+                
+                return uploadPhotoArr.map((p, i) => (
                   <img 
                     key={i} 
                     src={`http://localhost:8080/uploads/${p.replace('/uploads/', '')}`} 
-                    alt={`Photo ${i + 1}`} 
+                    alt={`Uploaded Photo ${i + 1}`} 
                     className="gallery-image"
-                    onClick={() => handleOpenPhotoViewer(photoArr, i)}
+                    onClick={() => handleOpenPhotoViewer(uploadPhotoArr, i)}
                     onError={(e) => {
                       // Try alternative URL format if the first one fails
                       const altSrc = `http://localhost:8080/${p.replace('/uploads/', '')}`;

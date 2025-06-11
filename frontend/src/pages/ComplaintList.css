@@ -701,6 +701,7 @@
 @media (max-width: 768px) {
   .complaint-list-container {
     padding: 1rem;
+    padding-top: calc(60px + 1rem); /* Mobile navbar height + padding */
   }
 
   .complaints-title {
@@ -746,6 +747,11 @@
 }
 
 @media (max-width: 480px) {
+  .complaint-list-container {
+    padding: 0.75rem;
+    padding-top: calc(55px + 0.75rem); /* Smaller mobile navbar height + padding */
+  }
+
   .complaint-card {
     padding: 1.5rem;
   }
@@ -760,6 +766,26 @@
 
   .empty-icon {
     font-size: 3rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 320px) {
+  .complaint-list-container {
+    padding: 0.5rem;
+    padding-top: calc(55px + 0.5rem); /* Maintain proper spacing for very small screens */
+  }
+
+  .complaints-header {
+    padding: 1rem;
+  }
+
+  .complaints-title {
+    font-size: 1.5rem;
+  }
+
+  .complaint-card {
+    padding: 1rem;
   }
 }
 

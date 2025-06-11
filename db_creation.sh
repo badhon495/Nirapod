@@ -56,6 +56,7 @@ CREATE TABLE "usr_complain" (
     Tags TEXT NOT NULL,
     Details TEXT NOT NULL,
     Photos TEXT NOT NULL,
+    upload_photos text,
     Post_on_timeline BOOLEAN NOT NULL,
     Location TEXT,
     Update TEXT,

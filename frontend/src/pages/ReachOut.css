@@ -1,12 +1,5 @@
-/* Complain.css - based on Login.css, tailored for Complain page */
-/* Modern ReachOut Component Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.complain-bg {
+/* Modern ReachOut Page Styles - Based on FAQ design patterns */
+.reachout-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
   display: flex;
@@ -16,7 +9,7 @@
   padding-top: calc(70px + 2rem); /* Add navbar height + original padding */
 }
 
-.complain-bg::before {
+.reachout-container::before {
   content: '';
   position: fixed;
   top: 0;
@@ -30,77 +23,10 @@
   z-index: 0;
 }
 
-.complain-split {
-  display: flex;
-  flex: 1;
-  position: relative;
-  z-index: 1;
-}
-
-.complain-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(10px);
-}
-
-.complain-logo-img {
-  width: 180px;
-  height: 180px;
-  object-fit: contain;
-  margin-bottom: 1.5rem;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
-  animation: float 3s ease-in-out infinite;
-}
-
-.complain-logo {
-  font-size: 3.5rem;
-  font-weight: 800;
+/* Page title */
+.reachout-page-title {
   color: #ffffff;
-  letter-spacing: 2px;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.complain-tagline {
-  font-size: 1.5rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 300;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.complain-right {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-}
-
-.complain-form-box {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 3rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  width: 100%;
-  max-width: 500px;
-  animation: slideInRight 0.6s ease-out;
-}
-
-.complain-form-box h2 {
-  color: #ffffff;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
   text-align: center;
   margin-bottom: 2rem;
@@ -108,175 +34,413 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  position: relative;
+  z-index: 1;
+  padding-top: 1rem;
 }
 
-.complain-form-box form {
+/* Centered layout */
+.reachout-centered {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - 200px); /* Account for page title and footer height */
+}
+
+.reachout-centered .reachout-form-box {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Main form container */
+.reachout-form-box {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 3rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 700px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: slideInUp 0.6s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.reachout-form-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form header */
+.form-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.form-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  animation: bounce 2s infinite;
+}
+
+.form-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 300;
+  text-align: center;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+/* Form styling */
+.reachout-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.complain-form-box input,
-.complain-form-box textarea {
+.input-group {
+  position: relative;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  z-index: 3;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.textarea-icon {
+  top: 1rem;
+  align-self: flex-start;
+}
+
+.form-input {
+  width: 100%;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 1.2rem 1.2rem 1.2rem 3.5rem;
   font-size: 1rem;
   color: #ffffff;
   font-family: inherit;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
+  position: relative;
+  z-index: 2;
+}
+
+.form-textarea {
   resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+  line-height: 1.6;
 }
 
-.complain-form-box input::placeholder,
-.complain-form-box textarea::placeholder {
+.form-input::placeholder {
   color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
 }
 
-.complain-form-box input:focus,
-.complain-form-box textarea:focus {
+.form-input:focus {
   border-color: #60a5fa;
   background: rgba(255, 255, 255, 0.12);
   box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
-.complain-form-box textarea {
-  min-height: 120px;
-  font-family: inherit;
+.form-input:focus::placeholder {
+  color: rgba(255, 255, 255, 0.3);
 }
 
-.complain-btn {
+.form-input:focus + .input-focus-line {
+  transform: scaleX(1);
+}
+
+.input-wrapper:focus-within .input-icon {
+  color: #60a5fa;
+  transform: scale(1.1);
+}
+
+.input-focus-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  border-radius: 1px;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+/* Submit button */
+.reachout-btn {
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: #ffffff;
   border: none;
-  border-radius: 12px;
-  padding: 1rem;
+  border-radius: 16px;
+  padding: 1.2rem 2rem;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-  margin-top: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.complain-btn:hover:not(:disabled) {
+.reachout-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, #5b21b6, #7c3aed);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
 }
 
-.complain-btn:active {
-  transform: translateY(0);
+.reachout-btn:active {
+  transform: translateY(-1px);
 }
 
-.complain-btn:disabled {
-  opacity: 0.6;
+.reachout-btn:disabled {
+  opacity: 0.7;
   cursor: not-allowed;
   transform: none;
 }
 
-.complain-error {
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.3);
+.reachout-btn.loading {
+  background: linear-gradient(135deg, #6b7280, #9ca3af);
+  cursor: not-allowed;
+}
+
+.reachout-btn.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.btn-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+  position: relative;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.reachout-btn:active .btn-ripple {
+  width: 300px;
+  height: 300px;
+}
+
+/* Success animation for form box */
+.reachout-form-box.success-animation {
+  animation: successGlow 1s ease-out;
+}
+
+@keyframes successGlow {
+  0% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+  50% { 
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                0 0 30px rgba(16, 185, 129, 0.5),
+                inset 0 0 30px rgba(16, 185, 129, 0.1);
+  }
+  100% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+}
+
+/* Message styling */
+.reachout-message {
+  margin-top: 1.5rem;
+  padding: 1rem 1.5rem;
   border-radius: 12px;
-  padding: 1rem;
-  color: #22c55e;
-  text-align: center;
-  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   font-weight: 500;
+  position: relative;
+  overflow: hidden;
   animation: fadeIn 0.5s ease-out;
 }
 
-.complain-error.error {
+.reachout-message.success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+.reachout-message.error {
   background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
 }
 
-.complain-footer {
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  padding: 1.5rem;
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  z-index: 1;
+.message-icon {
+  font-size: 1.5rem;
+  animation: messageIconBounce 0.6s ease-out;
 }
 
-.complain-footer-link {
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+@keyframes messageIconBounce {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
-.complain-footer-link:hover {
-  color: #60a5fa;
-  background: rgba(96, 165, 250, 0.1);
-  transform: translateY(-1px);
+.message-text {
+  flex: 1;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Login Footer Styling - Consistent across all pages */
+.login-footer {
+  color: rgba(255, 255, 255, 0.8);
+  border: none;
+  box-shadow: none;
+  padding: 1.5rem 0;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 1.5rem;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 6px;
+  position: relative;
+}
+
+.footer-link:hover {
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Mobile responsive styling for login footer */
+@media (max-width: 768px) {
+  .login-footer {
+    padding: 1rem 0;
+    margin-top: auto;
+  }
+  
+  .footer-link {
+    margin: 0 0.8rem;
+    font-size: 0.9rem;
   }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .complain-split {
-    flex-direction: column;
+  .complain-page-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
   }
-  
-  .complain-left {
-    padding: 1.5rem;
-    min-height: 40vh;
-  }
-  
-  .complain-logo-img {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .complain-logo {
-    font-size: 2.5rem;
-  }
-  
-  .complain-tagline {
-    font-size: 1.25rem;
-  }
-  
-  .complain-right {
+
+  .complain-centered {
     padding: 1.5rem;
   }
   
@@ -284,19 +448,497 @@
     padding: 2rem;
   }
   
-  .complain-form-box h2 {
-    font-size: 1.75rem;
+  .form-icon {
+    font-size: 2.5rem;
   }
   
-  .complain-footer {
-    flex-wrap: wrap;
-    gap: 1rem;
+  .form-subtitle {
+    font-size: 1rem;
+  }
+  
+  .floating-element {
+    opacity: 0.5;
   }
 }
 
 @media (max-width: 480px) {
-  .complain-left,
-  .complain-right {
+  .complain-page-title {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .complain-centered {
+    padding: 1rem;
+  }
+  
+  .complain-form-box {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .form-input {
+    padding: 0.8rem 0.8rem 0.8rem 2.8rem;
+  }
+  
+  .input-icon {
+    left: 0.8rem;
+    font-size: 1.1rem;
+  }
+  
+  .complain-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .floating-element {
+    opacity: 0.3;
+  }
+
+  .element-1, .element-3 {
+    width: 50px;
+    height: 50px;
+  }
+
+  .element-2, .element-4 {
+    width: 70px;
+    height: 70px;
+  }
+
+  .footer-link {
+    margin: 0 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .complain-form-box {
+    padding: 1rem;
+  }
+  
+  .form-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .complaint-form {
+    gap: 1rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .complain-form-box {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .form-input {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .complain-btn {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .floating-element,
+  .form-icon,
+  .complain-form-box,
+  .form-input,
+  .complain-btn,
+  .message-icon {
+    animation: none;
+  }
+  
+  .complain-form-box:hover {
+    transform: none;
+  }
+  
+  .form-input:focus {
+    transform: none;
+  }
+  
+  .complain-btn:hover {
+    transform: none;
+  }
+}
+
+/* Form header */
+.form-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.form-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  animation: bounce 2s infinite;
+}
+
+.form-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+/* Form styling */
+.complaint-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  z-index: 3;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.textarea-icon {
+  top: 1rem;
+  align-self: flex-start;
+}
+
+.form-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+  font-size: 1rem;
+  color: #ffffff;
+  font-family: inherit;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  position: relative;
+  z-index: 2;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: #60a5fa;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+  transform: translateY(-2px);
+}
+
+.form-input:focus::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.form-input:focus + .input-focus-line {
+  transform: scaleX(1);
+}
+
+.input-wrapper:focus-within .input-icon {
+  color: #60a5fa;
+  transform: scale(1.1);
+}
+
+.input-focus-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  border-radius: 1px;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+/* Submit button */
+.complain-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  padding: 1.2rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.complain-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5b21b6, #7c3aed);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+}
+
+.complain-btn:active {
+  transform: translateY(-1px);
+}
+
+.complain-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.complain-btn.loading {
+  background: linear-gradient(135deg, #6b7280, #9ca3af);
+  cursor: not-allowed;
+}
+
+.complain-btn.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.btn-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+  position: relative;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.complain-btn:active .btn-ripple {
+  width: 300px;
+  height: 300px;
+}
+
+/* Success animation for form box */
+.complain-form-box.success-animation {
+  animation: successGlow 1s ease-out;
+}
+
+@keyframes successGlow {
+  0% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+  50% { 
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 
+                0 0 30px rgba(16, 185, 129, 0.5),
+                inset 0 0 30px rgba(16, 185, 129, 0.1);
+  }
+  100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+}
+
+/* Message styling */
+.complain-message {
+  margin-top: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.complain-message.success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+.complain-message.error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.message-icon {
+  font-size: 1.5rem;
+  animation: messageIconBounce 0.6s ease-out;
+}
+
+@keyframes messageIconBounce {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.message-text {
+  flex: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Footer styling */
+.login-footer {
+  color: rgba(255, 255, 255, 0.8);
+  border: none;
+  box-shadow: none;
+  padding: 1.5rem 0;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 1.5rem;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 6px;
+  position: relative;
+}
+
+.footer-link:hover {
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .complain-bg {
+    padding-top: 1rem;
+  }
+
+  .complain-page-title {
+    font-size: 2.2rem;
+    margin: 1.5rem 0;
+  }
+
+  .complain-centered {
+    padding: 1.5rem;
+  }
+  
+  .complain-form-box {
+    padding: 2rem;
+  }
+  
+  .form-icon {
+    font-size: 2.5rem;
+  }
+  
+  .form-subtitle {
+    font-size: 1rem;
+  }
+
+  .login-footer {
+    padding: 1rem 0;
+  }
+  
+  .footer-link {
+    margin: 0 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .floating-element {
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 480px) {
+  .complain-page-title {
+    font-size: 1.8rem;
+    margin: 1rem 0;
+  }
+
+  .complain-centered {
     padding: 1rem;
   }
   
@@ -304,122 +946,84 @@
     padding: 1.5rem;
   }
   
-  .complain-logo {
-    font-size: 2rem;
+  .form-input {
+    padding: 1rem 1rem 1rem 3rem;
   }
   
-  .complain-tagline {
+  .input-icon {
+    left: 0.8rem;
+    font-size: 1.1rem;
+  }
+  
+  .complain-btn {
+    padding: 1rem 1.5rem;
     font-size: 1rem;
   }
-}
-
-.complain-tagline {
-  font-size: 1.3rem;
-  opacity: 0.8;
-}
-
-.complain-right {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.complain-form-box {
-  background: #27374d;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px #0002;
-  padding: 2.5rem 2rem 2rem 2rem;
-  min-width: 320px;
-  max-width: 350px;
-  width: auto;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.complain-form-box h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-}
-
-.complain-form-box input,
-.complain-form-box textarea {
-  margin-bottom: 1rem;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
-  border: none;
-  background: #1e2233;
-  color: #fff;
-  font-size: 1rem;
-}
-
-.complain-form-box input:focus,
-.complain-form-box textarea:focus {
-  outline: 2px solid #2563eb;
-}
-
-.complain-form-box form {
-  display: flex;
-  flex-direction: column;
-}
-
-.complain-btn {
-  background: #22c55e;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.7rem 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-bottom: 1rem;
-  transition: background 0.2s;
-  max-width: 160px;
-  align-self: center;
-  width: 100%;
-}
-
-.complain-btn:hover {
-  background: #16a34a;
-}
-
-.complain-error {
-  color: #ff6b6b;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.complain-footer {
-  color: #fff;
-  border: none;
-  box-shadow: none;
-  padding: 16px 0 0 0;
-  text-align: center;
-}
-
-.complain-footer-link {
-  color: #fff;
-  margin: 0 16px;
-  text-decoration: underline;
-  font-size: 1rem;
-}
-
-.complain-footer-link:hover {
-  color: #f9d342;
-}
-
-@media (max-width: 900px) {
-  .complain-split {
-    flex-direction: column;
+  
+  .floating-element {
+    opacity: 0.3;
   }
-  .complain-left, .complain-right {
-    min-height: 220px;
-    flex: unset;
+
+  .element-1, .element-3 {
+    width: 50px;
+    height: 50px;
   }
+
+  .element-2, .element-4 {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 360px) {
   .complain-form-box {
-    margin: 2rem auto;
+    padding: 1rem;
+  }
+  
+  .form-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .complaint-form {
+    gap: 1rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .complain-form-box {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .form-input {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .complain-btn {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .floating-element,
+  .form-icon,
+  .complain-form-box,
+  .form-input,
+  .complain-btn,
+  .message-icon {
+    animation: none;
+  }
+  
+  .complain-form-box:hover {
+    transform: none;
+  }
+  
+  .form-input:focus {
+    transform: none;
+  }
+  
+  .complain-btn:hover {
+    transform: none;
   }
 }

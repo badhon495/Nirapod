@@ -56,7 +56,7 @@ function Tracker() {
   return (
     <div className="tracker-container">
       <div className="tracker-content">
-        <h1 className="tracker-title">🔍 Track Your Complaint</h1>
+        <h1 className="tracker-title">Track Your Complaint</h1>
         <p className="tracker-subtitle">
           Enter your tracking ID to check the status of your complaint
         </p>
@@ -81,17 +81,17 @@ function Tracker() {
                 <span className="loading-spinner"></span> Tracking...
               </>
             ) : (
-              '🔍 Track Complaint'
+              'Track Complaint'
             )}
           </button>
         </form>
         
-        {error && <div className="tracker-error">⚠️ {error}</div>}
+        {error && <div className="tracker-error"> {error}</div>}
         
         {complain && (
           <div className="complaint-result">
             <div className="complaint-header">
-              <span className="complaint-header-icon">📋</span>
+              <span className="complaint-header-icon"></span>
               <h2 className="complaint-header-title">Complaint Details</h2>
             </div>
             
@@ -139,7 +139,7 @@ function Tracker() {
               <div className="complaint-label">Latest Update</div>
               <div className="complaint-value">
                 <div className={`complaint-update ${!complain.update ? 'no-update' : ''}`}>
-                  {complain.update || '📋 No updates yet. Your complaint is being processed.'}
+                  {complain.update || 'No updates yet. Your complaint is being processed.'}
                 </div>
               </div>
             </div>

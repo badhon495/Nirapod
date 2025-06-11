@@ -326,25 +326,69 @@
   }
 }
 
+/* Medium mobile responsive */
+@media (max-width: 900px) {
+  .navbar-btn-group {
+    gap: 6px;
+  }
+  
+  .navbar-btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .navbar-btn-text {
+    display: none;
+  }
+  
+  /* Make icons smaller on medium mobile */
+  .navbar-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .navbar-logo-img {
+    height: 36px;
+    margin-right: 8px;
+  }
+  
+  .gradient-text {
+    font-size: 1.3rem;
+  }
+}
+
 @media (max-width: 700px) {
   .navbar-btn-group {
-    gap: 10px;
+    gap: 6px;
     margin-left: 8px;
   }
   .navbar-btn {
     padding: 6px 12px;
     font-size: 0.98rem;
   }
+  .navbar-btn-text {
+    display: none;
+  }
+  
+  /* Make icons even smaller on small mobile */
+  .navbar-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  
   .navbar-logo-img {
     height: 36px;
     margin-right: 8px;
   }
   .police-navbar .navbar-links {
-    gap: 10px;
+    gap: 6px;
   }
   .police-navbar .navbar-btn {
     padding: 6px 12px;
     font-size: 0.98rem;
+  }
+  .police-navbar .navbar-btn-text {
+    display: none;
   }
   .police-navbar .navbar-logo {
     height: 36px;
@@ -591,12 +635,52 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+  .navbar-custom {
+    height: 60px;
+    padding: 0 16px;
+  }
+
+  .navbar-logo-img {
+    height: 28px;
+    margin-right: 6px;
+  }
+
+  .gradient-text {
+    font-size: 1.2rem;
+  }
+
+  .navbar-btn-group {
+    gap: 4px;
+  }
+
+  .navbar-btn {
+    padding: 8px 10px;
+    min-width: auto;
+    justify-content: center;
+  }
+
+  .navbar-btn-text {
+    display: none;
+  }
+
+  /* Make icons smaller on mobile */
+  .navbar-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .profile-button {
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
   .profile-name {
     display: none;
   }
   
-  .profile-button {
-    padding: 8px 12px;
+  .profile-avatar {
+    width: 28px;
+    height: 28px;
   }
   
   .dropdown-menu {
@@ -612,5 +696,98 @@
   .dropdown-avatar {
     width: 40px;
     height: 40px;
+  }
+
+  .police-navbar {
+    height: 60px;
+    padding: 0 16px;
+  }
+
+  .police-navbar .navbar-logo {
+    height: 32px;
+    margin-right: 16px;
+  }
+
+  .police-navbar .navbar-links {
+    gap: 4px;
+  }
+
+  .police-navbar .navbar-btn {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    min-width: auto;
+    justify-content: center;
+  }
+
+  .police-navbar .navbar-btn-text {
+    display: none;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .navbar-custom {
+    height: 55px;
+    padding: 0 12px;
+  }
+
+  .navbar-logo-img {
+    height: 24px;
+    margin-right: 4px;
+  }
+
+  .gradient-text {
+    font-size: 1rem;
+  }
+
+  .navbar-btn-group {
+    gap: 2px;
+  }
+
+  .navbar-btn {
+    padding: 6px 8px;
+  }
+
+  .navbar-btn-text {
+    display: none;
+  }
+
+  /* Make icons smallest on extra small mobile */
+  .navbar-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .profile-button {
+    padding: 6px 8px;
+  }
+
+  .profile-avatar {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Profile button icons */
+  .profile-button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .police-navbar {
+    height: 55px;
+    padding: 0 12px;
+  }
+
+  .police-navbar .navbar-logo {
+    height: 28px;
+    margin-right: 12px;
+  }
+
+  .police-navbar .navbar-btn {
+    padding: 6px 8px;
+  }
+
+  .police-navbar .navbar-btn-text {
+    display: none;
   }
 }

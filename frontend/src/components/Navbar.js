@@ -124,7 +124,7 @@ function Navbar() {
         className={`navbar-btn ${isActive ? 'active' : ''}`}
       >
         <Icon className="w-4 h-4" />
-        {children}
+        <span className="navbar-btn-text">{children}</span>
       </Link>
     );
   };

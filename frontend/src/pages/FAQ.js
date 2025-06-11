@@ -1,6 +1,5 @@
 import React from 'react';
 import './FAQ.css';
-import logo from '../image/logo.png';
 
 function FAQ() {
   const faqs = [
@@ -40,38 +39,30 @@ function FAQ() {
 
   return (
     <div className="faq-container">
-      <div className="faq-split">
-        <div className="faq-left">
-          <img src={logo} alt="Nirapod Logo" className="faq-logo-img" />
-          <div className="faq-logo">Nirapod</div>
-          <div className="faq-tagline">
-            Frequently Asked Questions<br />
-            Find answers to common queries
-          </div>
-        </div>
-        <div className="faq-right">
-          <div className="faq-content-box">
-            <h2>❓ FAQ</h2>
-            <div className="faq-list">
-              {faqs.map((faq, index) => (
-                <div key={index} className="faq-item">
-                  <div className="faq-question">
-                    <span className="faq-question-icon">Q{index + 1}.</span>
-                    {faq.question}
-                  </div>
-                  <div className="faq-answer">
-                    {faq.answer}
-                  </div>
+      <h2 className="faq-page-title">❓ FAQ</h2>
+      <div className="faq-centered">
+        <div className="faq-content-box">
+          <div className="faq-list">
+            {faqs.map((faq, index) => (
+              <div key={index} className="faq-item">
+                <div className="faq-question">
+                  <span className="faq-question-icon">Q{index + 1}.</span>
+                  {faq.question}
                 </div>
-              ))}
-            </div>
+                <div className="faq-answer">
+                  {faq.answer}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-      <footer className="faq-footer">
-        <a href="/login" className="faq-footer-link">🔐 Login</a>
-        <a href="/ReachOut" className="faq-footer-link">📞 Reach Out</a>
-        <a href="/contact" className="faq-footer-link">📧 Contact</a>
+      <footer className="login-footer">
+        <a href="/login" className="footer-link">Login</a>
+        <a href="/faq" className="footer-link">FAQ</a>
+        <a href="/ReachOut" className="footer-link">Reach out</a>
+        <a href="/contact" className="footer-link">Contact</a>
+    
       </footer>
     </div>
   );

@@ -500,6 +500,7 @@
   line-height: 1.5;
   margin-bottom: 16px;
   word-wrap: break-word;
+  margin-top: 16px;
 }
 
 .social-post-update {
@@ -799,6 +800,9 @@
   flex: 1;
   justify-content: center;
   min-width: 0;
+  /* Touch-friendly improvements */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .post-action-btn:hover {
@@ -807,6 +811,11 @@
   border-color: #2563eb;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.post-action-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
 }
 
 .post-action-following {
@@ -873,21 +882,83 @@
     padding: 12px 16px;
   }
   
-  .social-actions-row {
+  .social-actions-row,
+  .post-actions-row {
     gap: 8px;
+    flex-wrap: wrap;
   }
   
-  .social-action-btn {
-    padding: 8px 12px;
+  .social-action-btn,
+  .post-action-btn {
+    padding: 10px 14px;
     font-size: 13px;
+    min-height: 44px; /* Better touch target */
+    flex: 1;
+    min-width: calc(50% - 4px); /* Two buttons per row on very small screens */
+    border-radius: 12px;
   }
   
   .action-text {
     display: none;
   }
   
-  .action-icon {
-    font-size: 18px;
+  .action-icon,
+  .btn-icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .social-post-actions {
+    padding: 8px 12px;
+  }
+  
+  .post-actions-row {
+    gap: 6px;
+  }
+  
+  .post-action-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+    min-height: 40px;
+    min-width: calc(50% - 3px);
+    border-radius: 10px;
+  }
+  
+  .btn-icon {
+    font-size: 14px;
+  }
+  
+  .post-action-btn span:not(.btn-icon) {
+    display: none; /* Hide text labels on very small screens */
+  }
+  
+  /* Optimize engagement stats for mobile */
+  .social-engagement-stats {
+    font-size: 12px;
+    gap: 8px;
+  }
+  
+  .engagement-item {
+    gap: 3px;
+  }
+}
+
+/* Touch-friendly improvements for devices with coarse pointers */
+@media (hover: none) and (pointer: coarse) {
+  .post-action-btn {
+    min-height: 48px; /* Larger touch targets */
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .post-action-btn:hover {
+    transform: none; /* Disable transform on touch devices */
+  }
+  
+  .post-action-btn:active {
+    background: #1d4ed8;
+    transform: scale(0.98);
   }
 }
 
@@ -1424,12 +1495,14 @@
   }
   
   .post-actions {
-    gap: 8px;
+    gap: 6px;
+    padding: 0 16px 16px;
   }
   
   .action-btn {
-    padding: 8px 12px;
-    font-size: 13px;
+    padding: 8px 10px;
+    font-size: 12px;
+    min-height: 40px;
   }
   
   .post-tags {
@@ -1439,6 +1512,18 @@
   .post-tag {
     padding: 3px 8px;
     font-size: 11px;
+  }
+  
+  /* Additional mobile optimizations for post action buttons */
+  .post-action-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+    min-height: 40px;
+    border-radius: 10px;
+  }
+  
+  .btn-icon {
+    font-size: 14px;
   }
 }
 .post-context {
@@ -1506,6 +1591,37 @@
     transform: none;
     top: auto;
     right: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .post-actions {
+    gap: 12px;
+    margin: 24px 0 0 0;
+    flex-wrap: wrap;
+  }
+  
+  .post-action-btn {
+    flex: 1;
+    min-width: calc(50% - 6px);
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    min-height: 44px;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .post-actions {
+    gap: 8px;
+    margin: 20px 0 0 0;
+  }
+  
+  .post-action-btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    min-height: 40px;
+    border-radius: 10px;
   }
 }
 
@@ -1666,7 +1782,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.95);
-  z-index: 10000;
+  z-index: 20000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1698,7 +1814,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10002;
+  z-index: 20002;
   transition: background 0.2s ease;
   backdrop-filter: blur(10px);
 }
@@ -1741,7 +1857,7 @@
   justify-content: center;
   transition: background 0.2s ease;
   backdrop-filter: blur(10px);
-  z-index: 10002;
+  z-index: 20002;
 }
 
 .photo-nav:hover {
@@ -1768,7 +1884,7 @@
   font-size: 14px;
   font-weight: 500;
   backdrop-filter: blur(10px);
-  z-index: 10002;
+  z-index: 20002;
 }
 
 .photo-viewer-thumbnails {
@@ -1784,6 +1900,7 @@
   backdrop-filter: blur(10px);
   max-width: 80vw;
   overflow-x: auto;
+  z-index: 20002;
 }
 
 .photo-thumbnail {
@@ -2509,4 +2626,15 @@
   .filter-icon {
     font-size: 18px;
   }
+}
+
+.no-photos-message {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.no-photos-message p {
+  font-size: 1.1rem;
+  margin: 0;
 }

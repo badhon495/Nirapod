@@ -449,6 +449,17 @@ html, body {
   .signup-tagline {
     font-size: 1.1rem;
   }
+  
+  /* Mobile responsive styling for login footer */
+  .login-footer {
+    padding: 1rem 0;
+    margin-top: auto;
+  }
+  
+  .footer-link {
+    margin: 0 0.8rem;
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -650,4 +661,20 @@ html, body {
   color: #6366f1;
   background: rgba(99, 102, 241, 0.1);
   transform: translateY(-1px);
+}
+
+/* Login Footer Styling - Consistent across all pages */
+.login-footer {
+  color: rgba(255, 255, 255, 0.8);
+  border: none;
+  box-shadow: none;
+  padding: 1.5rem 0;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  flex-shrink: 0;
 }

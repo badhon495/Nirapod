@@ -90,6 +90,7 @@ public class ComplaintController {
                     c.getTags(),
                     c.getDetails(),
                     c.getPhotos(),
+                    c.getUploadPhotos(),
                     c.isPostOnTimeline(),
                     c.getLocation(),
                     c.getUpdateNote(),
@@ -97,6 +98,7 @@ public class ComplaintController {
                     c.getFollow(),
                     c.getComment(),
                     c.getTime(), // <-- Make sure this is c.getTime()
+                    c.getReport(),
                     userProfileImage
             ));
         }
@@ -135,6 +137,7 @@ public class ComplaintController {
                         c.getTags(),
                         c.getDetails(),
                         c.getPhotos(),
+                        c.getUploadPhotos(),
                         c.isPostOnTimeline(),
                         c.getLocation(),
                         c.getUpdateNote(),
@@ -189,6 +192,7 @@ public class ComplaintController {
                     c.getTags(),
                     c.getDetails(),
                     c.getPhotos(),
+                    c.getUploadPhotos(),
                     c.isPostOnTimeline(),
                     c.getLocation(),
                     c.getUpdateNote(),
@@ -196,6 +200,7 @@ public class ComplaintController {
                     c.getFollow(),
                     c.getComment(),
                     c.getTime(),
+                    null, // no report field for user complaints
                     userProfileImage));
         }
         return responseList;
@@ -288,16 +293,32 @@ public class ComplaintController {
                 photoPaths.add("/uploads/" + filename);
             }
         }
-        // Append to existing photos
-        String existingPhotos = complaint.getPhotos();
+        // Append to existing upload_photos instead of photos
+        String existingUploadPhotos = complaint.getUploadPhotos();
         String newPhotos = String.join(",", photoPaths);
-        if (existingPhotos != null && !existingPhotos.isBlank()) {
-            complaint.setPhotos(existingPhotos + "," + newPhotos);
+        if (existingUploadPhotos != null && !existingUploadPhotos.isBlank()) {
+            complaint.setUploadPhotos(existingUploadPhotos + "," + newPhotos);
         } else {
-            complaint.setPhotos(newPhotos);
+            complaint.setUploadPhotos(newPhotos);
         }
         repository.save(complaint);
-        return ResponseEntity.ok(Map.of("success", true, "photos", complaint.getPhotos()));
+        return ResponseEntity.ok(Map.of("success", true, "uploadPhotos", complaint.getUploadPhotos()));
+    }
+
+    // Get upload photos for a specific complaint
+    @GetMapping("/complaint/{trackingId}/upload-photos")
+    public ResponseEntity<?> getUploadPhotos(@PathVariable Integer trackingId) {
+        Optional<Complaint> complaintOpt = repository.findById(trackingId);
+        if (complaintOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Complaint not found");
+        }
+        Complaint complaint = complaintOpt.get();
+        String uploadPhotos = complaint.getUploadPhotos();
+        List<String> photoList = new ArrayList<>();
+        if (uploadPhotos != null && !uploadPhotos.isBlank()) {
+            photoList = List.of(uploadPhotos.split(","));
+        }
+        return ResponseEntity.ok(Map.of("uploadPhotos", photoList));
     }
 
     // Delete a complaint by ID
