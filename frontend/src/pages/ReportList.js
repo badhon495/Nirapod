@@ -3,9 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ComplaintList.css';
 
-// Set axios base URL to backend for all requests
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-
 const ReportList = () => {
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -55,7 +52,7 @@ const ReportList = () => {
     const fetchReports = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/complaints/reported`);
+            const res = await axios.get('/api/complaints/reported');
             setReports(res.data);
             setLoading(false);
         } catch (err) {
@@ -69,7 +66,7 @@ const ReportList = () => {
         const names = [];
         for (const nid of nids) {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/user/by-identifier?value=${nid}`);
+                const res = await axios.get(`/api/user/by-identifier?value=${nid}`);
                 names.push(res.data.name || nid);
             } catch {
                 names.push(nid);

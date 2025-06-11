@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './ComplaintList.css';
-
-// Set axios base URL to backend for all requests
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+import './Notifications.css';
 
 function Notifications() {
   const [notifications, setNotifications] = useState([]);
@@ -40,10 +37,40 @@ function Notifications() {
       setNotifications(sortedNotifications);
       setLoading(false);
       setError(null);
+
+      // Automatically mark all unread notifications as read
+      await markAllAsRead(sortedNotifications);
     } catch (err) {
       console.error('Failed to fetch notifications:', err.response?.data || err.message);
       setError('Failed to fetch notifications. Please try again later.');
       setLoading(false);
+    }
+  };
+
+  const markAllAsRead = async (notificationsList) => {
+    if (!userId || !notificationsList) return;
+
+    const unreadNotifications = notificationsList.filter(n => !n.read);
+    
+    if (unreadNotifications.length === 0) return;
+
+    try {
+      // Mark all unread notifications as read in parallel
+      const markReadPromises = unreadNotifications.map(notification => 
+        axios.put(`/api/notifications/${notification.id}/read`)
+      );
+
+      await Promise.all(markReadPromises);
+
+      // Update the local state to reflect all notifications as read
+      setNotifications(prevNotifications => 
+        prevNotifications.map(n => ({ ...n, read: true }))
+      );
+
+      console.log(`Marked ${unreadNotifications.length} notifications as read`);
+    } catch (err) {
+      console.error('Failed to mark notifications as read:', err);
+      // Don't show error to user as this is a background operation
     }
   };
 
@@ -54,15 +81,8 @@ function Notifications() {
     }
 
     try {
-      if (!notification.read) {
-        await axios.put(`/api/notifications/${notification.id}/read`);
-        setNotifications(prevNotifications => 
-          prevNotifications.map(n => 
-            n.id === notification.id ? { ...n, read: true } : n
-          )
-        );
-      }
-
+      // Since all notifications are already marked as read when page loads,
+      // we just need to handle navigation
       if (notification.relatedPostId) {
         // First verify that the user is still authenticated
         try {
@@ -92,9 +112,8 @@ function Notifications() {
   }, []);
 
   const getNotificationStyle = (notification) => {
-    let className = 'notification-item';
-    if (!notification.read) className += ' notification-unread';
-    return className;
+    // All notifications appear the same since they're auto-marked as read
+    return 'notification-item';
   };
 
   const formatTime = (dateString) => {

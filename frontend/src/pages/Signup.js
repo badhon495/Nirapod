@@ -5,9 +5,6 @@ import logo from '../image/logo.png';
 import { GoogleLogin, googleLogout } from '@react-oauth/google';
 import googleIcon from '../image/google-icon.png';
 
-// Set axios base URL to backend for all requests
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-
 const initialForm = {
   name: '', phoneNumber: '', email: '', password: '', confirmPassword: '',
   otp: '', userType: 'NORMAL', nid: '', presentAddress: '', permanentAddress: '',
@@ -28,7 +25,7 @@ function Signup() {
   const handleGoogleSignup = async (credentialResponse) => {
     try {
       const idToken = credentialResponse.credential;
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/google-signup`, { idToken });
+      const res = await axios.post('/api/auth/google-signup', { idToken });
       if (res.data && res.data.user) {
         setForm(f => ({
           ...f,
@@ -44,6 +41,12 @@ function Signup() {
     } catch (err) {
       setMessage('Google signup failed or user already exists.');
     }
+  };
+
+  // Custom Google Signup Button Click Handler
+  const handleCustomGoogleSignup = () => {
+    // This will be implemented if the GoogleLogin component fails
+    setMessage('Google signup is temporarily unavailable. Please use email signup.');
   };
 
   const handleChange = e => {
@@ -69,7 +72,7 @@ function Signup() {
         return;
       }
       try {
-        await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/send-otp`, {
+        await axios.post('/api/auth/send-otp', {
           email: form.email,
         });
         setStep(2);
@@ -119,7 +122,7 @@ function Signup() {
         }
       });
       try {
-        await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signup`, formData, {
+        await axios.post('/api/auth/signup', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
           maxContentLength: 20 * 1024 * 1024, // 20MB
           maxBodyLength: 20 * 1024 * 1024 // 20MB
@@ -152,24 +155,34 @@ function Signup() {
           <div className="signup-form-box">
             <h2>Sign Up</h2>
             {step === 1 && (
-              <div className="google-btn-wrapper" style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ marginBottom: '0.5rem', fontWeight: 500, color: '#fff', fontSize: '1.05rem', textAlign: 'center' }}>
+              <div className="google-btn-wrapper">
+                <div className="google-separator">
                   Sign up with Google
                 </div>
-                <GoogleLogin
-                  onSuccess={handleGoogleSignup}
-                  onError={() => setMessage('Google signup failed')}
-                  width="100%"
-                  text="signup_with"
-                  useOneTap={false}
-                  theme="outline"
-                  shape="rectangular"
-                  logo_alignment="center"
-                  ux_mode="popup"
-                  type="icon"
-                  size="large"
-                  cancel_on_tap_outside={false}
-                />
+                <div className="google-login-container">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSignup}
+                    onError={() => setMessage('Google signup failed')}
+                    width="100%"
+                    text="signup_with"
+                    useOneTap={false}
+                    theme="filled_blue"
+                    shape="rectangular"
+                    logo_alignment="left"
+                    ux_mode="popup"
+                    size="large"
+                  />
+                </div>
+                {/* Custom Google Button with proper icon */}
+                <button 
+                  type="button" 
+                  className="custom-google-btn"
+                  onClick={handleCustomGoogleSignup}
+                  style={{ display: 'none' }}
+                >
+                  <img src={googleIcon} alt="Google" className="google-icon" />
+                  Sign up with Google
+                </button>
               </div>
             )}
             {step === 1 && (
@@ -300,12 +313,17 @@ function Signup() {
             )}
             {message && <div className="signup-error">{message}</div>}
             <div className="signup-links">
-              <a href="/login" className="signup-link">Already has an account?</a>
+              <div className="signup-divider">
+                <span>Already have an account?</span>
+              </div>
+              <a href="/login" className="signup-link-btn login-btn-link">
+                Sign in here
+              </a>
             </div>
           </div>
         </div>
       </div>
-      <footer className="signup-footer">
+      <footer className="login-footer">
         <a href="/faq" className="footer-link">FAQ</a>
         <a href="/ReachOut" className="footer-link">Reach out</a>
         <a href="/contact" className="footer-link">Contact</a>

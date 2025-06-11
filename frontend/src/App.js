@@ -25,8 +25,8 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    // Only check category if not on login/signup/faq/contact/complain
-    const publicPaths = ['/login', '/signup', '/faq', '/contact', '/complain'];
+    // Only check category if not on login/signup/faq/contact/complain/ReachOut
+    const publicPaths = ['/login', '/signup', '/faq', '/contact', '/complain', '/ReachOut'];
     if (publicPaths.includes(location.pathname)) return;
     // Get identifier from localStorage (set after login)
     const identifier = localStorage.getItem('nirapod_identifier');
@@ -36,7 +36,7 @@ function App() {
       .catch(() => {});
   }, [location.pathname]);
 
-  const hideNavbar = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/faq' || location.pathname === '/contact' || location.pathname === '/complain';
+  const hideNavbar = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/faq' || location.pathname === '/contact' || location.pathname === '/complain' || location.pathname === '/ReachOut';
 
   return (
     <>

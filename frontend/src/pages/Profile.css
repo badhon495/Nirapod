@@ -1,0 +1,713 @@
+/* Profile Page Modern Styling */
+.profile-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  padding: 2rem;
+  padding-top: calc(70px + 2rem); /* Add navbar height + original padding */
+  position: relative;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+.profile-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(120, 255, 198, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-title {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.profile-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.profile-form {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.profile-photo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.profile-photo-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.profile-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.profile-photo:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.profile-photo-placeholder {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-photo-placeholder::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    transparent 50%, 
+    rgba(255, 255, 255, 0.1) 100%);
+  animation: shimmer 3s infinite;
+}
+
+.profile-photo-placeholder:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.profile-photo-placeholder:hover .profile-avatar-initials {
+  transform: scale(1.1);
+}
+
+.profile-photo-placeholder:hover .profile-default-icon {
+  transform: scale(1.2);
+}
+
+.profile-avatar-initials {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+.profile-photo-upload-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.profile-photo-upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+.profile-form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  position: relative;
+}
+
+.profile-form-label {
+  min-width: 200px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  text-align: right;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.profile-form-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.875rem 1.25rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.profile-form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.profile-form-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.profile-form-input:read-only {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: not-allowed;
+}
+
+.profile-form-input[type="file"] {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.profile-form-input[type="file"]::-webkit-file-upload-button {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.profile-form-input[type="file"]::-webkit-file-upload-button:hover {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  transform: translateY(-1px);
+}
+
+.profile-update-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 1.5rem auto 0;
+  display: block;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.profile-update-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+.profile-update-btn:active {
+  transform: translateY(-1px);
+}
+
+.password-change-form {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.password-change-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.password-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.875rem 1.25rem;
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.password-input:focus {
+  outline: none;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.password-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.password-change-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.password-change-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+  background: linear-gradient(135deg, #d97706, #b45309);
+}
+
+.profile-message {
+  margin-top: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.profile-message.success {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.profile-message.error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Social Avatar Fallback - same as Home page */
+.social-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 50%;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1rem 0.5rem;
+    padding-top: calc(60px + 1rem); /* Mobile navbar height + padding */
+  }
+
+  .profile-title {
+    font-size: 2rem;
+  }
+
+  .profile-form {
+    padding: 1.5rem;
+    margin: 0 0.5rem 1.5rem;
+  }
+
+  .password-change-form {
+    padding: 1.5rem;
+    margin: 0 0.5rem;
+  }
+
+  .profile-form-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .profile-form-label {
+    min-width: auto;
+    text-align: left;
+    margin-bottom: 0.25rem;
+  }
+
+  .profile-photo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-photo-placeholder {
+    width: 120px;
+    height: 120px;
+  }
+  
+  /* Disable performance-heavy effects on mobile */
+  .profile-photo,
+  .profile-photo-placeholder {
+    transition: none !important;
+    transform: none !important;
+  }
+  
+  .profile-photo:hover,
+  .profile-photo-placeholder:hover {
+    transform: none !important;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  .profile-photo-placeholder:hover .profile-avatar-initials,
+  .profile-photo-placeholder:hover .profile-default-icon {
+    transform: none !important;
+  }
+  
+  /* Simplify animations for mobile */
+  .profile-form-row {
+    animation: none !important;
+  }
+  
+  .profile-update-btn:hover {
+    transform: none !important;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3) !important;
+  }
+  
+  .profile-update-btn:active {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 0.75rem 0.5rem;
+    padding-top: calc(55px + 0.75rem); /* Smaller mobile navbar height + padding */
+  }
+
+  .profile-title {
+    font-size: 1.75rem;
+  }
+
+  .profile-form {
+    padding: 1rem;
+  }
+
+  .password-change-form {
+    padding: 1rem;
+  }
+
+  .profile-photo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-photo-placeholder {
+    width: 100px;
+    height: 100px;
+    font-size: 1rem;
+  }
+  
+  /* Further optimize for very small screens */
+  .profile-form-input:focus {
+    box-shadow: none !important; /* Remove focus glow for performance */
+    border-color: #3b82f6;
+  }
+  
+  .profile-form-input[type="file"]::-webkit-file-upload-button {
+    transition: none !important;
+  }
+  
+  .profile-form-input[type="file"]::-webkit-file-upload-button:hover {
+    transform: none !important;
+  }
+  
+  /* Disable backdrop filters on very small screens for better performance */
+  .profile-form,
+  .password-change-form {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+}
+
+/* Extra optimizations for very small screens */
+@media (max-width: 320px) {
+  .profile-container {
+    padding: 0.5rem 0.25rem;
+    padding-top: calc(55px + 0.5rem);
+  }
+  
+  .profile-title {
+    font-size: 1.5rem;
+  }
+  
+  .profile-form,
+  .password-change-form {
+    padding: 0.75rem;
+    margin: 0 0.25rem 1rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  .profile-photo,
+  .profile-photo-placeholder {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .profile-avatar-initials {
+    font-size: 1.8rem;
+  }
+  
+  .profile-form-input {
+    padding: 0.75rem 1rem;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  .profile-update-btn {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+/* Performance optimizations for mobile devices */
+@media (max-width: 768px) {
+  /* Disable expensive shimmer animation on mobile */
+  .profile-photo-placeholder::before {
+    animation: none !important;
+    display: none;
+  }
+  
+  /* Use simpler gradient backgrounds */
+  .profile-container::before {
+    background: radial-gradient(circle at 50% 50%, rgba(120, 119, 198, 0.05) 0%, transparent 70%) !important;
+  }
+  
+  /* Optimize backdrop filters */
+  .profile-form-input {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .profile-photo:hover,
+  .profile-photo-placeholder:hover,
+  .profile-update-btn:hover,
+  .profile-form-input[type="file"]::-webkit-file-upload-button:hover {
+    transform: none !important;
+    box-shadow: inherit !important;
+  }
+  
+  /* Increase touch targets */
+  .profile-form-input[type="file"] {
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  
+  .profile-update-btn {
+    min-height: 48px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .profile-photo-placeholder::before {
+    animation: none !important;
+  }
+}
+
+/* Enhanced animations */
+.profile-form, .password-change-form {
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-form-row {
+  animation: fadeInLeft 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+.profile-form-row:nth-child(1) { animation-delay: 0.1s; }
+.profile-form-row:nth-child(2) { animation-delay: 0.2s; }
+.profile-form-row:nth-child(3) { animation-delay: 0.3s; }
+.profile-form-row:nth-child(4) { animation-delay: 0.4s; }
+.profile-form-row:nth-child(5) { animation-delay: 0.5s; }
+.profile-form-row:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.profile-default-icon {
+  font-size: 2.5rem;
+  transition: transform 0.3s ease;
+}
+
+/* Hardware acceleration and performance optimizations */
+.profile-container {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: scroll-position;
+  contain: layout style paint;
+}
+
+.profile-form,
+.password-change-form {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: auto;
+}
+
+/* iOS Safari specific optimizations */
+@supports (-webkit-touch-callout: none) {
+  .profile-container {
+    -webkit-overflow-scrolling: touch;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .profile-form-input {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+/* Optimize scroll performance */
+.profile-container {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

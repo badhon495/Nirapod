@@ -40,11 +40,59 @@ function ReachOut() {
 
   return (
     <div className="reachout-container">
-      <h2 className="reachout-page-title">📞 Reach Out to Us</h2>
-      
-      <div className="reachout-centered">
-        <div className={`reachout-form-box ${isSubmitted ? 'success-animation' : ''}`}>
+      <div className="reachout-split">
+        {/* Left side - Logo and branding */}
+        <div className="reachout-left">
+          <div className="reachout-logo-section">
+            <img 
+              src="/logo.png" 
+              alt="Nirapod Logo" 
+              className="reachout-logo-img"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'block';
+              }}
+            />
+            <div className="reachout-logo" style={{ display: 'none' }}>NIRAPOD</div>
+            <p className="reachout-tagline">
+              Connect with us for any questions, feedback, or support needs
+            </p>
+          </div>
+          
+          {/* Quick Contact Info */}
+          <div className="reachout-quick-info">
+            <div className="quick-info-item">
+              <div className="quick-info-icon">📧</div>
+              <div className="quick-info-text">
+                <div className="quick-info-label">Email</div>
+                <div className="quick-info-value">support@nirapod.com</div>
+              </div>
+            </div>
+            <div className="quick-info-item">
+              <div className="quick-info-icon">📱</div>
+              <div className="quick-info-text">
+                <div className="quick-info-label">Phone</div>
+                <div className="quick-info-value">+880 1700-000000</div>
+              </div>
+            </div>
+            <div className="quick-info-item">
+              <div className="quick-info-icon">⏰</div>
+              <div className="quick-info-text">
+                <div className="quick-info-label">Response Time</div>
+                <div className="quick-info-value">Within 24 hours</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        {/* Right side - Contact Form */}
+        <div className="reachout-right">
+          <div className={`reachout-form-box ${isSubmitted ? 'success-animation' : ''}`}>
+            <div className="form-header">
+              <h2 className="form-title">Get in Touch</h2>
+              <p className="form-subtitle">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+            </div>
+          
           <form onSubmit={handleSubmit} className="reachout-form">
             <div className="input-group">
               <div className="input-wrapper">
@@ -125,11 +173,11 @@ function ReachOut() {
                   </>
                 ) : isSubmitted ? (
                   <>
-                    Sent!
+                    ✅ Sent!
                   </>
                 ) : (
                   <>
-                    Send Message
+                    🚀 Send Message
                   </>
                 )}
               </span>
@@ -149,11 +197,9 @@ function ReachOut() {
       </div>
       
       <footer className="login-footer">
-        <a href="/login" className="footer-link">Login</a>
         <a href="/faq" className="footer-link">FAQ</a>
         <a href="/ReachOut" className="footer-link">Reach out</a>
         <a href="/contact" className="footer-link">Contact</a>
-        
       </footer>
     </div>
   );

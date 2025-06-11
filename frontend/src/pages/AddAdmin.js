@@ -3,9 +3,6 @@ import axios from 'axios';
 import './Signup.css';
 import logo from '../image/logo.png';
 
-// Set axios base URL to backend for all requests
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-
 const initialForm = {
   name: '', phoneNumber: '', email: '', password: '', confirmPassword: '',
   otp: '', nid: '', presentAddress: '', permanentAddress: '',
@@ -219,7 +216,7 @@ function AddAdmin() {
           </div>
         </div>
       </div>
-      <footer className="signup-footer">
+      <footer className="login-footer">
         <a href="/faq" className="footer-link">FAQ</a>
         <a href="/ReachOut" className="footer-link">Reach out</a>
         <a href="/contact" className="footer-link">Contact</a>

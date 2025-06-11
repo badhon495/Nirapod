@@ -9,9 +9,6 @@ import L from 'leaflet';
 import 'leaflet-control-geocoder';
 import pinGif from '../image/pin.gif';
 
-// Set axios base URL to backend for all requests
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-
 function ComplaintDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -19,6 +16,7 @@ function ComplaintDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
+  const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [], currentIndex: 0 });
 
   // Admin-only actions
   const isAdmin = localStorage.getItem('categories') === 'admin';
@@ -70,6 +68,37 @@ function ComplaintDetails() {
     }
   }, [complaint]);
 
+  // Handle photo viewer body overflow and keyboard navigation
+  useEffect(() => {
+    if (photoViewer.isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [photoViewer.isOpen]);
+
+  // Keyboard navigation for photo viewer
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (!photoViewer.isOpen) return;
+      
+      if (e.key === 'Escape') {
+        handleClosePhotoViewer();
+      } else if (e.key === 'ArrowLeft') {
+        handlePrevPhoto();
+      } else if (e.key === 'ArrowRight') {
+        handleNextPhoto();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [photoViewer.isOpen]);
+
   const handleUpdateSuccess = (updatedComplaint) => {
     setComplaint(updatedComplaint);
     alert('Complaint updated successfully!');
@@ -77,6 +106,36 @@ function ComplaintDetails() {
 
   const handleBackToList = () => {
     navigate('/complains');
+  };
+
+  // Photo viewer handlers
+  const handleOpenPhotoViewer = (photos, index = 0) => {
+    const processedPhotos = photos.map(photo => {
+      const cleanPhoto = photo.replace('/uploads/', '');
+      return {
+        primary: `http://localhost:8080/uploads/${cleanPhoto}`,
+        fallback: `http://localhost:8080/${cleanPhoto}`
+      };
+    });
+    setPhotoViewer({ isOpen: true, photos: processedPhotos, currentIndex: index });
+  };
+
+  const handleClosePhotoViewer = () => {
+    setPhotoViewer({ isOpen: false, photos: [], currentIndex: 0 });
+  };
+
+  const handleNextPhoto = () => {
+    setPhotoViewer(prev => ({
+      ...prev,
+      currentIndex: (prev.currentIndex + 1) % prev.photos.length
+    }));
+  };
+
+  const handlePrevPhoto = () => {
+    setPhotoViewer(prev => ({
+      ...prev,
+      currentIndex: prev.currentIndex === 0 ? prev.photos.length - 1 : prev.currentIndex - 1
+    }));
   };
 
   useEffect(() => {
@@ -124,11 +183,11 @@ function ComplaintDetails() {
         {complaint.userPhoto && (() => {
           let photo = complaint.userPhoto;
           if (photo.startsWith('/uploads/')) photo = photo.replace('/uploads/', '');
-          const backendUrl = process.env.REACT_APP_API_URL;
+          const backendUrl = 'http://localhost:8080';
           const src = `${backendUrl}/${photo}`;
           return (
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 18 }}>
-              <img src={src} alt="User" style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', border: '3px solid #fff', background: '#eee' }} />
+            <div className="user-photo-container">
+              <img src={src} alt="User" className="user-photo" />
             </div>
           );
         })()}
@@ -164,27 +223,26 @@ function ComplaintDetails() {
         <div className="detail-row">
           <span className="detail-label">Location : </span>
           <span className="detail-value">{complaint.location}</span>
-        </div>
-
-        <div className="detail-row">
+        </div>        <div className="detail-row">
           <span className="detail-label">Map :</span>
-          <div className="detail-value" style={{ height: '300px', width: '100%', border: '1px solid #ccc', borderRadius: '8px' }}>
-            {(() => {
-              const location = complaint.location;
-              if (!location) return <div>Location not found in the map</div>;
+          <div className="detail-value">
+            <div className="map-container">
+              {(() => {
+                const location = complaint.location;
+                if (!location) return <div>Location not found in the map</div>;
 
-              const [latitude, longitude] = location.split(',').map(coord => parseFloat(coord.trim()));
+                const [latitude, longitude] = location.split(',').map(coord => parseFloat(coord.trim()));
 
-              if (!isNaN(latitude) && !isNaN(longitude)) {
-                return (
-                  <div id="map" style={{ height: '100%', width: '100%' }}></div>
-                );
-              } else {
-                return <div>Please Use GPS Coordinates to load the map correctly !</div>;
-              }
-            })()}
+                if (!isNaN(latitude) && !isNaN(longitude)) {
+                  return (
+                    <div id="map"></div>
+                  );
+                } else {
+                  return <div>Please Use GPS Coordinates to load the map correctly !</div>;
+                }
+              })()}
+            </div>
           </div>
-
         </div>
         <div className="detail-row">
           <span className="detail-label">Timestamp :</span>
@@ -203,25 +261,31 @@ function ComplaintDetails() {
         </div>
         <div className="detail-row">
           <span className="detail-label">Photos :</span>
-          <span className="detail-value">
-            {complaint.photos && complaint.photos.split(',').map((photo, idx) => {
-              let trimmed = photo.trim();
-              // Do not include /uploads in the image URL
-              if (trimmed.startsWith('/uploads/')) {
-                trimmed = trimmed.replace('/uploads/', '');
-              }
-              const backendUrl = process.env.REACT_APP_API_URL;
-              const src = `${backendUrl}/${trimmed}`;
-              return (
-                <img
-                  key={idx}
-                  src={src}
-                  alt={`complaint-photo-${idx}`}
-                  style={{ maxWidth: 180, maxHeight: 180, marginRight: 8, borderRadius: 8, border: '1px solid #ccc' }}
-                />
-              );
-            })}
-          </span>
+          <div className="detail-value">
+            <div className="photos-container">
+              {complaint.photos && complaint.photos.split(',').map((photo, idx) => {
+                let trimmed = photo.trim();
+                // Do not include /uploads in the image URL
+                if (trimmed.startsWith('/uploads/')) {
+                  trimmed = trimmed.replace('/uploads/', '');
+                }
+                const backendUrl = "http://localhost:8080";
+                const src = `${backendUrl}/${trimmed}`;
+                return (
+                  <img
+                    key={idx}
+                    src={src}
+                    alt={`complaint-photo-${idx}`}
+                    className="complaint-photo"
+                    onClick={() => {
+                      const photoArray = complaint.photos.split(',').map(p => p.trim());
+                      handleOpenPhotoViewer(photoArray, idx);
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
         </div>
         {/* Current Status */}
         <div className="detail-row">
@@ -238,19 +302,85 @@ function ComplaintDetails() {
           </div>
         )}
         {/* Update Component and Admin Delete Buttons */}
-        <div className="update-complaint-container" style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+        <div className="update-complaint-container">
           <UpdateComplaint 
             complaint={complaint} 
             onUpdateSuccess={handleUpdateSuccess} 
           />
           {isAdmin && (
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 16, marginTop: 0 }}>
-              <button className="update-button" style={{ background: '#f59e42' }} onClick={handleDeleteReport}>Delete Report</button>
-              <button className="update-button" style={{ background: '#e74c3c' }} onClick={handleDeletePost}>Delete Post</button>
+            <div className="admin-actions">
+              <button className="admin-btn delete-report-btn" onClick={handleDeleteReport}>
+                Delete Report
+              </button>
+              <button className="admin-btn delete-post-btn" onClick={handleDeletePost}>
+                Delete Post
+              </button>
             </div>
           )}
         </div>
       </div>
+
+      {/* Photo Viewer Modal */}
+      {photoViewer.isOpen && (
+        <div className="photo-viewer-overlay" onClick={handleClosePhotoViewer}>
+          <div className="photo-viewer-content" onClick={(e) => e.stopPropagation()}>
+            <button className="photo-viewer-close" onClick={handleClosePhotoViewer}>
+              ×
+            </button>
+            
+            {photoViewer.photos.length > 1 && (
+              <button className="photo-nav photo-nav-prev" onClick={handlePrevPhoto}>
+                ‹
+              </button>
+            )}
+            
+            <div className="photo-viewer-main">
+              <img 
+                src={photoViewer.photos[photoViewer.currentIndex]?.primary} 
+                alt={`Photo ${photoViewer.currentIndex + 1}`}
+                className="photo-viewer-image"
+                onError={(e) => {
+                  const fallbackSrc = photoViewer.photos[photoViewer.currentIndex]?.fallback;
+                  if (fallbackSrc && e.target.src !== fallbackSrc) {
+                    e.target.src = fallbackSrc;
+                  }
+                }}
+              />
+            </div>
+            
+            {photoViewer.photos.length > 1 && (
+              <button className="photo-nav photo-nav-next" onClick={handleNextPhoto}>
+                ›
+              </button>
+            )}
+            
+            {photoViewer.photos.length > 1 && (
+              <div className="photo-viewer-counter">
+                {photoViewer.currentIndex + 1} / {photoViewer.photos.length}
+              </div>
+            )}
+            
+            {photoViewer.photos.length > 1 && (
+              <div className="photo-viewer-thumbnails">
+                {photoViewer.photos.map((photo, index) => (
+                  <img
+                    key={index}
+                    src={photo.primary}
+                    alt={`Thumbnail ${index + 1}`}
+                    className={`photo-thumbnail ${index === photoViewer.currentIndex ? 'active' : ''}`}
+                    onClick={() => setPhotoViewer(prev => ({ ...prev, currentIndex: index }))}
+                    onError={(e) => {
+                      if (e.target.src !== photo.fallback) {
+                        e.target.src = photo.fallback;
+                      }
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

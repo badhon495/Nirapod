@@ -86,7 +86,6 @@ function Complain() {
     formData.append('details', form.details);
     formData.append('postOnTimeline', form.postOnTimeline ? '1' : '0');
     formData.append('location', form.location);
-    formData.append('time', new Date().toISOString());
     if (form.photos && form.photos.length > 0) {
       for (let i = 0; i < form.photos.length; i++) {
         formData.append('photos', form.photos[i]);
@@ -108,66 +107,79 @@ function Complain() {
   return (
     <div className="complain-bg">
       <form className="complain-form" onSubmit={handleSubmit}>
-        {successMsg && <div style={{color:'#22c55e', textAlign:'center', marginBottom:12, fontWeight:600}}>{successMsg}</div>}
+        <h1>Submit Complaint</h1>
+        
+        {successMsg && <div className="success-message">{successMsg}</div>}
+        
         <div className="complain-row">
-          <label>Name :</label>
+          <label>Name:</label>
           <input className="complain-input" name="name" value={form.name} readOnly />
         </div>
+        
         <div className="complain-row">
-          <label>Phone :</label>
+          <label>Phone:</label>
           <input className="complain-input" name="phone" value={form.phone} readOnly />
         </div>
+        
         <div className="complain-row">
-          <label>Email :</label>
+          <label>Email:</label>
           <input className="complain-input" name="email" value={form.email} readOnly />
         </div>
+        
         <div className="complain-row">
-          <label>NID :</label>
+          <label>NID:</label>
           <input className="complain-input" name="nid" value={form.nid} readOnly />
         </div>
+        
         <div className="complain-row">
-          <label>Complain to :</label>
+          <label>Complain to:</label>
           <select className="complain-input" name="complainTo" value={form.complainTo} onChange={handleChange} required>
-            <option value="">Select</option>
+            <option value="">Select Department</option>
             <option value="police">Police</option>
             <option value="fire">Fire Service</option>
             <option value="city">City Corporation</option>
             <option value="animal">Animal Welfare</option>
           </select>
         </div>
+        
         <div className="complain-row">
-          <label>Urgency :</label>
+          <label>Urgency:</label>
           <select className="complain-input" name="urgency" value={form.urgency} onChange={handleChange} required>
-            <option value="">Select</option>
+            <option value="">Select Priority</option>
             <option value="High">High</option>
             <option value="Medium">Medium</option>
             <option value="Low">Low</option>
           </select>
-          <span className="complain-urgency-note"><a href="/Level" style={{color:'#60a5fa', textDecoration:'underline'}} target="_blank" rel="noopener noreferrer">*See Level</a></span>
+          <div className="complain-urgency-note">
+            <a href="/Level" target="_blank" rel="noopener noreferrer">*See Priority Levels</a>
+          </div>
         </div>
+        
         <div className="complain-row">
-          <label>District :</label>
+          <label>District:</label>
           <select className="complain-input" name="district" value={form.district} onChange={handleChange} required>
-            <option value="">Select</option>
+            <option value="">Select District</option>
             {districts.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
         </div>
+        
         <div className="complain-row">
-          <label>Area :</label>
+          <label>Area:</label>
           <select className="complain-input" name="area" value={form.area} onChange={handleChange} required disabled={!form.district}>
-            <option value="">Select</option>
+            <option value="">Select Area</option>
             {areas.map(a => <option key={a} value={a}>{a}</option>)}
           </select>
         </div>
+        
         <div className="complain-row">
-          <label>Location :</label>
+          <label>Location:</label>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <input
               className="complain-input"
               name="location"
               value={form.location}
               onChange={handleChange}
-              placeholder="Full address"
+              placeholder="Enter full address or coordinates"
               required
             />
             <button
@@ -189,23 +201,42 @@ function Complain() {
                 }
               }}
             >
-              Get Location
+            Get Location
             </button>
           </div>
         </div>
+        
         <div className="complain-row">
-          <label>Tag :</label>
-          <input className="complain-input" name="tag" value={form.tag} onChange={handleChange} placeholder="Ex: Phone Theft, Hijack, Fire" />
+          <label>Tags:</label>
+          <input 
+            className="complain-input" 
+            name="tag" 
+            value={form.tag} 
+            onChange={handleChange} 
+            placeholder="e.g., Phone Theft, Hijack, Fire, Road Accident" 
+          />
         </div>
+        
         <div className="complain-row">
-          <label>Details :</label>
-          <textarea className="complain-textarea" name="details" value={form.details} onChange={handleChange} placeholder="Write all the details about your complain" />
+          <label>Details:</label>
+          <textarea 
+            className="complain-textarea" 
+            name="details" 
+            value={form.details} 
+            onChange={handleChange} 
+            placeholder="Provide detailed information about your complaint. Include time, witnesses, and any other relevant details."
+            required
+          />
         </div>
+        
         <div className="complain-photo-row complain-row">
-          <label>Photos :</label>
+          <label>Evidence Photos:</label>
           <label className="complain-photo-btn">
-            {form.photos && form.photos.length > 0 ? `${form.photos.length} photo${form.photos.length > 1 ? 's' : ''} added` : 'Add photos'}
-            <input type="file" name="photos" style={{ display: 'none' }} onChange={handleChange} multiple />
+            {form.photos && form.photos.length > 0 ? 
+              `${form.photos.length} photo${form.photos.length > 1 ? 's' : ''} selected` : 
+              'Add Photos'
+            }
+            <input type="file" name="photos" style={{ display: 'none' }} onChange={handleChange} multiple accept="image/*" />
           </label>
           <label className="complain-checkbox-label">
             <input
@@ -214,12 +245,15 @@ function Complain() {
               checked={form.postOnTimeline}
               onChange={handleChange}
             />
-            Post it on timeline
+            Share on public timeline
           </label>
-          {photoError && <div style={{color:'#ef4444', marginTop:8, fontWeight:500}}>{photoError}</div>}
+          {photoError && <div className="error-message">{photoError}</div>}
         </div>
+        
         <div className="complain-submit-row">
-          <button className="complain-submit-btn" type="submit">Submit</button>
+          <button className="complain-submit-btn" type="submit">
+            Submit Complaint
+          </button>
         </div>
       </form>
     </div>

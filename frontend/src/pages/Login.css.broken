@@ -1,20 +1,37 @@
-/* Modern Login Styles for Nirapod */
+/* Modern Login Styles with Enhanced Animations */
 
 html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   background: #0a0a0a;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
 .login-bg {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
   position: relative;
   overflow-x: hidden;
+  opacity: 0;
+  animation: pageEnter 0.8s ease-out forwards;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-bg.mounted {
+  animation-delay: 0.2s;
 }
 
 .login-bg::before {
@@ -28,12 +45,18 @@ html, body {
               radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
               radial-gradient(circle at 40% 40%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
   pointer-events: none;
+  animation: backgroundPulse 10s ease-in-out infinite alternate;
+}
+
+@keyframes backgroundPulse {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 .login-split {
   display: flex;
   flex: 1;
-  min-height: calc(100vh - 120px); /* Account for footer height */
+  min-height: calc(100vh - 120px);
   position: relative;
   z-index: 1;
 }
@@ -54,6 +77,18 @@ html, body {
   justify-content: center;
   position: relative;
   padding: 2rem;
+  animation: slideInLeft 1s ease-out 0.3s both;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .login-logo {
@@ -66,6 +101,12 @@ html, body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+  animation: logoGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+  0% { filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3)); }
+  100% { filter: drop-shadow(0 0 40px rgba(99, 102, 241, 0.6)); }
 }
 
 .login-logo-img {
@@ -78,8 +119,8 @@ html, body {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-15px) scale(1.05); }
 }
 
 .login-tagline {
@@ -91,6 +132,18 @@ html, body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 500;
+  animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .login-right {
@@ -98,6 +151,20 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 2rem;
+  animation: slideInRight 1s ease-out 0.4s both;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
   padding: 2rem;
   min-height: calc(100vh - 120px);
 }

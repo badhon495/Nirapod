@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
-// Set axios base URL to backend for all requests
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+import './Tracker.css';
 
 function Tracker() {
   const [trackingId, setTrackingId] = useState('');
@@ -14,51 +12,163 @@ function Tracker() {
     e.preventDefault();
     setError('');
     setComplain(null);
-    if (!trackingId) return;
+    if (!trackingId.trim()) {
+      setError('Please enter a tracking ID');
+      return;
+    }
     setLoading(true);
     try {
       // 1. Get identifier from localStorage
       const identifier = localStorage.getItem('nirapod_identifier');
       if (!identifier) {
-        setError('You must be logged in.');
+        setError('You must be logged in to track complaints.');
         setLoading(false);
         return;
       }
       // 2. Fetch user info to get NID
-      const userRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/user/by-identifier?value=${encodeURIComponent(identifier)}`);
+      const userRes = await axios.get(`/api/user/by-identifier?value=${encodeURIComponent(identifier)}`);
       const userNid = userRes.data.nid;
       // 3. Fetch complain by trackingId and NID
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/complain/${trackingId}?nid=${encodeURIComponent(userNid)}`);
+      const res = await axios.get(`/api/complain/${trackingId}?nid=${encodeURIComponent(userNid)}`);
       setComplain(res.data);
     } catch (err) {
-      setError('Complain not found for this Tracking ID.');
+      console.error('Tracking error:', err);
+      setError('Complaint not found for this Tracking ID or you do not have permission to view it.');
     }
     setLoading(false);
   };
 
+  const getStatusBadge = (status) => {
+    // Handle both integer status (new backend) and string status (old backend)
+    let statusText;
+    if (typeof status === 'number') {
+      switch (status) {
+        case 2: statusText = 'Solved'; break;
+        case 1: statusText = 'In Progress'; break;
+        default: statusText = 'Unsolved'; break;
+      }
+    } else {
+      statusText = status || 'Unsolved';
+    }
+    
+    // Ensure statusText is a string before calling toLowerCase
+    const statusLower = String(statusText).toLowerCase();
+    let className = 'status-badge ';
+    
+    if (statusLower.includes('solved') || statusLower.includes('resolved') || statusLower.includes('completed')) {
+      className += 'status-resolved';
+    } else if (statusLower.includes('investigating') || statusLower.includes('progress')) {
+      className += 'status-investigating';
+    } else {
+      className += 'status-pending';
+    }
+    
+    return <span className={className}>{statusText}</span>;
+  };
+
   return (
-    <div style={{ background: '#232831', minHeight: '100vh', padding: '0', fontFamily: 'Fira Mono, monospace' }}>
-      <div style={{ paddingTop: 60, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ color: '#fff', fontSize: 22, marginBottom: 18, letterSpacing: 1 }}>Tracking ID :</div>
-        <form onSubmit={handleSearch} style={{ marginBottom: 32 }}>
-          <input
-            value={trackingId}
-            onChange={e => setTrackingId(e.target.value)}
-            placeholder="Enter Tracking ID"
-            style={{ fontSize: 20, borderRadius: 12, border: 'none', padding: '8px 32px', textAlign: 'center', background: '#f5f6fa' }}
-          />
-          <button type="submit" style={{ marginLeft: 16, padding: '8px 24px', borderRadius: 12, border: 'none', background: '#22c55e', color: '#fff', fontWeight: 600, fontSize: 18, cursor: 'pointer' }} disabled={loading}>{loading ? 'Loading...' : 'Track'}</button>
+    <div className="tracker-container">
+      <div className="tracker-content">
+        <h1 className="tracker-title">Track Your Complaint</h1>
+        <p className="tracker-subtitle">
+          Enter your tracking ID to check the status of your complaint
+        </p>
+        
+        <form className="tracker-form" onSubmit={handleSearch}>
+          <div className="tracker-input-group">
+            <input
+              className="tracker-input"
+              value={trackingId}
+              onChange={e => setTrackingId(e.target.value)}
+              placeholder="Enter Tracking ID (e.g., TRK12345)"
+              required
+            />
+          </div>
+          <button 
+            type="submit" 
+            className="tracker-button" 
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span className="loading-spinner"></span> Tracking...
+              </>
+            ) : (
+              'Track Complaint'
+            )}
+          </button>
         </form>
-        {error && <div style={{ color: '#ff6b6b', marginBottom: 18 }}>{error}</div>}
+        
+        {error && <div className="tracker-error"> {error}</div>}
+        
         {complain && (
-          <div style={{ background: '#232b36', borderRadius: 18, color: '#fff', padding: 32, minWidth: 340, maxWidth: 540, fontSize: 18, boxShadow: '0 4px 24px #0003' }}>
-            <div><b>Complain ID:</b> {complain.trackingId}</div>
-            <div><b>Complain By:</b> {complain.nid}</div>
-            <div><b>Complain To:</b> {complain.complainTo}</div>
-            <div><b>Complain Tag:</b> {complain.tags}</div>
-            <div><b>Complain Subject:</b> {complain.details && complain.details.split('\n')[0]}</div>
-            <div style={{ margin: '12px 0' }}><b>Complain Details:</b><br />{complain.details}</div>
-            <div style={{ marginTop: 18 }}><b>Update:</b> {complain.update || 'No update yet.'}</div>
+          <div className="complaint-result">
+            <div className="complaint-header">
+              <h2 className="complaint-header-title">Complaint Details</h2>
+            </div>
+            
+            <div className="complaint-details">
+              <div className="complaint-detail-row">
+                <div>
+                  <div className="complaint-label">Tracking ID</div>
+                  <div className="complaint-value">{complain.trackingId}</div>
+                </div>
+              </div>
+              
+              <div className="complaint-detail-row">
+                <div>
+                  <div className="complaint-label">Complainant NID</div>
+                  <div className="complaint-value">{complain.nid}</div>
+                </div>
+              </div>
+              
+              <div className="complaint-detail-row">
+                <div>
+                  <div className="complaint-label">Department</div>
+                  <div className="complaint-value">{complain.complainTo}</div>
+                </div>
+              </div>
+              
+              <div className="complaint-detail-row">
+                <div>
+                  <div className="complaint-label">Category</div>
+                  <div className="complaint-value">{complain.tags || 'Not specified'}</div>
+                </div>
+              </div>
+              
+              <div className="complaint-detail-row">
+                <div>
+                  <div className="complaint-label">Status</div>
+                  <div className="complaint-value">
+                    {getStatusBadge(complain.status)}
+                  </div>
+                </div>
+              </div>
+              
+              {complain.details && (
+                <div className="complaint-detail-row">
+                  <div style={{width: '100%'}}>
+                    <div className="complaint-label">Details</div>
+                    <div className="complaint-value" style={{textAlign: 'left', maxWidth: '100%'}}>
+                      {complain.details.split('\n').map((line, index) => (
+                        <p key={index} style={{margin: '0.5rem 0'}}>{line}</p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="complaint-detail-row">
+                <div style={{width: '100%'}}>
+                  <div className="complaint-label">Latest Update</div>
+                  <div className="complaint-value" style={{textAlign: 'left', maxWidth: '100%'}}>
+                    <div className={`complaint-update ${!(complain.update || complain.updateNote) ? 'no-update' : ''}`}>
+                      {complain.update || complain.updateNote || 'No updates yet. Your complaint is being processed.'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

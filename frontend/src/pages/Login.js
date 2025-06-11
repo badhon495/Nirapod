@@ -5,9 +5,6 @@ import { GoogleLogin, googleLogout } from '@react-oauth/google';
 import logo from '../image/logo.png';
 import googleIcon from '../image/google-icon.png';
 
-// Set axios base URL to backend for all requests
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-
 function Login() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({ phoneNumber: '', password: '', otp: '', forgotEmail: '' });
@@ -108,6 +105,12 @@ function Login() {
     }
   };
 
+  // Custom Google Login Button Click Handler
+  const handleCustomGoogleLogin = () => {
+    // This will be implemented if the GoogleLogin component fails
+    setMessage('Google login is temporarily unavailable. Please use email/phone login.');
+  };
+
   return (
     <div className="login-bg">
       <div className="login-split">
@@ -127,24 +130,34 @@ function Login() {
               </form>
             )}
             {step === 1 && (
-              <div className="google-btn-wrapper" style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ marginBottom: '0.5rem', fontWeight: 500, color: '#fff', fontSize: '1.05rem', textAlign: 'center' }}>
+              <div className="google-btn-wrapper">
+                <div className="google-separator">
                   Or sign in with Google
                 </div>
-                <GoogleLogin
-                  onSuccess={handleGoogleLogin}
-                  onError={() => setMessage('Google login failed')}
-                  width="100%"
-                  text="continue_with"
-                  useOneTap={false}
-                  theme="outline"
-                  shape="rectangular"
-                  logo_alignment="center"
-                  ux_mode="popup"
-                  type="icon"
-                  size="large"
-                  cancel_on_tap_outside={false}
-                />
+                <div className="google-login-container">
+                  <GoogleLogin
+                    onSuccess={handleGoogleLogin}
+                    onError={() => setMessage('Google login failed')}
+                    width="100%"
+                    text="continue_with"
+                    useOneTap={false}
+                    theme="filled_blue"
+                    shape="rectangular"
+                    logo_alignment="left"
+                    ux_mode="popup"
+                    size="large"
+                  />
+                </div>
+                {/* Custom Google Button with proper icon */}
+                <button 
+                  type="button" 
+                  className="custom-google-btn"
+                  onClick={handleCustomGoogleLogin}
+                  style={{ display: 'none' }}
+                >
+                  <img src={googleIcon} alt="Google" className="google-icon" />
+                  Continue with Google
+                </button>
               </div>
             )}
             {step === 2 && (
@@ -163,11 +176,20 @@ function Login() {
             <div className="login-links">
               {step !== 3 ? (
                 <>
-                  <button type="button" className="login-link" onClick={e => { e.preventDefault(); setStep(3); setMessage(''); }}>Forgotten password?</button>
-                  <a href="/signup" className="login-link">Create an account</a>
+                  <button type="button" className="login-link-btn forgot-password-btn" onClick={e => { e.preventDefault(); setStep(3); setMessage(''); }}>
+                    Forgotten password?
+                  </button>
+                  <div className="login-divider">
+                    <span>or</span>
+                  </div>
+                  <a href="/signup" className="login-link-btn create-account-btn">
+                    Create an account
+                  </a>
                 </>
               ) : (
-                <button type="button" className="login-link" onClick={e => { e.preventDefault(); setStep(1); setMessage(''); }}>Remembered password?</button>
+                <button type="button" className="login-link-btn back-to-login-btn" onClick={e => { e.preventDefault(); setStep(1); setMessage(''); }}>
+                  Remembered password?
+                </button>
               )}
             </div>
           </div>
