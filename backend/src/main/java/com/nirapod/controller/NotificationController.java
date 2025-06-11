@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/notifications")
+@CrossOrigin(origins = "*")
 public class NotificationController {
     private final Logger logger = LoggerFactory.getLogger(NotificationController.class);
     

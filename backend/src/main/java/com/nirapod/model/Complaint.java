@@ -41,6 +41,9 @@ public class Complaint {
     @Column(name = "Photos")
     private String photos;
 
+    @Column(name = "upload_photos")
+    private String uploadPhotos;
+
     @Column(name = "Post_on_timeline")
     private boolean postOnTimeline;
 
@@ -88,6 +91,9 @@ public class Complaint {
 
     public String getPhotos() { return photos; }
     public void setPhotos(String photos) { this.photos = photos; }
+
+    public String getUploadPhotos() { return uploadPhotos; }
+    public void setUploadPhotos(String uploadPhotos) { this.uploadPhotos = uploadPhotos; }
 
     public boolean isPostOnTimeline() { return postOnTimeline; }
     public void setPostOnTimeline(boolean postOnTimeline) { this.postOnTimeline = postOnTimeline; }

@@ -56,7 +56,4 @@ public class CreateComplain {
 
     @Column(name = "comment")
     private String comment;
-
-    @Column(name = "Time")
-    private java.time.LocalDateTime time;
 }

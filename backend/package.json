@@ -1,0 +1,16 @@
+{
+  "name": "nirapod-backend",
+  "version": "1.0.0",
+  "description": "Backend for Nirapod application",
+  "main": "livechat-server.js",
+  "scripts": {
+    "start": "node livechat-server.js",
+    "dev": "nodemon livechat-server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

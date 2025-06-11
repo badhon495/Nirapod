@@ -1,3 +1,4 @@
+# Example application.properties for Spring Boot (place in backend/src/main/resources/)
 # Database Configuration
 spring.datasource.url=jdbc:postgresql://localhost:5432/nirapod
 spring.datasource.username=postgres
@@ -17,8 +18,8 @@ spring.servlet.multipart.max-request-size=100MB
 # Email (for OTP)
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
-spring.mail.username=sadmansakib022@gmail.com
-spring.mail.password=iktm rths bxmz udfv
+spring.mail.username=your_email@gmail.com
+spring.mail.password=your_app_password
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 
@@ -27,4 +28,4 @@ spring.security.user.name=admin
 spring.security.user.password=admin
 
 # Google OAuth
-google.client.id=762749948531-bupk6ovulctucvrqtvau2aq9dm2ih1c4.apps.googleusercontent.com
+google.client.id=your_google_client_id

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class ComplaintController {
@@ -76,6 +77,9 @@ public class ComplaintController {
             String userName = userRepository.findByNid(c.getNid())
                     .map(u -> u.getName())
                     .orElse("");
+            String userProfileImage = userRepository.findByNid(c.getNid())
+                    .map(u -> u.getUserPhoto())
+                    .orElse(null);
             responseList.add(new ComplaintResponse(
                     c.getTrackingId(),
                     userName,
@@ -86,13 +90,16 @@ public class ComplaintController {
                     c.getTags(),
                     c.getDetails(),
                     c.getPhotos(),
+                    c.getUploadPhotos(),
                     c.isPostOnTimeline(),
                     c.getLocation(),
                     c.getUpdateNote(),
                     c.getStatus(),
                     c.getFollow(),
                     c.getComment(),
-                    c.getTime() // <-- Make sure this is c.getTime()
+                    c.getTime(), // <-- Make sure this is c.getTime()
+                    c.getReport(),
+                    userProfileImage
             ));
         }
         return responseList;
@@ -117,6 +124,9 @@ public class ComplaintController {
                 String userName = userRepository.findByNid(c.getNid())
                         .map(u -> u.getName())
                         .orElse("");
+                String userProfileImage = userRepository.findByNid(c.getNid())
+                        .map(u -> u.getUserPhoto())
+                        .orElse(null);
                 responseList.add(new ComplaintResponse(
                         c.getTrackingId(),
                         userName,
@@ -127,6 +137,7 @@ public class ComplaintController {
                         c.getTags(),
                         c.getDetails(),
                         c.getPhotos(),
+                        c.getUploadPhotos(),
                         c.isPostOnTimeline(),
                         c.getLocation(),
                         c.getUpdateNote(),
@@ -134,7 +145,8 @@ public class ComplaintController {
                         c.getFollow(),
                         c.getComment(),
                         c.getTime(),
-                        c.getReport() // Add report field for frontend
+                        c.getReport(), // Add report field for frontend
+                        userProfileImage
                 ));
             }
         }
@@ -167,6 +179,9 @@ public class ComplaintController {
             String userName = userRepository.findByNid(c.getNid())
                     .map(u -> u.getName())
                     .orElse("");
+            String userProfileImage = userRepository.findByNid(c.getNid())
+                    .map(u -> u.getUserPhoto())
+                    .orElse(null);
             responseList.add(new ComplaintResponse(
                     c.getTrackingId(),
                     userName,
@@ -177,13 +192,16 @@ public class ComplaintController {
                     c.getTags(),
                     c.getDetails(),
                     c.getPhotos(),
+                    c.getUploadPhotos(),
                     c.isPostOnTimeline(),
                     c.getLocation(),
                     c.getUpdateNote(),
                     c.getStatus(),
                     c.getFollow(),
                     c.getComment(),
-                    c.getTime()));
+                    c.getTime(),
+                    null, // no report field for user complaints
+                    userProfileImage));
         }
         return responseList;
     }
@@ -275,16 +293,32 @@ public class ComplaintController {
                 photoPaths.add("/uploads/" + filename);
             }
         }
-        // Append to existing photos
-        String existingPhotos = complaint.getPhotos();
+        // Append to existing upload_photos instead of photos
+        String existingUploadPhotos = complaint.getUploadPhotos();
         String newPhotos = String.join(",", photoPaths);
-        if (existingPhotos != null && !existingPhotos.isBlank()) {
-            complaint.setPhotos(existingPhotos + "," + newPhotos);
+        if (existingUploadPhotos != null && !existingUploadPhotos.isBlank()) {
+            complaint.setUploadPhotos(existingUploadPhotos + "," + newPhotos);
         } else {
-            complaint.setPhotos(newPhotos);
+            complaint.setUploadPhotos(newPhotos);
         }
         repository.save(complaint);
-        return ResponseEntity.ok(Map.of("success", true, "photos", complaint.getPhotos()));
+        return ResponseEntity.ok(Map.of("success", true, "uploadPhotos", complaint.getUploadPhotos()));
+    }
+
+    // Get upload photos for a specific complaint
+    @GetMapping("/complaint/{trackingId}/upload-photos")
+    public ResponseEntity<?> getUploadPhotos(@PathVariable Integer trackingId) {
+        Optional<Complaint> complaintOpt = repository.findById(trackingId);
+        if (complaintOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Complaint not found");
+        }
+        Complaint complaint = complaintOpt.get();
+        String uploadPhotos = complaint.getUploadPhotos();
+        List<String> photoList = new ArrayList<>();
+        if (uploadPhotos != null && !uploadPhotos.isBlank()) {
+            photoList = List.of(uploadPhotos.split(","));
+        }
+        return ResponseEntity.ok(Map.of("uploadPhotos", photoList));
     }
 
     // Delete a complaint by ID

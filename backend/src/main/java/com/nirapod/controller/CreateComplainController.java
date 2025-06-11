@@ -36,8 +36,7 @@ public class CreateComplainController {
             @RequestParam("details") String details,
             @RequestParam(value = "photos", required = false) List<MultipartFile> photos,
             @RequestParam("postOnTimeline") String postOnTimeline,
-            @RequestParam("location") String location,
-            @RequestParam(value = "time", required = false) String time
+            @RequestParam("location") String location
     ) throws IOException {
         List<String> photoPaths = new ArrayList<>();
         if (photos != null) {
@@ -66,7 +65,6 @@ public class CreateComplainController {
                 .status(0)
                 .follow(nid)
                 .comment("")
-                .time(time != null ? java.time.LocalDateTime.parse(time.replace("Z", "")) : java.time.LocalDateTime.now())
                 .build();
         CreateComplain saved = createComplainRepository.save(complain);
         return ResponseEntity.ok(saved);

@@ -28,6 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
     @Autowired
     private AuthService authService;
@@ -280,15 +281,14 @@ public class AuthController {
             if (idToken != null) {
                 GoogleIdToken.Payload googlePayload = idToken.getPayload();
                 String email = googlePayload.getEmail();
-                Optional<User> userOpt = authService.findByEmail(email == null ? null : email.toLowerCase());
+                Optional<User> userOpt = authService.findByEmail(email);
                 if (userOpt.isPresent()) {
-                    // Optionally, check for approval/active status here
                     return ResponseEntity.ok(Map.of(
                             "message", "Google login successful",
                             "user", userOpt.get()
                     ));
                 } else {
-                    return ResponseEntity.status(404).body("User not found. Please complete signup first.");
+                    return ResponseEntity.status(404).body("User not found");
                 }
             } else {
                 return ResponseEntity.status(401).body("Invalid Google ID token");
