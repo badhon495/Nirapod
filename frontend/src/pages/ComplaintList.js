@@ -85,83 +85,116 @@ const ComplaintList = () => {
 
     return (
         <div className="complaint-list-container">
-            <div style={{ padding: '12px 0 0 0', display: 'flex', justifyContent: 'flex-start', marginLeft: 438 }}>
-                {/* Position changed here Faishal */}
-                <div style={{ background: '#232b36', borderRadius: 18, padding: 12, marginBottom: 12, display: 'flex', gap: 18, alignItems: 'center', position: 'relative', left:'-420px'  }}>
+            {/* Modern Filter Section */}
+            <div className="filter-section">
+                <div className="filter-container">
                     <button
                         ref={filterBtnRef}
-                        style={{ borderRadius: 8, padding: '8px 32px', fontSize: 16, border: 'none', background: '#e5e7eb', fontWeight: 600, cursor: 'pointer' }}
-                        onClick={() => setFilterOpen(o => !o)}
+                        className={`modern-filter-btn ${filterOpen ? 'active' : ''}`}
+                        onClick={() => setFilterOpen(!filterOpen)}
                     >
-                        Filter
+                        <div className="filter-btn-content">
+                            <span className="filter-icon">🎯</span>
+                            <span className="filter-text">Filter Complaints</span>
+                            <span className={`filter-chevron ${filterOpen ? 'rotated' : ''}`}>▼</span>
+                        </div>
                     </button>
                     {filterOpen && (
-                        <div ref={filterDropdownRef} style={{ position: 'absolute', top: 48, left: 0, background: '#fff', borderRadius: 12, boxShadow: '0 4px 24px #0003', padding: 32, zIndex: 10, minWidth: 380, maxWidth: 480, width: 100, boxSizing: 'border-box', overflow: 'hidden', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
-                            <div style={{ marginBottom: 16 }}>
-                                <label style={{ fontWeight: 500 }}>Tags:</label>
-                                <input
-                                    type="text"
-                                    name="tags"
-                                    value={filters.tags}
-                                    onChange={handleFilterChange}
-                                    placeholder="Filter by tags"
-                                    style={{ borderRadius: 8, padding: '10px 18px', fontSize: 16, border: '1px solid #ddd', width: '100%', marginTop: 4, boxSizing: 'border-box', overflow: 'hidden' }}
-                                />
-                            </div>
-                            <div style={{ marginBottom: 16 }}>
-                                <label style={{ fontWeight: 500 }}>Urgency:</label>
-                                <select
-                                    name="urgency"
-                                    value={filters.urgency}
-                                    onChange={handleFilterChange}
-                                    style={{ borderRadius: 8, padding: '10px 18px', fontSize: 16, border: '1px solid #ddd', width: '100%', marginTop: 4, boxSizing: 'border-box', overflow: 'hidden' }}
-                                >
-                                    <option value="">All</option>
-                                    <option value="High">High</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="Low">Low</option>
-                                </select>
-                            </div>
-                            <div style={{ marginBottom: 16 }}>
-                                <label style={{ fontWeight: 500 }}>Sort By:</label>
-                                <select
-                                    name="status"
-                                    value={filters.status}
-                                    onChange={handleFilterChange}
-                                    style={{ borderRadius: 8, padding: '10px 18px', fontSize: 16, border: '1px solid #ddd', width: '100%', marginTop: 4, boxSizing: 'border-box', overflow: 'hidden' }}
-                                >
-                                    <option value="">All</option>
-                                    <option value="Solved">Solved</option>
-                                    <option value="Unsolved">Unsolved</option>
-                                </select>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-                                <button
-                                    type="button"
-                                    style={{ borderRadius: 8, padding: '10px 32px', fontSize: 16, border: 'none', background: '#2563eb', color: '#fff', fontWeight: 600, cursor: 'pointer' }}
+                        <div ref={filterDropdownRef} className="modern-filter-panel">
+                            <div className="filter-panel-header">
+                                <h3 className="filter-panel-title">Filter Complaints</h3>
+                                <button 
+                                    className="filter-panel-close"
                                     onClick={() => setFilterOpen(false)}
                                 >
-                                    Apply
+                                    ✕
                                 </button>
-                                <button
-                                    type="button"
-                                    style={{ borderRadius: 10, padding: '10px 32px', fontSize: 16, border: 'none', background: '#eee', fontWeight: 600, cursor: 'pointer' }}
-                                    onClick={() => { setFilters({ tags: '', urgency: '', status: '' }); setFilterOpen(false); }}
-                                >
-                                    Reset
-                                </button>
+                            </div>
+                            
+                            <div className="filter-panel-content">
+                                <div className="filter-grid">
+                                    <div className="filter-item">
+                                        <label className="filter-label">
+                                            <span className="filter-label-icon">#️⃣</span>
+                                            Tags
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="tags"
+                                            value={filters.tags}
+                                            onChange={handleFilterChange}
+                                            placeholder="Search by tags..."
+                                            className="modern-filter-input"
+                                        />
+                                    </div>
+                                    
+                                    <div className="filter-item">
+                                        <label className="filter-label">
+                                            <span className="filter-label-icon">⚡</span>
+                                            Urgency
+                                        </label>
+                                        <select
+                                            name="urgency"
+                                            value={filters.urgency}
+                                            onChange={handleFilterChange}
+                                            className="modern-filter-select"
+                                        >
+                                            <option value="">All Urgency Levels</option>
+                                            <option value="High">🔴 High Priority</option>
+                                            <option value="Medium">🟡 Medium Priority</option>
+                                            <option value="Low">🟢 Low Priority</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div className="filter-item">
+                                        <label className="filter-label">
+                                            <span className="filter-label-icon">📊</span>
+                                            Status
+                                        </label>
+                                        <select
+                                            name="status"
+                                            value={filters.status}
+                                            onChange={handleFilterChange}
+                                            className="modern-filter-select"
+                                        >
+                                            <option value="">All Status</option>
+                                            <option value="Solved">✅ Solved</option>
+                                            <option value="In Progress">🔄 In Progress</option>
+                                            <option value="Unsolved">⏳ Unsolved</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div className="filter-panel-actions">
+                                    <button 
+                                        className="filter-action-btn secondary"
+                                        onClick={() => setFilters({ tags: '', urgency: '', status: '' })}
+                                    >
+                                        <span className="btn-icon">🗑️</span>
+                                        Clear All
+                                    </button>
+                                    <button 
+                                        className="filter-action-btn primary"
+                                        onClick={() => setFilterOpen(false)}
+                                    >
+                                        <span className="btn-icon">✨</span>
+                                        Apply Filters
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
-            <input
-                type="text"
-                className="search-box"
-                placeholder="Search by Tracking ID"
-                value={searchTerm}
-                onChange={handleSearch}
-            />
+            <div className="search-container">
+                <input
+                    type="text"
+                    className="search-box"
+                    placeholder="Search by Tracking ID"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                />
+            </div>
             {filteredComplaints.map((complaint) => {
                 console.log('Complaint object:', complaint); // Debug: check structure
                 const displayTime = (() => {

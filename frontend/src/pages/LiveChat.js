@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import './Login.css';
+import './LiveChat.css';
 import logo from '../image/logo.png';
 
 function LiveChat() {
@@ -126,52 +126,76 @@ function LiveChat() {
   };
 
   return (
-    <div className="login-bg">
-      <div className="login-split">
-        <div className="login-left">
-          <img src={logo} alt="Nirapod Logo" className="login-logo-img" />
-          <div className="login-logo">Nirapod</div>
-          <div className="login-tagline">Global Live Chat</div>
+    <div className="livechat-container">
+      <div className="livechat-header">
+        <div className="livechat-header-left">
+          <img src={logo} alt="Nirapod Logo" className="livechat-logo" />
+          <div className="livechat-title">Nirapod Live Chat</div>
         </div>
-        <div className="login-right">
-          <div className="login-form-box" style={{ minHeight: 420, maxWidth: 420 }}>
-            <h2>Live Chat</h2>
-            {!joined ? (
-              <div style={{ color: '#aaa', textAlign: 'center', marginTop: 40 }}>
-                Loading chat...
-              </div>
-            ) : (
-              <>
-                <div style={{ background: '#1e2233', borderRadius: 12, padding: 12, height: 260, overflowY: 'auto', marginBottom: 16, color: '#fff', fontSize: 15 }}>
-                  {messages.length === 0 && <div style={{ color: '#aaa', textAlign: 'center' }}>No messages yet. Say hi!</div>}
-                  {messages.map((msg, i) => (
-                    <div key={i} style={{ marginBottom: 8, wordBreak: 'break-word' }}>
-                      <span style={{ color: '#60a5fa', fontWeight: 600 }}>{msg.user}</span>
-                      <span style={{ color: '#aaa', fontSize: 12, marginLeft: 8 }}>{msg.time}</span>
-                      <div style={{ marginLeft: 8 }}>{msg.text}</div>
-                    </div>
-                  ))}
-                  <div ref={chatEndRef} />
-                </div>
-                <form onSubmit={handleSend} style={{ display: 'flex', gap: 8 }}>
-                  <input
-                    placeholder="Type a message..."
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    style={{ flex: 1 }}
-                    autoFocus
-                  />
-                  <button className="login-btn" type="submit" style={{ minWidth: 80 }}>Send</button>
-                </form>
-              </>
-            )}
-          </div>
+        <div className="livechat-connection-status">
+          <div className={`livechat-status-indicator ${joined ? '' : 'disconnected'}`}></div>
+          <span>{joined ? 'Connected' : 'Connecting...'}</span>
         </div>
       </div>
-      <footer className="login-footer">
-        <a href="/faq" className="footer-link">FAQ</a>
-        <a href="/ReachOut" className="footer-link">Reach out</a>
-        <a href="/contact" className="footer-link">Contact</a>
+
+      <div className="livechat-main">
+        <div className="livechat-messages">
+          {!joined ? (
+            <div className="livechat-empty-state">
+              <div className="livechat-empty-icon">💬</div>
+              <div className="livechat-empty-title">Loading chat...</div>
+              <div className="livechat-empty-subtitle">Connecting to the chat server...</div>
+            </div>
+          ) : messages.length === 0 ? (
+            <div className="livechat-empty-state">
+              <div className="livechat-empty-icon">💬</div>
+              <div className="livechat-empty-title">No messages yet</div>
+              <div className="livechat-empty-subtitle">Say hi to start the conversation!</div>
+            </div>
+          ) : (
+            messages.map((msg, i) => (
+              <div key={i} className={`livechat-message ${msg.user === username ? 'own' : 'other'}`}>
+                <div className="livechat-message-header">
+                  <span className="livechat-message-username">{msg.user}</span>
+                  <span className="livechat-message-time">{msg.time}</span>
+                </div>
+                <div className="livechat-message-bubble">{msg.text}</div>
+              </div>
+            ))
+          )}
+          <div ref={chatEndRef} />
+        </div>
+        
+        {joined && (
+          <div className="livechat-input-container">
+            <form onSubmit={handleSend} className="livechat-input-form">
+              <input
+                type="text"
+                placeholder="Type a message..."
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                className="livechat-input"
+                autoFocus
+              />
+              <button type="submit" className="livechat-send-btn" disabled={!input.trim()}>
+                <span>✈️</span>
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+
+      <footer className="livechat-footer">
+        <div className="livechat-user-info">
+          {joined && (
+            <>
+              <span>Welcome, <strong>{username}</strong></span>
+              <button onClick={handleLogoutClick} className="livechat-logout-btn">
+                Logout
+              </button>
+            </>
+          )}
+        </div>
       </footer>
     </div>
   );
