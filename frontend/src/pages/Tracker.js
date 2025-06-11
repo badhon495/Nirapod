@@ -39,10 +39,23 @@ function Tracker() {
   };
 
   const getStatusBadge = (status) => {
-    const statusLower = (status || 'pending').toLowerCase();
+    // Handle both integer status (new backend) and string status (old backend)
+    let statusText;
+    if (typeof status === 'number') {
+      switch (status) {
+        case 2: statusText = 'Solved'; break;
+        case 1: statusText = 'In Progress'; break;
+        default: statusText = 'Unsolved'; break;
+      }
+    } else {
+      statusText = status || 'Unsolved';
+    }
+    
+    // Ensure statusText is a string before calling toLowerCase
+    const statusLower = String(statusText).toLowerCase();
     let className = 'status-badge ';
     
-    if (statusLower.includes('resolved') || statusLower.includes('completed')) {
+    if (statusLower.includes('solved') || statusLower.includes('resolved') || statusLower.includes('completed')) {
       className += 'status-resolved';
     } else if (statusLower.includes('investigating') || statusLower.includes('progress')) {
       className += 'status-investigating';
@@ -50,7 +63,7 @@ function Tracker() {
       className += 'status-pending';
     }
     
-    return <span className={className}>{status || 'Pending'}</span>;
+    return <span className={className}>{statusText}</span>;
   };
 
   return (
@@ -91,55 +104,68 @@ function Tracker() {
         {complain && (
           <div className="complaint-result">
             <div className="complaint-header">
-              <span className="complaint-header-icon"></span>
               <h2 className="complaint-header-title">Complaint Details</h2>
             </div>
             
-            <div className="complaint-field">
-              <div className="complaint-label">Tracking ID</div>
-              <div className="complaint-value">{complain.trackingId}</div>
-            </div>
-            
-            <div className="complaint-field">
-              <div className="complaint-label">Complainant NID</div>
-              <div className="complaint-value">{complain.nid}</div>
-            </div>
-            
-            <div className="complaint-field">
-              <div className="complaint-label">Department</div>
-              <div className="complaint-value">{complain.complainTo}</div>
-            </div>
-            
-            <div className="complaint-field">
-              <div className="complaint-label">Category</div>
-              <div className="complaint-value">{complain.tags || 'Not specified'}</div>
-            </div>
-            
-            <div className="complaint-field">
-              <div className="complaint-label">Status</div>
-              <div className="complaint-value">
-                {getStatusBadge(complain.status)}
+            <div className="complaint-details">
+              <div className="complaint-detail-row">
+                <div>
+                  <div className="complaint-label">Tracking ID</div>
+                  <div className="complaint-value">{complain.trackingId}</div>
+                </div>
               </div>
-            </div>
-            
-            {complain.details && (
-              <div className="complaint-field">
-                <div className="complaint-label">Details</div>
-                <div className="complaint-value">
-                  <div className="complaint-details">
-                    {complain.details.split('\n').map((line, index) => (
-                      <p key={index}>{line}</p>
-                    ))}
+              
+              <div className="complaint-detail-row">
+                <div>
+                  <div className="complaint-label">Complainant NID</div>
+                  <div className="complaint-value">{complain.nid}</div>
+                </div>
+              </div>
+              
+              <div className="complaint-detail-row">
+                <div>
+                  <div className="complaint-label">Department</div>
+                  <div className="complaint-value">{complain.complainTo}</div>
+                </div>
+              </div>
+              
+              <div className="complaint-detail-row">
+                <div>
+                  <div className="complaint-label">Category</div>
+                  <div className="complaint-value">{complain.tags || 'Not specified'}</div>
+                </div>
+              </div>
+              
+              <div className="complaint-detail-row">
+                <div>
+                  <div className="complaint-label">Status</div>
+                  <div className="complaint-value">
+                    {getStatusBadge(complain.status)}
                   </div>
                 </div>
               </div>
-            )}
-            
-            <div className="complaint-field">
-              <div className="complaint-label">Latest Update</div>
-              <div className="complaint-value">
-                <div className={`complaint-update ${!complain.update ? 'no-update' : ''}`}>
-                  {complain.update || 'No updates yet. Your complaint is being processed.'}
+              
+              {complain.details && (
+                <div className="complaint-detail-row">
+                  <div style={{width: '100%'}}>
+                    <div className="complaint-label">Details</div>
+                    <div className="complaint-value" style={{textAlign: 'left', maxWidth: '100%'}}>
+                      {complain.details.split('\n').map((line, index) => (
+                        <p key={index} style={{margin: '0.5rem 0'}}>{line}</p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="complaint-detail-row">
+                <div style={{width: '100%'}}>
+                  <div className="complaint-label">Latest Update</div>
+                  <div className="complaint-value" style={{textAlign: 'left', maxWidth: '100%'}}>
+                    <div className={`complaint-update ${!(complain.update || complain.updateNote) ? 'no-update' : ''}`}>
+                      {complain.update || complain.updateNote || 'No updates yet. Your complaint is being processed.'}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

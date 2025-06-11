@@ -177,20 +177,17 @@ function Login() {
               {step !== 3 ? (
                 <>
                   <button type="button" className="login-link-btn forgot-password-btn" onClick={e => { e.preventDefault(); setStep(3); setMessage(''); }}>
-                    <span className="link-icon">🔑</span>
                     Forgotten password?
                   </button>
                   <div className="login-divider">
                     <span>or</span>
                   </div>
                   <a href="/signup" className="login-link-btn create-account-btn">
-                    <span className="link-icon">➕</span>
                     Create an account
                   </a>
                 </>
               ) : (
                 <button type="button" className="login-link-btn back-to-login-btn" onClick={e => { e.preventDefault(); setStep(1); setMessage(''); }}>
-                  <span className="link-icon">🔄</span>
                   Remembered password?
                 </button>
               )}

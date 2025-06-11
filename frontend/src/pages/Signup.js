@@ -317,7 +317,6 @@ function Signup() {
                 <span>Already have an account?</span>
               </div>
               <a href="/login" className="signup-link-btn login-btn-link">
-                <span className="link-icon">🔑</span>
                 Sign in here
               </a>
             </div>
