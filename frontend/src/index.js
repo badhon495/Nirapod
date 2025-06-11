@@ -71,7 +71,7 @@ const AppWithProviders = () => {
 // Configure axios defaults
 // Set the base URL for API requests
 const apiBaseUrl = process.env.NODE_ENV === 'production' 
-  ? process.env.REACT_APP_API_BASE_URL || 'https://nirapod-backend.onrender.com'
+  ? process.env.REACT_APP_API_BASE_URL || 'https://nirapod.onrender.com'
   : 'http://localhost:8080';
 
 axios.defaults.baseURL = apiBaseUrl;
@@ -81,6 +81,8 @@ axios.interceptors.request.use(
   (config) => {
     // Add timeout for better error handling
     config.timeout = 30000; // 30 seconds
+    // Add withCredentials for CORS
+    config.withCredentials = false; // Set to false for now to test
     return config;
   },
   (error) => {
@@ -94,6 +96,12 @@ axios.interceptors.response.use(
   (error) => {
     if (error.code === 'ERR_NETWORK') {
       console.warn('Network error - API might be unavailable');
+    }
+    if (error.response?.status === 404) {
+      console.warn('API endpoint not found:', error.config?.url);
+    }
+    if (error.response?.status === 500) {
+      console.error('Server error:', error.response.data);
     }
     return Promise.reject(error);
   }

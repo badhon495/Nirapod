@@ -9,6 +9,7 @@ backend/.env
 backend/.classpath
 backend/.project
 backend/.settings/
+backend/src/main/resources/application.properties
 
 # IDE/editor
 .vscode/

@@ -15,12 +15,16 @@ public class GlobalCorsConfig {
                 registry.addMapping("/**")
                     .allowedOriginPatterns(
                         "https://nirapod.netlify.app",
-                        "http://localhost:3000"
+                        "https://*.netlify.app",
+                        "http://localhost:3000",
+                        "http://localhost:3001",
+                        "http://127.0.0.1:3000"
                     )
-                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD")
                     .allowedHeaders("*")
-                    .exposedHeaders("Authorization")
-                    .allowCredentials(true);
+                    .exposedHeaders("Authorization", "Content-Type", "Content-Length")
+                    .allowCredentials(true)
+                    .maxAge(3600); // Cache preflight response for 1 hour
             }
         };
     }
