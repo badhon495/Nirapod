@@ -119,3 +119,18 @@ To set up your environment variables and configuration files:
 - Get the Google APP ID and APP SECRET from the Google Developer Console and set them in the frontend `.env` file and backend `application.properties`.
 - For mail service, you can use any SMTP server. The example uses Gmail, but you can replace it with your own SMTP server details in the `application.properties` file.
 - Ensure you have the required permissions for file uploads and location sharing in your browser settings.
+
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+  <p>⭐ Star this repo if you found it helpful!</p>
+</div>
