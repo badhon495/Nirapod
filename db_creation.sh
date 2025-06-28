@@ -79,4 +79,4 @@ CREATE TABLE "notifications" (
 EOF
 
 echo "\n# Usr_complain.Status: 0 = unsolved, 1 = in progress, 2 = solved"
-echo "✅ Setup complete!"
+echo "Setup complete!"

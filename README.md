@@ -7,9 +7,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-316192?style=flat-square&logo=postgresql)
 ![Maven](https://img.shields.io/badge/Maven-C71A36?style=flat-square&logo=apache-maven)
 
-This is a full-stack web application built with Spring Boot for the backend and React for the frontend. The application includes features such as user authentication, file uploads, live location sharing and a live chat system. User can complain to the privileged person and the privileged person takes action on the complaint.
-
-
+This is a full-stack social media-inspired web application built to make communities safer and more connected. It empowers users to raise their voices by reporting local issues with descriptions, images, and live locations, while trusted authorities like police or fire services can respond and take action in real time. Complaints are shared in a familiar social feed where others can engage, support, and contribute. With live chat and location sharing, the platform fosters quick, transparent, and meaningful communication. Built with Spring Boot and React, it combines functionality with purpose—bridging the gap between citizens and responders when it matters most.
 
 </div>
 
@@ -20,7 +18,21 @@ This is a full-stack web application built with Spring Boot for the backend and 
 - db_creation.sh (Postgres DB setup)
 
 
-## Backend Setup (Spring Boot)
+## Installation and Setup
+
+First, you need to clone the repository:
+
+```bash
+git clone https://github.com/badhon495/Nirapod.git
+cd Nirapod
+```
+
+ Install the required dependencies for both backend and frontend:
+```bash
+npm install
+```   
+
+### Backend Setup (Spring Boot)
 
 1. Navigate to backend directory:
    ```bash
@@ -42,7 +54,7 @@ This is a full-stack web application built with Spring Boot for the backend and 
 6. The backend will run on `http://localhost:8080` by default.
 
 
-## Frontend Setup (React)
+### Frontend Setup (React)
 
 1. Navigate to frontend directory:
    ```bash
@@ -59,9 +71,8 @@ This is a full-stack web application built with Spring Boot for the backend and 
    ```
 5. The frontend will run on `http://localhost:3000` by default.
 
----
 
-## Live Chat Setup
+### Live Chat Setup
 
 1. Navigate to backend directory:
    ```bash
@@ -72,7 +83,6 @@ This is a full-stack web application built with Spring Boot for the backend and 
    node livechat-server.js
    ```
 
----
 
 ## Database Setup
 
@@ -82,7 +92,6 @@ This is a full-stack web application built with Spring Boot for the backend and 
    ./db_creation.sh
    ```
 
----
 
 ## Environment Configuration
 
@@ -95,7 +104,7 @@ To set up your environment variables and configuration files:
      ```
    - Edit `application.properties` and fill in your real database, email, and Google credentials.
 
-2. **Backend .env file**
+2. **Frontend .env file**
    - Copy the example file to create your actual .env:
      ```bash
      cp frontend/.env.example frontend/.env
