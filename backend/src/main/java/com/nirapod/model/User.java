@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 public class User {
     @Id
-    @Column(name = "NID", length = 10)
+    @Column(name = "NID", length = 17) // Changed to accommodate longer NIDs if needed
     private String nid;
 
     @Column(name = "Categories", length = 16, nullable = false)
@@ -26,7 +26,7 @@ public class User {
     @Column(name = "Name", nullable = false)
     private String name;
 
-    @Column(name = "Phone", nullable = false)
+    @Column(name = "Phone", nullable = false, length = 15) // Changed to VARCHAR to handle international formats
     private String phone;
 
     @Column(name = "Present_address", nullable = false)

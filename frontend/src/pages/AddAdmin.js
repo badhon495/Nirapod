@@ -178,7 +178,16 @@ function AddAdmin() {
             )}
             {step === 4 && (
               <form onSubmit={handleNext}>
-                <input name="nid" placeholder="NID" value={form.nid} onChange={handleChange} required />
+                <input 
+                  name="nid" 
+                  placeholder="NID (exactly 10 digits)" 
+                  value={form.nid} 
+                  onChange={handleChange} 
+                  maxLength="10"
+                  pattern="[0-9]{10}"
+                  title="NID must be exactly 10 digits"
+                  required 
+                />
                 <input name="presentAddress" placeholder="Present Address" value={form.presentAddress} onChange={handleChange} required />
                 <input name="permanentAddress" placeholder="Permanent Address" value={form.permanentAddress} onChange={handleChange} required />
                 <input name="drivingLicence" placeholder="Driving Licence (optional)" value={form.drivingLicence} onChange={handleChange} />

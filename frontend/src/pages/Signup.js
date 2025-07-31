@@ -210,7 +210,15 @@ function Signup() {
             )}
             {step === 3 && (
               <form onSubmit={handleNext}>
-                <input name="phoneNumber" placeholder="Phone Number" value={form.phoneNumber} onChange={handleChange} required />
+                <input 
+                  name="phoneNumber" 
+                  placeholder="Phone Number (10-15 digits)" 
+                  value={form.phoneNumber} 
+                  onChange={handleChange} 
+                  pattern="[0-9]{10,15}"
+                  title="Phone number must be between 10 and 15 digits"
+                  required 
+                />
                 <div className="signup-password-input-wrapper">
                   <input
                     name="password"
@@ -256,7 +264,17 @@ function Signup() {
             )}
             {step === 4 && (
               <form onSubmit={handleNext}>
-                <input name="nid" placeholder="NID" value={form.nid} onChange={handleChange} required />
+                <input 
+                  name="nid" 
+                  placeholder="NID (10-17 characters)" 
+                  value={form.nid} 
+                  onChange={handleChange} 
+                  minLength="10"
+                  maxLength="17"
+                  pattern="[0-9A-Za-z]{10,17}"
+                  title="NID must be between 10 and 17 characters"
+                  required 
+                />
                 <input name="presentAddress" placeholder="Present Address" value={form.presentAddress} onChange={handleChange} required />
                 <input name="permanentAddress" placeholder="Permanent Address" value={form.permanentAddress} onChange={handleChange} required />
                 <input name="drivingLicence" placeholder="Driving Licence (optional)" value={form.drivingLicence} onChange={handleChange} />

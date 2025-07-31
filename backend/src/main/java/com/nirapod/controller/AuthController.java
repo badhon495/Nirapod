@@ -63,6 +63,19 @@ public class AuthController {
             @RequestParam(value = "privUserId", required = false) String privUserId,
             @RequestParam(value = "privUserIdPhoto", required = false) MultipartFile privUserIdPhoto
     ) {
+        // Validate NID length - typically 10-17 characters depending on country
+        if (nid == null || nid.trim().length() < 10 || nid.trim().length() > 17) {
+            return ResponseEntity.badRequest().body("NID must be between 10 and 17 characters");
+        }
+        
+        // Validate phone number - must be 10-15 digits to accommodate international formats
+        if (phoneNumber == null || !phoneNumber.matches("\\d{10,15}")) {
+            return ResponseEntity.badRequest().body("Phone number must be between 10 and 15 digits");
+        }
+        
+        // Trim NID to ensure no extra spaces
+        nid = nid.trim();
+        
         if (authService.findByPhoneNumber(phoneNumber).isPresent() ||
             authService.findByEmail(email).isPresent()) {
             return ResponseEntity.badRequest().body("User already exists");
