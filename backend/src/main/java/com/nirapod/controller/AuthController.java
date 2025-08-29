@@ -3,6 +3,7 @@ package com.nirapod.controller;
 import com.nirapod.model.User;
 import com.nirapod.service.AuthService;
 import com.nirapod.service.OtpService;
+import com.nirapod.service.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,16 +11,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.StringUtils;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
@@ -35,9 +32,8 @@ public class AuthController {
     private OtpService otpService;
     @Autowired
     private JavaMailSender mailSender;
-
-    @Value("${file.upload-dir:uploads}")
-    private String uploadDir;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Value("${google.client.id}")
     private String googleClientId;
@@ -90,14 +86,29 @@ public class AuthController {
                 }
             }
 
-            Path dirPath = Paths.get(uploadDir);
-            if (!Files.exists(dirPath)) Files.createDirectories(dirPath);
-            String passportImgPath = passportImg != null && !passportImg.isEmpty() ? saveFile(passportImg, dirPath) : null;
-            String drivingLicenseImgPath = drivingLicenseImg != null && !drivingLicenseImg.isEmpty() ? saveFile(drivingLicenseImg, dirPath) : null;
-            String utilityBillPhotoPath = saveFile(utilityBillPhoto, dirPath);
-            String userPhotoPath = saveFile(userPhoto, dirPath);
-            String nidPhotoPath = saveFile(nidPhoto, dirPath);
-            String privUserIdPhotoPath = privUserIdPhoto != null && !privUserIdPhoto.isEmpty() ? saveFile(privUserIdPhoto, dirPath) : null;
+            // Upload files to Cloudinary
+            String passportImgUrl = null;
+            String drivingLicenseImgUrl = null;
+            String utilityBillPhotoUrl = null;
+            String userPhotoUrl = null;
+            String nidPhotoUrl = null;
+            String privUserIdPhotoUrl = null;
+            
+            try {
+                passportImgUrl = passportImg != null && !passportImg.isEmpty() ? 
+                    cloudinaryService.uploadImage(passportImg, "nirapod/user-documents") : null;
+                drivingLicenseImgUrl = drivingLicenseImg != null && !drivingLicenseImg.isEmpty() ? 
+                    cloudinaryService.uploadImage(drivingLicenseImg, "nirapod/user-documents") : null;
+                utilityBillPhotoUrl = cloudinaryService.uploadImage(utilityBillPhoto, "nirapod/user-documents");
+                userPhotoUrl = cloudinaryService.uploadImage(userPhoto, "nirapod/user-photos");
+                nidPhotoUrl = cloudinaryService.uploadImage(nidPhoto, "nirapod/user-documents");
+                privUserIdPhotoUrl = privUserIdPhoto != null && !privUserIdPhoto.isEmpty() ? 
+                    cloudinaryService.uploadImage(privUserIdPhoto, "nirapod/user-documents") : null;
+            } catch (IOException e) {
+                System.err.println("Cloudinary upload failed: " + e.getMessage());
+                return ResponseEntity.status(500).body("Failed to upload images to cloud storage: " + e.getMessage());
+            }
+                
             User user = User.builder()
                     .nid(nid)
                     .categories(mappedCategory)
@@ -108,15 +119,15 @@ public class AuthController {
                     .presentAddress(presentAddress)
                     .permanentAddress(permanentAddress)
                     .passport(passport)
-                    .passportImg(passportImgPath != null ? "/uploads/" + passportImgPath : null)
+                    .passportImg(passportImgUrl)
                     .drivingLicense(drivingLicense)
-                    .drivingLicenseImg(drivingLicenseImgPath != null ? "/uploads/" + drivingLicenseImgPath : null)
+                    .drivingLicenseImg(drivingLicenseImgUrl)
                     .utilityBillCustomerId(utilityBillCustomerId)
-                    .utilityBillPhoto("/uploads/" + utilityBillPhotoPath)
-                    .userPhoto("/uploads/" + userPhotoPath)
-                    .nidPhoto("/uploads/" + nidPhotoPath)
+                    .utilityBillPhoto(utilityBillPhotoUrl)
+                    .userPhoto(userPhotoUrl)
+                    .nidPhoto(nidPhotoUrl)
                     .privUserId(privUserId)
-                    .privUserIdPhoto(privUserIdPhotoPath != null ? "/uploads/" + privUserIdPhotoPath : null)
+                    .privUserIdPhoto(privUserIdPhotoUrl)
                     .build();
             User saved = authService.registerUser(user);
             if (email != null && !email.isEmpty()) {
@@ -127,16 +138,11 @@ public class AuthController {
                 mailSender.send(message);
             }
             return ResponseEntity.ok(Map.of("message", "Signup completed", "userId", saved.getNid()));
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("File upload failed: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Signup error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Signup failed: " + e.getMessage());
         }
-    }
-
-    private String saveFile(MultipartFile file, Path dirPath) throws IOException {
-        String filename = System.currentTimeMillis() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
-        Path filePath = dirPath.resolve(filename);
-        file.transferTo(filePath);
-        return filename;
     }
 
     @PostMapping("/send-otp")

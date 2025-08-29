@@ -4,17 +4,14 @@ import com.nirapod.dto.ComplaintResponse;
 import com.nirapod.model.Complaint;
 import com.nirapod.repository.ComplaintRepository;
 import com.nirapod.repository.UserRepository;
+import com.nirapod.service.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +28,9 @@ public class ComplaintController {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Value("${file.upload-dir:uploads}")
-    private String uploadDir;
+    
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     // Fetch all complaints
     @GetMapping("/complaints")
@@ -272,36 +269,43 @@ public class ComplaintController {
     public ResponseEntity<?> uploadPhotos(
             @RequestParam("trackingId") Integer trackingId,
             @RequestParam("nid") String nid,
-            @RequestParam("photos") java.util.List<MultipartFile> photos) throws IOException {
-        Optional<Complaint> complaintOpt = repository.findById(trackingId);
-        if (complaintOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body("Complaint not found");
-        }
-        Complaint complaint = complaintOpt.get();
-        // Save files
-        Path dirPath = Paths.get(uploadDir);
-        if (!Files.exists(dirPath))
-            Files.createDirectories(dirPath);
-        java.util.List<String> photoPaths = new ArrayList<>();
-        for (MultipartFile file : photos) {
-            if (!file.isEmpty()) {
-                String filename = System.currentTimeMillis() + "_"
-                        + org.springframework.util.StringUtils.cleanPath(file.getOriginalFilename());
-                Path filePath = dirPath.resolve(filename);
-                file.transferTo(filePath);
-                photoPaths.add("/uploads/" + filename);
+            @RequestParam("photos") java.util.List<MultipartFile> photos) {
+        try {
+            Optional<Complaint> complaintOpt = repository.findById(trackingId);
+            if (complaintOpt.isEmpty()) {
+                return ResponseEntity.badRequest().body("Complaint not found");
             }
+            Complaint complaint = complaintOpt.get();
+            
+            // Upload files to Cloudinary
+            java.util.List<String> photoUrls = new ArrayList<>();
+            for (MultipartFile file : photos) {
+                if (!file.isEmpty()) {
+                    try {
+                        String photoUrl = cloudinaryService.uploadImage(file, "nirapod/complaint-uploads");
+                        photoUrls.add(photoUrl);
+                    } catch (IOException e) {
+                        System.err.println("Failed to upload image: " + e.getMessage());
+                        // Continue with other photos
+                    }
+                }
+            }
+            
+            // Append to existing upload_photos instead of photos
+            String existingUploadPhotos = complaint.getUploadPhotos();
+            String newPhotos = String.join(",", photoUrls);
+            if (existingUploadPhotos != null && !existingUploadPhotos.isBlank()) {
+                complaint.setUploadPhotos(existingUploadPhotos + "," + newPhotos);
+            } else {
+                complaint.setUploadPhotos(newPhotos);
+            }
+            repository.save(complaint);
+            return ResponseEntity.ok(Map.of("success", true, "uploadPhotos", complaint.getUploadPhotos()));
+        } catch (Exception e) {
+            System.err.println("Error uploading photos: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to upload photos: " + e.getMessage());
         }
-        // Append to existing upload_photos instead of photos
-        String existingUploadPhotos = complaint.getUploadPhotos();
-        String newPhotos = String.join(",", photoPaths);
-        if (existingUploadPhotos != null && !existingUploadPhotos.isBlank()) {
-            complaint.setUploadPhotos(existingUploadPhotos + "," + newPhotos);
-        } else {
-            complaint.setUploadPhotos(newPhotos);
-        }
-        repository.save(complaint);
-        return ResponseEntity.ok(Map.of("success", true, "uploadPhotos", complaint.getUploadPhotos()));
     }
 
     // Get upload photos for a specific complaint

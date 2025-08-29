@@ -2,17 +2,14 @@ package com.nirapod.controller;
 
 import com.nirapod.model.User;
 import com.nirapod.repository.UserRepository;
+import com.nirapod.service.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +20,9 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private UserRepository userRepository;
-
-    @Value("${file.upload-dir:uploads}")
-    private String uploadDir;
+    
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @GetMapping("/by-identifier")
     public ResponseEntity<?> getUserByIdentifier(@RequestParam("value") String value) {
@@ -125,32 +122,28 @@ public class UserController {
         if (utilityBillCustomerId != null) user.setUtilityBillCustomerId(utilityBillCustomerId);
         if (passport != null) user.setPassport(passport);
         if (drivingLicense != null) user.setDrivingLicense(drivingLicense);
-        // Save files if present
-        Path dirPath = Paths.get(uploadDir);
-        if (!Files.exists(dirPath)) Files.createDirectories(dirPath);
-        if (photo != null && !photo.isEmpty()) {
-            String filename = System.currentTimeMillis() + "_photo_" + photo.getOriginalFilename();
-            Path filePath = dirPath.resolve(filename);
-            photo.transferTo(filePath);
-            user.setUserPhoto("/uploads/" + filename);
-        }
-        if (utilityBillPhoto != null && !utilityBillPhoto.isEmpty()) {
-            String filename = System.currentTimeMillis() + "_utilitybill_" + utilityBillPhoto.getOriginalFilename();
-            Path filePath = dirPath.resolve(filename);
-            utilityBillPhoto.transferTo(filePath);
-            user.setUtilityBillPhoto("/uploads/" + filename);
-        }
-        if (passportImg != null && !passportImg.isEmpty()) {
-            String filename = System.currentTimeMillis() + "_passport_" + passportImg.getOriginalFilename();
-            Path filePath = dirPath.resolve(filename);
-            passportImg.transferTo(filePath);
-            user.setPassportImg("/uploads/" + filename);
-        }
-        if (drivingLicenseImg != null && !drivingLicenseImg.isEmpty()) {
-            String filename = System.currentTimeMillis() + "_dl_" + drivingLicenseImg.getOriginalFilename();
-            Path filePath = dirPath.resolve(filename);
-            drivingLicenseImg.transferTo(filePath);
-            user.setDrivingLicenseImg("/uploads/" + filename);
+        
+        // Upload files to Cloudinary if present
+        try {
+            if (photo != null && !photo.isEmpty()) {
+                String photoUrl = cloudinaryService.uploadImage(photo, "nirapod/user-photos");
+                user.setUserPhoto(photoUrl);
+            }
+            if (utilityBillPhoto != null && !utilityBillPhoto.isEmpty()) {
+                String utilityBillPhotoUrl = cloudinaryService.uploadImage(utilityBillPhoto, "nirapod/user-documents");
+                user.setUtilityBillPhoto(utilityBillPhotoUrl);
+            }
+            if (passportImg != null && !passportImg.isEmpty()) {
+                String passportImgUrl = cloudinaryService.uploadImage(passportImg, "nirapod/user-documents");
+                user.setPassportImg(passportImgUrl);
+            }
+            if (drivingLicenseImg != null && !drivingLicenseImg.isEmpty()) {
+                String drivingLicenseImgUrl = cloudinaryService.uploadImage(drivingLicenseImg, "nirapod/user-documents");
+                user.setDrivingLicenseImg(drivingLicenseImgUrl);
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to upload image: " + e.getMessage());
+            return ResponseEntity.status(500).body("Failed to upload images: " + e.getMessage());
         }
         userRepository.save(user);
         return ResponseEntity.ok("Profile updated successfully");

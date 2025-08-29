@@ -337,6 +337,14 @@ function Home() {
   // Photo viewer handlers
   const handleOpenPhotoViewer = (photos, index = 0) => {
     const processedPhotos = photos.map(photo => {
+      // If the photo URL already starts with http (Cloudinary URL), use it as is
+      if (photo.startsWith('http')) {
+        return {
+          primary: photo,
+          fallback: photo
+        };
+      }
+      // Otherwise, use localhost fallback (for old local images)
       const cleanPhoto = photo.replace('/uploads/', '');
       return {
         primary: `http://localhost:8080/uploads/${cleanPhoto}`,
@@ -420,7 +428,7 @@ function Home() {
                 onClick={() => setFilterPanelOpen(!filterPanelOpen)}
               >
                 <div className="filter-btn-content">
-                  <span className="filter-icon">🎯</span>
+                  <span className="filter-icon"></span>
                   <span className="filter-text">Filter Posts</span>
                   {getActiveFilterCount() > 0 && (
                     <span className="filter-badge">{getActiveFilterCount()}</span>
@@ -446,7 +454,7 @@ function Home() {
                     <div className="filter-grid">
                       <div className="filter-item">
                         <label className="filter-label">
-                          <span className="filter-label-icon">📍</span>
+                          <span className="filter-label-icon"></span>
                           Area
                         </label>
                         <input 
@@ -460,7 +468,7 @@ function Home() {
                       
                       <div className="filter-item">
                         <label className="filter-label">
-                          <span className="filter-label-icon">⚡</span>
+                          <span className="filter-label-icon"></span>
                           Urgency
                         </label>
                         <select 
@@ -470,15 +478,15 @@ function Home() {
                           className="modern-filter-select"
                         >
                           <option value="">All Urgency Levels</option>
-                          <option value="High">🔴 High Priority</option>
-                          <option value="Medium">🟡 Medium Priority</option>
-                          <option value="Low">🟢 Low Priority</option>
+                          <option value="High">High Priority</option>
+                          <option value="Medium">Medium Priority</option>
+                          <option value="Low">Low Priority</option>
                         </select>
                       </div>
                       
                       <div className="filter-item">
                         <label className="filter-label">
-                          <span className="filter-label-icon">🏘️</span>
+                          <span className="filter-label-icon"></span>
                           District
                         </label>
                         <input 
@@ -492,7 +500,7 @@ function Home() {
                       
                       <div className="filter-item">
                         <label className="filter-label">
-                          <span className="filter-label-icon">#️⃣</span>
+                          <span className="filter-label-icon"></span>
                           Tags
                         </label>
                         <input 
@@ -506,7 +514,7 @@ function Home() {
                       
                       <div className="filter-item">
                         <label className="filter-label">
-                          <span className="filter-label-icon">📅</span>
+                          <span className="filter-label-icon"></span>
                           From Date
                         </label>
                         <input 
@@ -520,7 +528,7 @@ function Home() {
                       
                       <div className="filter-item">
                         <label className="filter-label">
-                          <span className="filter-label-icon">📅</span>
+                          <span className="filter-label-icon"></span>
                           To Date
                         </label>
                         <input 
@@ -538,14 +546,14 @@ function Home() {
                         className="filter-action-btn secondary"
                         onClick={handleClearFilters}
                       >
-                        <span className="btn-icon">🗑️</span>
+                        <span className="btn-icon"></span>
                         Clear All
                       </button>
                       <button 
                         className="filter-action-btn primary"
                         onClick={() => setFilterPanelOpen(false)}
                       >
-                        <span className="btn-icon">✨</span>
+                        <span className="btn-icon"></span>
                         Apply Filters
                       </button>
                     </div>
@@ -581,7 +589,7 @@ function Home() {
                       <div className="social-avatar">
                         {post.userProfileImage && post.userProfileImage !== 'null' && post.userProfileImage !== '' ? (
                           <img 
-                            src={`http://localhost:8080/uploads/${post.userProfileImage.replace('/uploads/', '')}`} 
+                            src={post.userProfileImage.startsWith('http') ? post.userProfileImage : `http://localhost:8080/uploads/${post.userProfileImage.replace('/uploads/', '')}`} 
                             alt="Profile" 
                             className="social-avatar-image"
                             onError={(e) => {
@@ -672,14 +680,19 @@ function Home() {
                       <div className="social-photos-carousel">
                         <div className="social-photo-container">
                           <img 
-                            src={`http://localhost:8080/uploads/${photoArr[currentPhotoIndex[post.trackingId] || 0].replace('/uploads/', '')}`} 
+                            src={photoArr[currentPhotoIndex[post.trackingId] || 0].startsWith('http') ? 
+                                  photoArr[currentPhotoIndex[post.trackingId] || 0] : 
+                                  `http://localhost:8080/uploads/${photoArr[currentPhotoIndex[post.trackingId] || 0].replace('/uploads/', '')}`} 
                             alt={`Post Photo ${(currentPhotoIndex[post.trackingId] || 0) + 1}`} 
                             className="social-post-image"
                             onClick={() => handleOpenPhotoViewer(photoArr, currentPhotoIndex[post.trackingId] || 0)}
                             onError={(e) => {
-                              const altSrc = `http://localhost:8080/${photoArr[currentPhotoIndex[post.trackingId] || 0].replace('/uploads/', '')}`;
-                              if (e.target.src !== altSrc) {
-                                e.target.src = altSrc;
+                              const currentPhoto = photoArr[currentPhotoIndex[post.trackingId] || 0];
+                              if (!currentPhoto.startsWith('http')) {
+                                const altSrc = `http://localhost:8080/${currentPhoto.replace('/uploads/', '')}`;
+                                if (e.target.src !== altSrc) {
+                                  e.target.src = altSrc;
+                                }
                               }
                             }}
                           />
@@ -958,15 +971,15 @@ function Home() {
                 return uploadPhotoArr.map((p, i) => (
                   <img 
                     key={i} 
-                    src={`http://localhost:8080/uploads/${p.replace('/uploads/', '')}`} 
+                    src={p.startsWith('http') ? p : `http://localhost:8080/uploads/${p.replace('/uploads/', '')}`} 
                     alt={`Uploaded Photo ${i + 1}`} 
                     className="gallery-image"
                     onClick={() => handleOpenPhotoViewer(uploadPhotoArr, i)}
                     onError={(e) => {
-                      // Try alternative URL format if the first one fails
-                      const altSrc = `http://localhost:8080/${p.replace('/uploads/', '')}`;
-                      if (e.target.src !== altSrc) {
-                        e.target.src = altSrc;
+                      // If Cloudinary URL fails, try localhost fallback
+                      if (p.startsWith('http') && !e.target.src.includes('localhost')) {
+                        const fallbackSrc = `http://localhost:8080/uploads/${p.replace('/uploads/', '')}`;
+                        e.target.src = fallbackSrc;
                       }
                     }}
                   />

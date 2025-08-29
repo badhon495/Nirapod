@@ -2,17 +2,13 @@ package com.nirapod.controller;
 
 import com.nirapod.model.CreateComplain;
 import com.nirapod.repository.CreateComplainRepository;
+import com.nirapod.service.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +17,9 @@ import java.util.List;
 public class CreateComplainController {
     @Autowired
     private CreateComplainRepository createComplainRepository;
-
-    @Value("${file.upload-dir:uploads}")
-    private String uploadDir;
+    
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @PostMapping
     public ResponseEntity<?> submitComplain(
@@ -37,37 +33,44 @@ public class CreateComplainController {
             @RequestParam(value = "photos", required = false) List<MultipartFile> photos,
             @RequestParam("postOnTimeline") String postOnTimeline,
             @RequestParam("location") String location
-    ) throws IOException {
-        List<String> photoPaths = new ArrayList<>();
-        if (photos != null) {
-            Path dirPath = Paths.get(uploadDir);
-            if (!Files.exists(dirPath)) Files.createDirectories(dirPath);
-            for (MultipartFile file : photos) {
-                if (!file.isEmpty()) {
-                    String filename = System.currentTimeMillis() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
-                    Path filePath = dirPath.resolve(filename);
-                    file.transferTo(filePath);
-                    photoPaths.add("/uploads/" + filename);
+    ) {
+        try {
+            List<String> photoUrls = new ArrayList<>();
+            if (photos != null) {
+                for (MultipartFile file : photos) {
+                    if (!file.isEmpty()) {
+                        try {
+                            String photoUrl = cloudinaryService.uploadImage(file, "nirapod/complaint-photos");
+                            photoUrls.add(photoUrl);
+                        } catch (IOException e) {
+                            System.err.println("Failed to upload image: " + e.getMessage());
+                            // Continue with other photos, don't fail the entire submission
+                        }
+                    }
                 }
             }
+            CreateComplain complain = CreateComplain.builder()
+                    .nid(nid)
+                    .urgency(urgency)
+                    .complainTo(complainTo)
+                    .district(district)
+                    .area(area)
+                    .tags(tags)
+                    .details(details)
+                    .photos(String.join(",", photoUrls))
+                    .postOnTimeline("1".equals(postOnTimeline))
+                    .location(location)
+                    .status(0)
+                    .follow(nid)
+                    .comment("")
+                    .build();
+            CreateComplain saved = createComplainRepository.save(complain);
+            return ResponseEntity.ok(saved);
+        } catch (Exception e) {
+            System.err.println("Error submitting complaint: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to submit complaint: " + e.getMessage());
         }
-        CreateComplain complain = CreateComplain.builder()
-                .nid(nid)
-                .urgency(urgency)
-                .complainTo(complainTo)
-                .district(district)
-                .area(area)
-                .tags(tags)
-                .details(details)
-                .photos(String.join(",", photoPaths))
-                .postOnTimeline("1".equals(postOnTimeline))
-                .location(location)
-                .status(0)
-                .follow(nid)
-                .comment("")
-                .build();
-        CreateComplain saved = createComplainRepository.save(complain);
-        return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/{trackingId}")
