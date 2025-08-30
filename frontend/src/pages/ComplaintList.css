@@ -981,6 +981,287 @@
     }
 }
 
+/* ===== ENHANCED LOADING ANIMATIONS ===== */
+
+/* Initial Loading Container */
+.initial-loading-container {
+  width: 100%;
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  animation: optimizedFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.initial-loading-text {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 1rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.initial-loading-text::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.1), transparent);
+  animation: optimizedShimmer 2s infinite;
+  transform: translateZ(0);
+}
+
+.initial-loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(96, 165, 250, 0.2);
+  border-top: 2px solid #60a5fa;
+  border-radius: 50%;
+  animation: optimizedSpin 0.8s linear infinite;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Complaint Skeleton Cards */
+.complaint-skeleton {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  animation: optimizedPulse 1.5s ease-in-out infinite;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.complaint-skeleton.skeleton-1 {
+  animation-delay: 0s;
+}
+
+.complaint-skeleton.skeleton-2 {
+  animation-delay: 0.1s;
+}
+
+.complaint-skeleton.skeleton-3 {
+  animation-delay: 0.2s;
+}
+
+.skeleton-element {
+  background: rgba(96, 165, 250, 0.1);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+
+.skeleton-element::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.2), transparent);
+  animation: optimizedShimmer 2s infinite;
+  transform: translateZ(0);
+}
+
+.skeleton-id {
+  height: 16px;
+  width: 120px;
+  margin-bottom: 8px;
+}
+
+.skeleton-status {
+  height: 24px;
+  width: 80px;
+  border-radius: 12px;
+}
+
+.skeleton-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.skeleton-label {
+  height: 14px;
+  width: 60px;
+}
+
+.skeleton-value {
+  height: 14px;
+  width: 100px;
+}
+
+.skeleton-button {
+  height: 40px;
+  width: 120px;
+  margin-top: 16px;
+  border-radius: 8px;
+}
+
+/* Infinite Loading Container */
+.infinite-loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 300px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: optimizedFadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  position: relative;
+  overflow: hidden;
+}
+
+.infinite-loading-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.1), transparent);
+  animation: optimizedShimmer 2s infinite;
+  transform: translateZ(0);
+}
+
+.infinite-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(96, 165, 250, 0.2);
+  border-top: 2px solid #60a5fa;
+  border-radius: 50%;
+  animation: optimizedSpin 0.8s linear infinite;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.infinite-loading-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  font-weight: 500;
+  animation: optimizedPulse 2s ease-in-out infinite;
+  transform: translateZ(0);
+}
+
+/* Hardware-Accelerated Keyframes */
+@keyframes optimizedSpin {
+  0% { transform: translateZ(0) rotate(0deg); }
+  100% { transform: translateZ(0) rotate(360deg); }
+}
+
+@keyframes optimizedPulse {
+  0%, 100% { 
+    transform: translateZ(0) scale(1);
+    opacity: 0.7;
+  }
+  50% { 
+    transform: translateZ(0) scale(1.02);
+    opacity: 1;
+  }
+}
+
+@keyframes optimizedFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes optimizedShimmer {
+  0% {
+    transform: translateX(-100%) translateZ(0);
+  }
+  100% {
+    transform: translateX(100%) translateZ(0);
+  }
+}
+
+/* Responsive Design for Loading Animations */
+@media (max-width: 768px) {
+  .infinite-loading-container {
+    max-width: 250px;
+    padding: 1.5rem;
+  }
+
+  .infinite-loading-spinner {
+    width: 18px;
+    height: 18px;
+    border-width: 2px;
+  }
+
+  .infinite-loading-text {
+    font-size: 0.9rem;
+  }
+
+  .initial-loading-spinner {
+    width: 24px;
+    height: 24px;
+  }
+
+  .initial-loading-text {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .infinite-loading-container {
+    max-width: 200px;
+    padding: 1rem;
+  }
+
+  .infinite-loading-spinner {
+    width: 16px;
+    height: 16px;
+  }
+
+  .infinite-loading-text {
+    font-size: 0.85rem;
+  }
+
+  .initial-loading-text {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .complaint-skeleton {
+    padding: 1rem;
+  }
+}
+
 
 
 

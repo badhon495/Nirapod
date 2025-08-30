@@ -7,7 +7,8 @@ import axios from 'axios';
 
 const ComplaintList = () => {
     const [complaints, setComplaints] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
     const [error, setError] = useState(null);
     const [filters, setFilters] = useState({ tags: '', urgency: '', status: '' });
     const [filterOpen, setFilterOpen] = useState(false);
@@ -56,9 +57,11 @@ const ComplaintList = () => {
             const data = await ComplaintService.getAllComplaints();
             setComplaints(data);
             setLoading(false);
+            if (initialLoading) setInitialLoading(false);
         } catch (err) {
             setError('Failed to fetch complaints. Please try again later.');
             setLoading(false);
+            if (initialLoading) setInitialLoading(false);
         }
     };
 
@@ -80,11 +83,49 @@ const ComplaintList = () => {
         setSearchTerm(e.target.value);
     };
 
-    if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">{error}</div>;
 
     return (
         <div className="complaint-list-container">
+            {initialLoading ? (
+                <div className="initial-loading-container">
+                    <div className="initial-loading-text">
+                        <div className="initial-loading-spinner"></div>
+                        <span>Loading complaints...</span>
+                    </div>
+                    {/* Skeleton complaint cards */}
+                    <div className="complaints-grid">
+                        {[1, 2, 3].map((index) => (
+                            <div key={index} className={`complaint-skeleton skeleton-${index}`}>
+                                <div className="complaint-header">
+                                    <div className="skeleton-element skeleton-id"></div>
+                                    <div className="skeleton-element skeleton-status"></div>
+                                </div>
+                                <div className="complaint-info">
+                                    <div className="skeleton-row">
+                                        <div className="skeleton-element skeleton-label"></div>
+                                        <div className="skeleton-element skeleton-value"></div>
+                                    </div>
+                                    <div className="skeleton-row">
+                                        <div className="skeleton-element skeleton-label"></div>
+                                        <div className="skeleton-element skeleton-value"></div>
+                                    </div>
+                                    <div className="skeleton-row">
+                                        <div className="skeleton-element skeleton-label"></div>
+                                        <div className="skeleton-element skeleton-value"></div>
+                                    </div>
+                                    <div className="skeleton-row">
+                                        <div className="skeleton-element skeleton-label"></div>
+                                        <div className="skeleton-element skeleton-value"></div>
+                                    </div>
+                                </div>
+                                <div className="skeleton-element skeleton-button"></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <>
             {/* Modern Filter Section */}
             <div className="filter-section">
                 <div className="filter-container">
@@ -248,6 +289,15 @@ const ComplaintList = () => {
                     </div>
                 );
             })}
+                </>
+            )}
+
+            {loading && !initialLoading && (
+                <div className="infinite-loading-container">
+                    <div className="infinite-loading-spinner"></div>
+                    <span className="infinite-loading-text">Loading more complaints...</span>
+                </div>
+            )}
         </div>
     );
 };

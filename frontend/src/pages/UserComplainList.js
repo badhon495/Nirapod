@@ -5,7 +5,8 @@ import './ComplaintList.css';
 
 const UserComplainList = () => {
     const [complaints, setComplaints] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const nid = localStorage.getItem('nirapod_identifier');
@@ -21,9 +22,11 @@ const UserComplainList = () => {
             const data = await ComplaintService.getUserComplaints(nid);
             setComplaints(data);
             setLoading(false);
+            if (initialLoading) setInitialLoading(false);
         } catch (err) {
             setError('Failed to fetch your complaints. Please try again later.');
             setLoading(false);
+            if (initialLoading) setInitialLoading(false);
         }
     };
 
@@ -37,7 +40,6 @@ const UserComplainList = () => {
         return 'status-unsolved';
     };
 
-    if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">{error}</div>;
 
     return (
@@ -48,7 +50,44 @@ const UserComplainList = () => {
                     <p className="complaints-subtitle">Track and manage your submitted complaints</p>
                 </div>
 
-                {complaints.length === 0 ? (
+                {initialLoading ? (
+                    <div className="initial-loading-container">
+                        <div className="initial-loading-text">
+                            <div className="initial-loading-spinner"></div>
+                            <span>Loading your complaints...</span>
+                        </div>
+                        {/* Skeleton complaint cards */}
+                        <div className="complaints-grid">
+                            {[1, 2, 3].map((index) => (
+                                <div key={index} className={`complaint-skeleton skeleton-${index}`}>
+                                    <div className="complaint-header">
+                                        <div className="skeleton-element skeleton-id"></div>
+                                        <div className="skeleton-element skeleton-status"></div>
+                                    </div>
+                                    <div className="complaint-info">
+                                        <div className="skeleton-row">
+                                            <div className="skeleton-element skeleton-label"></div>
+                                            <div className="skeleton-element skeleton-value"></div>
+                                        </div>
+                                        <div className="skeleton-row">
+                                            <div className="skeleton-element skeleton-label"></div>
+                                            <div className="skeleton-element skeleton-value"></div>
+                                        </div>
+                                        <div className="skeleton-row">
+                                            <div className="skeleton-element skeleton-label"></div>
+                                            <div className="skeleton-element skeleton-value"></div>
+                                        </div>
+                                        <div className="skeleton-row">
+                                            <div className="skeleton-element skeleton-label"></div>
+                                            <div className="skeleton-element skeleton-value"></div>
+                                        </div>
+                                    </div>
+                                    <div className="skeleton-element skeleton-button"></div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : complaints.length === 0 ? (
                     <div className="empty-state">
                         <div className="empty-icon">📝</div>
                         <div className="empty-title">No Complaints Found</div>
@@ -110,6 +149,13 @@ const UserComplainList = () => {
                                 </div>
                             );
                         })}
+                    </div>
+                )}
+
+                {loading && !initialLoading && (
+                    <div className="infinite-loading-container">
+                        <div className="infinite-loading-spinner"></div>
+                        <span className="infinite-loading-text">Loading more complaints...</span>
                     </div>
                 )}
             </div>

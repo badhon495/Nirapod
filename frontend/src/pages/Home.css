@@ -2638,3 +2638,283 @@
   font-size: 1.1rem;
   margin: 0;
 }
+
+/* Infinite Loading Animation - Bottom of Posts */
+.infinite-loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  margin: 2rem 0;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: optimizedFadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.infinite-loading-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.1), transparent);
+  animation: shimmerSlide 2s infinite;
+}
+
+.infinite-loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(96, 165, 250, 0.2);
+  border-top: 2px solid #60a5fa;
+  border-radius: 50%;
+  animation: optimizedSpin 0.8s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  flex-shrink: 0;
+}
+
+.infinite-loading-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  animation: optimizedPulseText 2s ease-in-out infinite;
+}
+
+/* Initial Loading Skeleton for First Load */
+.initial-loading-container {
+  padding: 2rem 0;
+}
+
+.initial-loading-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.initial-loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(96, 165, 250, 0.2);
+  border-top: 3px solid #60a5fa;
+  border-radius: 50%;
+  animation: optimizedSpin 0.9s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.post-skeleton {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  animation: optimizedFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  position: relative;
+  overflow: hidden;
+}
+
+.post-skeleton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmerSlide 2s infinite;
+}
+
+.skeleton-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.skeleton-avatar {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: optimizedPulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeleton-line {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  animation: optimizedPulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-name {
+  width: 140px;
+  height: 16px;
+}
+
+.skeleton-time {
+  width: 80px;
+  height: 12px;
+}
+
+.skeleton-content {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeleton-title {
+  width: 85%;
+  height: 18px;
+}
+
+.skeleton-desc {
+  width: 100%;
+  height: 14px;
+}
+
+.skeleton-desc.short {
+  width: 60%;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  animation: optimizedPulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.skeleton-button {
+  width: 80px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  animation: optimizedPulse 1.5s ease-in-out infinite;
+}
+
+/* Keyframes for infinite loading animations */
+@keyframes optimizedSpin {
+  from {
+    transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    transform: rotate(360deg) translateZ(0);
+  }
+}
+
+@keyframes shimmerSlide {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes optimizedPulseText {
+  0%, 100% {
+    opacity: 0.8;
+    transform: translateZ(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
+@keyframes optimizedFadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0) scale3d(0.95, 0.95, 1);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+}
+
+@keyframes optimizedPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: translateZ(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateZ(0);
+  }
+}
+
+/* Responsive design for infinite loading */
+@media (max-width: 768px) {
+  .infinite-loading-container {
+    max-width: 250px;
+    padding: 1.5rem;
+    gap: 0.75rem;
+  }
+  
+  .infinite-loading-spinner {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }
+  
+  .infinite-loading-text {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .infinite-loading-container {
+    max-width: 200px;
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+  
+  .infinite-loading-spinner {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .infinite-loading-text {
+    font-size: 0.8rem;
+  }
+}

@@ -1,10 +1,16 @@
-/* Modern Tracker Component Styles */
+/* Modern Tracker Component Styles - Performance Optimized */
 .tracker-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
   padding: 2rem;
   padding-top: calc(70px + 2rem); /* Add navbar height + original padding */
   position: relative;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  /* Performance optimizations */
+  will-change: scroll-position;
+  contain: layout style paint;
+  transform: translateZ(0);
 }
 
 .tracker-container::before {
@@ -19,6 +25,8 @@
               radial-gradient(circle at 40% 40%, rgba(120, 255, 198, 0.1) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
+  will-change: opacity;
+  backface-visibility: hidden;
 }
 
 .tracker-content {
@@ -29,7 +37,10 @@
   margin: 0 auto;
   position: relative;
   z-index: 1;
-  animation: fadeIn 1s ease-out;
+  animation: optimizedFadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .tracker-title {
@@ -42,30 +53,38 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: fadeInDown 0.8s ease-out;
+  animation: optimizedTitleGlow 4s ease-in-out infinite alternate;
+  will-change: transform, opacity, filter;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .tracker-subtitle {
   color: rgba(255, 255, 255, 0.8);
   font-size: 1.1rem;
-  margin-bottom: 2rem;
   text-align: center;
-  animation: fadeInUp 0.8s ease-out 0.2s both;
+  margin-bottom: 3rem;
+  animation: optimizedSlideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .tracker-form {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 20px;
-  padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  margin-bottom: 2rem;
+  padding: 2.5rem;
   width: 100%;
   max-width: 500px;
-  animation: slideInUp 0.6s ease-out 0.4s both, float 6s ease-in-out infinite 2s;
-  position: relative;
-  overflow: hidden;
+  margin-bottom: 2rem;
+  animation: optimizedSubtleGlow 6s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout style paint;
 }
 
 .tracker-form::before {
@@ -84,7 +103,7 @@
 }
 
 .tracker-form:hover {
-  transform: translateY(-5px);
+  transform: translateY(-5px) translateZ(0);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   border-color: rgba(255, 255, 255, 0.2);
 }
@@ -92,7 +111,10 @@
 .tracker-input-group {
   position: relative;
   margin-bottom: 1.5rem;
-  animation: slideInLeft 0.6s ease-out 0.6s both;
+  animation: optimizedSlideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .tracker-input-group::before {
@@ -106,9 +128,11 @@
   border-radius: 14px;
   opacity: 0;
   z-index: -1;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   background-size: 400% 400%;
-  animation: gradientFlow 4s ease infinite;
+  animation: optimizedGradientFlow 4s ease infinite;
+  will-change: background-position, opacity;
+  backface-visibility: hidden;
 }
 
 .tracker-input:focus + .tracker-input-group::before,
@@ -154,11 +178,15 @@
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-  animation: slideInRight 0.6s ease-out 0.8s both;
+  animation: optimizedSlideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
   position: relative;
   overflow: hidden;
+  will-change: transform, box-shadow, background;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout style paint;
 }
 
 .tracker-button::before {
@@ -169,7 +197,7 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tracker-button:hover::before {
@@ -178,12 +206,13 @@
 
 .tracker-button:hover:not(:disabled) {
   background: linear-gradient(135deg, #5b21b6, #7c3aed);
-  transform: translateY(-2px);
+  transform: translateY(-2px) translateZ(0);
   box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
 }
 
 .tracker-button:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98) translateZ(0);
+  transition-duration: 0.1s;
 }
 
 .tracker-button:disabled {
@@ -391,6 +420,211 @@
   75% { transform: translateX(5px); }
 }
 
+/* Additional coherent animations for consistency with CreateComplain */
+@keyframes successSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Hardware-accelerated animations - Coherent with CreateComplain */
+@keyframes optimizedSubtleGlow {
+  0% { 
+    opacity: 0.6;
+    transform: scale3d(1, 1, 1);
+  }
+  100% { 
+    opacity: 1;
+    transform: scale3d(1.02, 1.02, 1);
+  }
+}
+
+@keyframes optimizedTitleGlow {
+  0% { 
+    filter: brightness(1) drop-shadow(0 0 10px rgba(96, 165, 250, 0.3));
+    transform: scale3d(1, 1, 1);
+  }
+  100% { 
+    filter: brightness(1.15) drop-shadow(0 0 20px rgba(168, 85, 247, 0.4));
+    transform: scale3d(1.01, 1.01, 1);
+  }
+}
+
+@keyframes optimizedFadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0) scale3d(0.95, 0.95, 1);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes optimizedSlideInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-30px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes optimizedPulseGlow {
+  0%, 100% { 
+    box-shadow: 
+      0 8px 30px rgba(99, 102, 241, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateZ(0);
+  }
+  50% { 
+    box-shadow: 
+      0 12px 35px rgba(139, 92, 246, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateZ(0);
+  }
+}
+
+@keyframes optimizedSlideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateZ(0);
+  }
+}
+
+@keyframes optimizedSlideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+@keyframes optimizedBounceIn {
+  0% {
+    transform: scale(0.9) translateZ(0);
+  }
+  50% {
+    transform: scale(1.05) translateZ(0);
+  }
+  100% {
+    transform: scale(1) translateZ(0);
+  }
+}
+
+@keyframes optimizedFloat {
+  0%, 100% {
+    transform: translateY(0) translateZ(0);
+  }
+  50% {
+    transform: translateY(-10px) translateZ(0);
+  }
+}
+
+@keyframes optimizedGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes optimizedGlow {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    transform: translateZ(0);
+  }
+  50% {
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+    transform: translateZ(0);
+  }
+}
+
+@keyframes optimizedPulse {
+  0%, 100% {
+    transform: scale(1) translateZ(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05) translateZ(0);
+    opacity: 0.9;
+  }
+}
+
+@keyframes optimizedSuccessGlow {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transform: translateZ(0);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(34, 197, 94, 0.4), 0 0 40px rgba(34, 197, 94, 0.2);
+    transform: translateZ(0);
+  }
+}
+
+/* Legacy animations for backwards compatibility */
 @keyframes fadeInDown {
   from {
     opacity: 0;
@@ -514,6 +748,28 @@
   40% {
     transform: scale(1.2);
     opacity: 1;
+  }
+}
+
+/* Accessibility and Performance - Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .tracker-content,
+  .tracker-title,
+  .tracker-subtitle,
+  .tracker-form,
+  .tracker-input-group {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 

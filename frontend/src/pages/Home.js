@@ -17,6 +17,7 @@ function Home() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [openComment, setOpenComment] = useState(null);
   const [currentCommentPost, setCurrentCommentPost] = useState(null);
   const [commentInput, setCommentInput] = useState('');
@@ -60,10 +61,12 @@ function Home() {
       setPosts(prev => reset ? nextPosts : [...prev, ...nextPosts]);
       setHasMore(end < filtered.length);
       setLoading(false);
+      if (initialLoading) setInitialLoading(false);
     } catch {
       setLoading(false);
+      if (initialLoading) setInitialLoading(false);
     }
-  }, [filters, page, loading]);
+  }, [filters, page, loading, initialLoading]);
 
   // Fetch followed posts for this user
   const fetchFollowed = async () => {
@@ -76,6 +79,7 @@ function Home() {
 
   useEffect(() => {
     setPage(0);
+    setInitialLoading(true);
     fetchPosts(true);
     // eslint-disable-next-line
   }, [filters]);
@@ -565,7 +569,38 @@ function Home() {
 
           {/* Posts Timeline */}
           <div className="timeline">
-            {posts.map((post, idx) => {
+            {initialLoading ? (
+              // Initial loading skeleton
+              <div className="initial-loading-container">
+                <div className="initial-loading-text">
+                  <div className="initial-loading-spinner"></div>
+                  <span>Loading posts...</span>
+                </div>
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="post-skeleton" style={{ animationDelay: `${i * 0.1}s` }}>
+                    <div className="skeleton-header">
+                      <div className="skeleton-avatar"></div>
+                      <div className="skeleton-meta">
+                        <div className="skeleton-line skeleton-name"></div>
+                        <div className="skeleton-line skeleton-time"></div>
+                      </div>
+                    </div>
+                    <div className="skeleton-content">
+                      <div className="skeleton-line skeleton-title"></div>
+                      <div className="skeleton-line skeleton-desc"></div>
+                      <div className="skeleton-line skeleton-desc short"></div>
+                    </div>
+                    <div className="skeleton-image"></div>
+                    <div className="skeleton-actions">
+                      <div className="skeleton-button"></div>
+                      <div className="skeleton-button"></div>
+                      <div className="skeleton-button"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              posts.map((post, idx) => {
               const isLast = idx === posts.length - 1;
               const photoArr = post.photos ? post.photos.split(',').map(p => p.trim()).filter(Boolean) : [];
               return (
@@ -780,12 +815,12 @@ function Home() {
 
                 </div>
               );
-            })}
+            }))}
             
             {loading && (
-              <div className="loading-container">
-                <div className="loading-spinner"></div>
-                <span className="loading-text">Loading more posts...</span>
+              <div className="infinite-loading-container">
+                <div className="infinite-loading-spinner"></div>
+                <span className="infinite-loading-text">Loading more posts...</span>
               </div>
             )}
             
