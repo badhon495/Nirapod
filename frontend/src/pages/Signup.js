@@ -162,37 +162,28 @@ function Signup() {
           <div className="signup-form-box">
             <h2>Sign Up</h2>
             {step === 1 && (
-              <div className="google-btn-wrapper">
-                <div className="google-separator">
-                  or
+              <>
+                <div className="signup-divider">
+                  <span>or</span>
                 </div>
-                <div className={`google-login-container ${googleSDKReady ? 'loaded' : 'loading'}`}>
-                  <div className={`google-button-wrapper ${googleSDKReady ? 'loaded' : 'loading'}`}>
+                <div className={`google-auth-button-container ${googleSDKReady ? 'sdk-ready' : ''}`}>
+                  {googleSDKReady ? (
                     <GoogleLogin
                       onSuccess={handleGoogleSignup}
                       onError={handleGoogleError}
-                      width="50"
-                      text=""
-                      useOneTap={false}
+                      text="signup_with"
                       theme="outline"
-                      shape="circle"
+                      size="large"
+                      width="100%"
+                      useOneTap={false}
                       logo_alignment="center"
                       ux_mode="popup"
-                      size="large"
                     />
-                  </div>
+                  ) : (
+                    <div>Loading Google Sign-Up...</div>
+                  )}
                 </div>
-                {/* Custom Google Button with proper icon */}
-                <button 
-                  type="button" 
-                  className="custom-google-btn"
-                  onClick={handleCustomGoogleSignup}
-                  style={{ display: 'none' }}
-                >
-                  <img src={googleIcon} alt="Google" className="google-icon" />
-                  Sign up with Google
-                </button>
-              </div>
+              </>
             )}
             {step === 1 && (
               <form onSubmit={handleNext}>

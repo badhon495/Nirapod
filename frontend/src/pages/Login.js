@@ -165,37 +165,28 @@ function Login() {
               </form>
             )}
             {step === 1 && (
-              <div className="google-btn-wrapper">
-                <div className="google-separator">
-                  or
+              <>
+                <div className="login-divider">
+                  <span>or</span>
                 </div>
-                <div className={`google-login-container ${googleSDKReady ? 'loaded' : 'loading'}`}>
-                  <div className={`google-button-wrapper ${googleSDKReady ? 'loaded' : 'loading'}`}>
+                <div className={`google-auth-button-container ${googleSDKReady ? 'sdk-ready' : ''}`}>
+                  {googleSDKReady ? (
                     <GoogleLogin
                       onSuccess={handleGoogleLogin}
                       onError={handleGoogleError}
-                      width="50"
-                      text=""
-                      useOneTap={false}
+                      text="continue_with"
                       theme="outline"
-                      shape="circle"
+                      size="large"
+                      width="100%"
+                      useOneTap={false}
                       logo_alignment="center"
                       ux_mode="popup"
-                      size="large"
                     />
-                  </div>
+                  ) : (
+                    <div>Loading Google Login...</div>
+                  )}
                 </div>
-                {/* Custom Google Button with proper icon */}
-                <button 
-                  type="button" 
-                  className="custom-google-btn"
-                  onClick={handleCustomGoogleLogin}
-                  style={{ display: 'none' }}
-                >
-                  <img src={googleIcon} alt="Google" className="google-icon" />
-                  Continue with Google
-                </button>
-              </div>
+              </>
             )}
             {step === 2 && (
               <form onSubmit={handleOtp}>
