@@ -163,29 +163,44 @@ function Signup() {
             <h2>Sign Up</h2>
             {step === 1 && (
               <>
-                {/* Google Sign-Up Button */}
-                <div style={{ display: 'flex', justifyContent: 'center', width: '100%', minHeight: '50px', marginBottom: '1.5rem' }}>
-                  {googleSDKReady && (
-                    <GoogleLogin
-                      onSuccess={handleGoogleSignup}
-                      onError={handleGoogleError}
-                      text="signup_with"
-                      theme="outline"
-                      size="large"
-                      useOneTap={false}
-                    />
-                  )}
+                {/* Elegant Google Sign-Up Button with Placeholder */}
+                <div className={`google-auth-wrapper ${googleSDKReady ? 'loaded' : 'loading'}`}>
+                  <div className="google-button-placeholder">
+                    <div className="google-placeholder-icon"></div>
+                    <span>Sign up with Google</span>
+                  </div>
+                  <div className="google-button-real">
+                    {googleSDKReady && (
+                      <GoogleLogin
+                        onSuccess={handleGoogleSignup}
+                        onError={handleGoogleError}
+                        text="signup_with"
+                        theme="outline"
+                        size="large"
+                        shape="rectangular"
+                        width="100%"
+                        logo_alignment="center"
+                        useOneTap={false}
+                      />
+                    )}
+                  </div>
                 </div>
 
                 {/* Divider */}
-                <div className="signup-divider" style={{ marginBottom: '1.5rem' }}>
-                  <span>or</span>
+                <div className="signup-divider">
+                  <span>OR</span>
                 </div>
 
                 {/* Manual Signup Form */}
                 <form onSubmit={handleNext}>
-                  <input name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-                  <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+                  <div className="input-wrapper">
+                    <span className="input-icon">👤</span>
+                    <input name="name" placeholder="Full Name" value={form.name} onChange={handleChange} required />
+                  </div>
+                  <div className="input-wrapper">
+                    <span className="input-icon">✉️</span>
+                    <input name="email" type="email" placeholder="Email Address" value={form.email} onChange={handleChange} required />
+                  </div>
                   <button className="signup-btn" type="submit">Sign up with Email</button>
                 </form>
               </>
