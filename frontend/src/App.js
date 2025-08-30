@@ -1,32 +1,48 @@
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Home from './pages/Home';
 import Navbar from './components/Navbar';
-import FAQ from './pages/FAQ';
-import Contact from './pages/Contact';
-import ReachOut from './pages/ReachOut';
-import CreateComplain from './pages/CreateComplain';
-import Level from './pages/Level';
-import Tracker from './pages/Tracker';
-import ComplaintList, { UserComplaintList } from './pages/ComplaintList';
-import ComplaintDetails from './pages/ComplaintDetails';
-import Investigate from './pages/Investigate';
-import Profile from './pages/Profile';
-import Notifications from './pages/Notifications';
-import LiveChat from './pages/LiveChat';
-import AdminHome from './pages/AdminHome';
-import ReportList from './pages/ReportList';
-import AddAdmin from './pages/AddAdmin';
 
-// Loading component for Suspense fallback
+// Lazy load components for better performance
+const Login = lazy(() => import('./pages/Login'));
+const Signup = lazy(() => import('./pages/Signup'));
+const Home = lazy(() => import('./pages/Home'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+const Contact = lazy(() => import('./pages/Contact'));
+const ReachOut = lazy(() => import('./pages/ReachOut'));
+const CreateComplain = lazy(() => import('./pages/CreateComplain'));
+const Level = lazy(() => import('./pages/Level'));
+const Tracker = lazy(() => import('./pages/Tracker'));
+const ComplaintList = lazy(() => import('./pages/ComplaintList').then(module => ({ default: module.default })));
+const UserComplaintList = lazy(() => import('./pages/ComplaintList').then(module => ({ default: module.UserComplaintList })));
+const ComplaintDetails = lazy(() => import('./pages/ComplaintDetails'));
+const Investigate = lazy(() => import('./pages/Investigate'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Notifications = lazy(() => import('./pages/Notifications'));
+const LiveChat = lazy(() => import('./pages/LiveChat'));
+const AdminHome = lazy(() => import('./pages/AdminHome'));
+const ReportList = lazy(() => import('./pages/ReportList'));
+const AddAdmin = lazy(() => import('./pages/AddAdmin'));
+
+// Optimized Loading component with skeleton
 const LoadingSpinner = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+  <div className="loading-container">
+    <div className="loading-content">
+      <div className="loading-skeleton">
+        <div className="skeleton-header"></div>
+        <div className="skeleton-body">
+          <div className="skeleton-line"></div>
+          <div className="skeleton-line"></div>
+          <div className="skeleton-line short"></div>
+        </div>
+      </div>
+      <div className="loading-spinner-wrapper">
+        <div className="optimized-spinner"></div>
+        <span className="loading-text">Loading...</span>
+      </div>
+    </div>
   </div>
 );
 
