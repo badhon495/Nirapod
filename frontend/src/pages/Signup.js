@@ -163,34 +163,32 @@ function Signup() {
             <h2>Sign Up</h2>
             {step === 1 && (
               <>
-                <div className="signup-divider">
-                  <span>or</span>
-                </div>
-                <div className={`google-auth-button-container ${googleSDKReady ? 'sdk-ready' : ''}`}>
-                  {googleSDKReady ? (
+                {/* Google Sign-Up Button */}
+                <div style={{ display: 'flex', justifyContent: 'center', width: '100%', minHeight: '50px', marginBottom: '1.5rem' }}>
+                  {googleSDKReady && (
                     <GoogleLogin
                       onSuccess={handleGoogleSignup}
                       onError={handleGoogleError}
                       text="signup_with"
                       theme="outline"
                       size="large"
-                      width="100%"
                       useOneTap={false}
-                      logo_alignment="center"
-                      ux_mode="popup"
                     />
-                  ) : (
-                    <div>Loading Google Sign-Up...</div>
                   )}
                 </div>
+
+                {/* Divider */}
+                <div className="signup-divider" style={{ marginBottom: '1.5rem' }}>
+                  <span>or</span>
+                </div>
+
+                {/* Manual Signup Form */}
+                <form onSubmit={handleNext}>
+                  <input name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
+                  <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+                  <button className="signup-btn" type="submit">Sign up with Email</button>
+                </form>
               </>
-            )}
-            {step === 1 && (
-              <form onSubmit={handleNext}>
-                <input name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-                <input name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-                <button className="signup-btn" type="submit">Next</button>
-              </form>
             )}
             {step === 2 && !isGoogleSignup && (
               <form onSubmit={handleNext}>

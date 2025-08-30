@@ -165,28 +165,23 @@ function Login() {
               </form>
             )}
             {step === 1 && (
-              <>
-                <div className="login-divider">
-                  <span>or</span>
+              <div className="google-btn-wrapper">
+                <div className="google-separator">
+                  or
                 </div>
-                <div className={`google-auth-button-container ${googleSDKReady ? 'sdk-ready' : ''}`}>
-                  {googleSDKReady ? (
+                <div style={{ display: 'flex', justifyContent: 'center', width: '100%', minHeight: '50px' }}>
+                  {googleSDKReady && (
                     <GoogleLogin
                       onSuccess={handleGoogleLogin}
                       onError={handleGoogleError}
                       text="continue_with"
                       theme="outline"
                       size="large"
-                      width="100%"
                       useOneTap={false}
-                      logo_alignment="center"
-                      ux_mode="popup"
                     />
-                  ) : (
-                    <div>Loading Google Login...</div>
                   )}
                 </div>
-              </>
+              </div>
             )}
             {step === 2 && (
               <form onSubmit={handleOtp}>
