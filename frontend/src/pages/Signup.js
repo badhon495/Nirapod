@@ -4,6 +4,7 @@ import './Signup.css';
 import logo from '../image/logo.png';
 import { GoogleLogin, googleLogout } from '@react-oauth/google';
 import googleIcon from '../image/google-icon.png';
+import useGoogleSDK from '../hooks/useGoogleSDK';
 
 const initialForm = {
   name: '', phoneNumber: '', email: '', password: '', confirmPassword: '',
@@ -20,18 +21,7 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isGoogleSignup, setIsGoogleSignup] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(true);
-
-  // Add effect to handle iframe loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (googleLoading) {
-        setGoogleLoading(false); // Fallback to show the button after 3 seconds
-      }
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [googleLoading]);
+  const { isReady: googleSDKReady } = useGoogleSDK();
 
   // Google Signup handler
   const handleGoogleSignup = async (credentialResponse) => {
@@ -55,14 +45,8 @@ function Signup() {
     }
   };
 
-  // Handle Google button ready state
-  const handleGoogleReady = () => {
-    setGoogleLoading(false);
-  };
-
   // Handle Google button error
   const handleGoogleError = () => {
-    setGoogleLoading(false);
     setMessage('Google signup failed');
   };
 
@@ -180,30 +164,21 @@ function Signup() {
             {step === 1 && (
               <div className="google-btn-wrapper">
                 <div className="google-separator">
-                  Sign up with Google
+                  or
                 </div>
-                <div className="google-login-container">
-                  {googleLoading && (
-                    <div className="google-button-placeholder">
-                      <div className="google-placeholder-loader">
-                        <div className="google-placeholder-icon"></div>
-                        <span>Sign up with Google</span>
-                      </div>
-                    </div>
-                  )}
-                  <div className={`google-button-wrapper ${googleLoading ? 'loading' : 'loaded'}`}>
+                <div className={`google-login-container ${googleSDKReady ? 'loaded' : 'loading'}`}>
+                  <div className={`google-button-wrapper ${googleSDKReady ? 'loaded' : 'loading'}`}>
                     <GoogleLogin
                       onSuccess={handleGoogleSignup}
                       onError={handleGoogleError}
-                      width="100%"
-                      text="signup_with"
+                      width="50"
+                      text=""
                       useOneTap={false}
-                      theme="filled_blue"
-                      shape="rectangular"
-                      logo_alignment="left"
+                      theme="outline"
+                      shape="circle"
+                      logo_alignment="center"
                       ux_mode="popup"
                       size="large"
-                      ready_callback={handleGoogleReady}
                     />
                   </div>
                 </div>
