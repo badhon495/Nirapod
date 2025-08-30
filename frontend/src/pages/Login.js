@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 import { GoogleLogin, googleLogout } from '@react-oauth/google';
 import logo from '../image/logo.png';
 import googleIcon from '../image/google-icon.png';
+import { useAuth } from '../contexts/AuthContext';
 
 function Login() {
   const [step, setStep] = useState(1);
@@ -11,6 +13,18 @@ function Login() {
   const [message, setMessage] = useState('');
   const [forgotLoading, setForgotLoading] = useState(false);
   const [identifier, setIdentifier] = useState('');
+  
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = location.state?.from?.pathname || '/home';
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location.state]);
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -22,15 +36,14 @@ function Login() {
         phoneNumber: form.phoneNumber,
         password: form.password
       });
-      if (response.data.categories) {
-        localStorage.setItem('categories', response.data.categories);
-      }
+      
       // If admin, log in directly and redirect
       if (response.data.admin) {
-        localStorage.setItem('nirapod_identifier', 'admin');
-        window.location.href = '/admin';
+        await login('admin', { nid: 'admin', categories: 'admin' });
+        navigate('/admin');
         return;
       }
+      
       setIdentifier(form.phoneNumber); // Save identifier for OTP step
       setStep(2);
     } catch (err) {
@@ -46,10 +59,11 @@ function Login() {
         identifier: identifier,
         otp: form.otp
       });
-      // Fetch NID and store it
+      
+      // Fetch user data and login
       const res = await axios.get(`/api/user/by-identifier?value=${encodeURIComponent(identifier)}`);
       if (res.data && res.data.nid) {
-        localStorage.setItem('nirapod_identifier', res.data.nid);
+        await login(res.data.nid, res.data);
         
         // Create security notification with correct structure
         await axios.post('/api/notifications', {
@@ -57,8 +71,17 @@ function Login() {
           message: `New login detected from ${navigator.platform} at ${new Date().toLocaleString()}`,
           read: false
         });
+
+        // Navigate based on user role
+        const userRole = res.data.categories;
+        if (userRole === 'admin') {
+          navigate('/admin');
+        } else if (['police', 'fire', 'city', 'animal'].includes(userRole)) {
+          navigate('/complains');
+        } else {
+          navigate('/home');
+        }
       }
-      window.location.href = '/home';
     } catch (err) {
       setMessage('Invalid OTP');
     }
@@ -84,10 +107,7 @@ function Login() {
       const idToken = credentialResponse.credential;
       const res = await axios.post('/api/auth/google-login', { idToken });
       if (res.data && res.data.user && res.data.user.nid) {
-        localStorage.setItem('nirapod_identifier', res.data.user.nid);
-        if (res.data.user.categories) {
-          localStorage.setItem('categories', res.data.user.categories);
-        }
+        await login(res.data.user.nid, res.data.user);
 
         // Create security notification for Google login with correct structure
         await axios.post('/api/notifications', {
@@ -96,7 +116,15 @@ function Login() {
           read: false
         });
 
-        window.location.href = '/home';
+        // Navigate based on user role
+        const userRole = res.data.user.categories;
+        if (userRole === 'admin') {
+          navigate('/admin');
+        } else if (['police', 'fire', 'city', 'animal'].includes(userRole)) {
+          navigate('/complains');
+        } else {
+          navigate('/home');
+        }
       } else {
         setMessage('User not found. Please sign up first.');
       }

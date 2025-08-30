@@ -83,6 +83,13 @@ axios.interceptors.request.use(
     config.timeout = 30000; // 30 seconds
     // Add withCredentials for CORS
     config.withCredentials = false; // Set to false for now to test
+    
+    // Add authentication identifier to requests if available
+    const identifier = localStorage.getItem('nirapod_identifier');
+    if (identifier) {
+      config.headers['X-User-Identifier'] = identifier;
+    }
+    
     return config;
   },
   (error) => {
@@ -90,7 +97,7 @@ axios.interceptors.request.use(
   }
 );
 
-// Add response interceptor for better error handling
+// Add response interceptor for better error handling and authentication
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -103,6 +110,19 @@ axios.interceptors.response.use(
     if (error.response?.status === 500) {
       console.error('Server error:', error.response.data);
     }
+    
+    // Handle authentication errors
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      // Clear invalid authentication data
+      localStorage.removeItem('nirapod_identifier');
+      localStorage.removeItem('categories');
+      
+      // Redirect to login if not already there
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
+    }
+    
     return Promise.reject(error);
   }
 );

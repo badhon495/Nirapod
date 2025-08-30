@@ -21,11 +21,13 @@ import logo from '../image/logo.png';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import './Navbar.css';
+import { useAuth } from '../contexts/AuthContext';
 
 function Navbar() {
-  const categories = localStorage.getItem('categories');
+  const { user, logout } = useAuth();
+  const categories = user?.categories || localStorage.getItem('categories');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState(user?.name || '');
   const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
@@ -73,8 +75,7 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('nirapod_identifier');
-    localStorage.removeItem('categories');
+    logout();
     toast.success('Logged out successfully');
     navigate('/login');
   };
