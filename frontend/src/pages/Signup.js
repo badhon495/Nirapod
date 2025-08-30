@@ -156,7 +156,7 @@ function Signup() {
         <div className="signup-left">
           <img src={logo} alt="Nirapod Logo" className="signup-logo-img" />
           <div className="signup-logo">Nirapod</div>
-          <div className="signup-tagline">Account for Your Digital Rights</div>
+          <div className="signup-tagline">Your Safety, Our Priority</div>
         </div>
         <div className="signup-right">
           <div className="signup-form-box">

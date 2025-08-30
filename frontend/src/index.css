@@ -256,3 +256,46 @@ body {
     font-size: 14px;
   }
 }
+
+/* === Global Footer Styles === */
+.login-footer {
+  color: rgba(255, 255, 255, 0.8);
+  border: none;
+  box-shadow: none;
+  padding: 1.5rem 0;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 1.5rem;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 6px;
+  position: relative;
+}
+
+.footer-link:hover {
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .login-footer {
+    padding: 1rem 0;
+    margin-top: auto;
+  }
+
+  .footer-link {
+    margin: 0 0.8rem;
+    font-size: 0.9rem;
+  }
+}
