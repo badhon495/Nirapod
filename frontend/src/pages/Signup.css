@@ -341,7 +341,38 @@ html, body {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .signup-split { flex-direction: column; }
-  .signup-left { display: none; }
-  .signup-form-box { width: 100%; max-width: 100%; padding: 2rem 1.5rem; border-radius: 0; }
+  .signup-split {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .signup-left, .signup-right {
+    min-height: auto; /* Reset min-height for stacking */
+    padding: 2rem 1.5rem;
+  }
+
+  .signup-left {
+    padding-bottom: 1rem; /* Space between logo and form */
+  }
+
+  .signup-logo-img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .signup-logo {
+    font-size: 2.5rem;
+  }
+
+  .signup-tagline {
+    font-size: 1.1rem;
+  }
+
+  .signup-form-box {
+    width: 100%;
+    max-width: 100%;
+    padding: 2rem 1.5rem;
+    border-radius: 0;
+    box-shadow: none; /* Remove shadow on mobile for a flatter look */
+  }
 }
