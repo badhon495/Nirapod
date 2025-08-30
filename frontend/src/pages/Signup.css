@@ -339,6 +339,23 @@ html, body {
   margin-bottom: 1rem; 
 }
 
+.resend-code-wrapper {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.resend-code-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.resend-code-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .signup-split {

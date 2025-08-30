@@ -207,12 +207,17 @@ function Signup() {
             )}
             {step === 2 && !isGoogleSignup && (
               <form onSubmit={handleNext}>
-                <input name="otp" placeholder="OTP" value={form.otp} onChange={handleChange} required />
+                <div className="input-wrapper">
+                  <span className="input-icon">#️⃣</span>
+                  <input name="otp" placeholder="OTP" value={form.otp} onChange={handleChange} required />
+                </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
                   <button type="button" className="signup-btn" onClick={handlePrevious}>Previous</button>
                   <button className="signup-btn" type="submit">Next</button>
                 </div>
-                <button type="button" className="signup-link-btn" onClick={() => setMessage('Resend not implemented')}>Resend Code</button>
+                <div className="resend-code-wrapper">
+                  <a href="#" onClick={(e) => {e.preventDefault(); setMessage('Resend not implemented')}} className="resend-code-link">Resend Code</a>
+                </div>
               </form>
             )}
             {step === 2 && isGoogleSignup && (
