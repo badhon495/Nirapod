@@ -12,11 +12,23 @@ function Login() {
   const [form, setForm] = useState({ phoneNumber: '', password: '', otp: '', forgotEmail: '' });
   const [message, setMessage] = useState('');
   const [forgotLoading, setForgotLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(true);
   const [identifier, setIdentifier] = useState('');
   
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Add effect to handle iframe loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (googleLoading) {
+        setGoogleLoading(false); // Fallback to show the button after 3 seconds
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [googleLoading]);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -133,6 +145,17 @@ function Login() {
     }
   };
 
+  // Handle Google button ready state
+  const handleGoogleReady = () => {
+    setGoogleLoading(false);
+  };
+
+  // Handle Google button error
+  const handleGoogleError = () => {
+    setGoogleLoading(false);
+    setMessage('Google login failed');
+  };
+
   // Custom Google Login Button Click Handler
   const handleCustomGoogleLogin = () => {
     // This will be implemented if the GoogleLogin component fails
@@ -163,18 +186,29 @@ function Login() {
                   Or sign in with Google
                 </div>
                 <div className="google-login-container">
-                  <GoogleLogin
-                    onSuccess={handleGoogleLogin}
-                    onError={() => setMessage('Google login failed')}
-                    width="100%"
-                    text="continue_with"
-                    useOneTap={false}
-                    theme="filled_blue"
-                    shape="rectangular"
-                    logo_alignment="left"
-                    ux_mode="popup"
-                    size="large"
-                  />
+                  {googleLoading && (
+                    <div className="google-button-placeholder">
+                      <div className="google-placeholder-loader">
+                        <div className="google-placeholder-icon"></div>
+                        <span>Continue with Google</span>
+                      </div>
+                    </div>
+                  )}
+                  <div className={`google-button-wrapper ${googleLoading ? 'loading' : 'loaded'}`}>
+                    <GoogleLogin
+                      onSuccess={handleGoogleLogin}
+                      onError={handleGoogleError}
+                      width="100%"
+                      text="continue_with"
+                      useOneTap={false}
+                      theme="filled_blue"
+                      shape="rectangular"
+                      logo_alignment="left"
+                      ux_mode="popup"
+                      size="large"
+                      ready_callback={handleGoogleReady}
+                    />
+                  </div>
                 </div>
                 {/* Custom Google Button with proper icon */}
                 <button 

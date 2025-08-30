@@ -606,28 +606,40 @@ html, body {
 /* Google Login Container Styling */
 .google-login-container {
   width: 100%;
+  height: 50px; /* Fixed height to prevent jumping */
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  min-height: 50px; /* Ensure minimum height */
 }
 
 .google-login-container > div {
   width: 100% !important;
   max-width: 100% !important;
+  height: 50px !important; /* Fixed height */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 /* Override Google Button iframe styling */
 .google-login-container iframe {
   width: 100% !important;
+  height: 50px !important; /* Fixed height */
   min-width: 100% !important;
+  min-height: 50px !important; /* Prevent shrinking */
+  max-height: 50px !important; /* Prevent growing */
   border-radius: 12px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  transition: all 0.3s ease !important;
+  transition: box-shadow 0.3s ease, transform 0.3s ease !important;
+  transform: translateZ(0) !important; /* Enable hardware acceleration */
+  backface-visibility: hidden !important; /* Prevent flickering */
 }
 
 .google-login-container iframe:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-  transform: translateY(-1px) !important;
+  transform: translateZ(0) translateY(-1px) !important; /* Maintain hardware acceleration */
 }
 
 /* Footer Styling - Matching Login Page */
@@ -677,4 +689,117 @@ html, body {
   z-index: 1;
   margin-top: auto;
   flex-shrink: 0;
+}
+
+/* ===== GOOGLE BUTTON LOADING STATES ===== */
+
+/* Google Button Loading States */
+.google-button-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #4285f4;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.google-placeholder-loader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.google-placeholder-icon {
+  width: 20px;
+  height: 20px;
+  background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwLjIgOC4xaDkuNWMuMSAxIDAgMi0uMSAzLTEuMyA3LjItOC4yIDEwLjctMTUuMSA2LjhDMS4yIDE1LjctMS4zIDkuNSAyIDUuNGMzLjEtMy45IDguNy00LjMgMTIuMy0xLjJsLTIuNSAyLjNjLTYuNC01LjktMTYuNi0uNi0xNi42IDguMSAwIDguNyAxMC4zIDEzLjkgMTYuNiA4LjMgMi0xLjggMi41LTQuNCAyLjUtN0gxMC4ydjAiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=') center/contain no-repeat;
+  flex-shrink: 0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.google-button-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: opacity 0.3s ease;
+}
+
+.google-button-wrapper.loading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.google-button-wrapper.loaded {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.google-button-wrapper.loaded ~ .google-button-placeholder {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Google Button Wrapper Enhancements */
+.google-btn-wrapper {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  transform: translateZ(0); /* Hardware acceleration for entire wrapper */
+  backface-visibility: hidden; /* Prevent flickering */
+}
+
+/* Google Separator Stability */
+.google-separator {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  position: relative;
+  padding: 0 1rem;
+  height: 20px; /* Fixed height to prevent jumping */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fixed positioning for separator lines */
+.google-separator::before,
+.google-separator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: translateY(-50%); /* Ensure perfect centering */
+}
+
+.google-separator::before {
+  left: -80px;
+}
+
+.google-separator::after {
+  right: -80px;
+}
+
+/* Pulse animation for loading state */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
