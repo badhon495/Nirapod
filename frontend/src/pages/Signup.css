@@ -613,6 +613,8 @@ html, body {
   position: relative;
   margin: 0 auto; /* Center the circular button */
   transition: all 0.3s ease;
+  overflow: visible; /* Ensure button is not clipped */
+  border-radius: 50%; /* Ensure container is circular */
 }
 
 /* Hide entire container during loading */
@@ -630,6 +632,7 @@ html, body {
   visibility: visible;
   height: 50px;
   margin: 0 auto;
+  overflow: visible;
 }
 
 .google-login-container > div {
@@ -639,6 +642,8 @@ html, body {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  overflow: visible !important; /* Prevent clipping */
+  border-radius: 50% !important; /* Ensure wrapper is circular */
 }
 
 /* Override Google Button iframe styling */
@@ -654,6 +659,9 @@ html, body {
   transition: box-shadow 0.3s ease, transform 0.3s ease !important;
   transform: translateZ(0) !important; /* Enable hardware acceleration */
   backface-visibility: hidden !important; /* Prevent flickering */
+  border: none !important; /* Remove any border */
+  outline: none !important; /* Remove any outline */
+  overflow: visible !important; /* Ensure content is not clipped */
 }
 
 .google-login-container iframe:hover {
