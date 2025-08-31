@@ -165,8 +165,43 @@ function Signup() {
       }
       setStep(4);
     } else if (step === 4) {
+      // Validate privileged user requirements before proceeding to file upload
+      if (form.userType === 'PRIVILEGED') {
+        if (!form.affiliation) {
+          setMessage('Please select an affiliation for privileged users');
+          return;
+        }
+        
+        // Check identification number for police, fire, city corp
+        if ((form.affiliation === 'Police Dept' || form.affiliation === 'Fire Dept' || form.affiliation === 'City Corp') 
+            && (!form.identificationNumber || form.identificationNumber.trim() === '')) {
+          setMessage('Identification number is required for ' + form.affiliation);
+          return;
+        }
+        
+        // Check registration number for animal shelter
+        if (form.affiliation === 'Animal Shelter' && (!form.registrationNumber || form.registrationNumber.trim() === '')) {
+          setMessage('Registration number is required for Animal Shelter');
+          return;
+        }
+      }
+      
       setStep(5);
     } else if (step === 5) {
+      // Additional validation for file uploads for privileged users
+      if (form.userType === 'PRIVILEGED' && (!form.affiliationDocFile)) {
+        setMessage('Affiliation document is required for privileged users');
+        return;
+      }
+      
+      // Debug: Log form state before processing
+      console.log('=== FRONTEND SIGNUP DEBUG ===');
+      console.log('Form userType:', form.userType);
+      console.log('Form affiliation:', form.affiliation);
+      console.log('Form identificationNumber:', form.identificationNumber);
+      console.log('Form registrationNumber:', form.registrationNumber);
+      console.log('Form affiliationDocFile:', form.affiliationDocFile);
+
       const formData = new FormData();
 
       // Append all text and number values from the form state
@@ -192,6 +227,8 @@ function Signup() {
         formData.append('identificationNumber', form.identificationNumber);
         formData.append('registrationNumber', form.registrationNumber);
       }
+      
+      console.log('Final categories being sent:', categories);
       formData.append('categories', categories);
 
       // Append files with correct backend keys

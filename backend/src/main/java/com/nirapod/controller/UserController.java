@@ -33,6 +33,7 @@ public class UserController {
             result.put("phone", "admin");
             result.put("email", "admin@gmail.com");
             result.put("name", "Admin");
+            result.put("categories", "admin");
             return ResponseEntity.ok(result);
         }
         Optional<User> userOpt = userRepository.findByNid(value);
@@ -51,6 +52,7 @@ public class UserController {
         result.put("phone", user.getPhone());
         result.put("email", user.getEmail());
         result.put("name", user.getName());
+        result.put("categories", user.getCategories());
         return ResponseEntity.ok(result);
     }
 

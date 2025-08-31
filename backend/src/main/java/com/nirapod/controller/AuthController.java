@@ -50,14 +50,21 @@ public class AuthController {
             @RequestParam("permanentAddress") String permanentAddress,
             @RequestParam(value = "passport", required = false) String passport,
             @RequestParam(value = "passportImg", required = false) MultipartFile passportImg,
+            @RequestParam(value = "passportPhoto", required = false) MultipartFile passportPhoto,
             @RequestParam(value = "drivingLicense", required = false) String drivingLicense,
+            @RequestParam(value = "drivingLicence", required = false) String drivingLicence,
             @RequestParam(value = "drivingLicenseImg", required = false) MultipartFile drivingLicenseImg,
+            @RequestParam(value = "drivingLicencePhoto", required = false) MultipartFile drivingLicencePhoto,
             @RequestParam("utilityBillCustomerId") String utilityBillCustomerId,
             @RequestParam("utilityBillPhoto") MultipartFile utilityBillPhoto,
             @RequestParam("userPhoto") MultipartFile userPhoto,
             @RequestParam("nidPhoto") MultipartFile nidPhoto,
             @RequestParam(value = "privUserId", required = false) String privUserId,
-            @RequestParam(value = "privUserIdPhoto", required = false) MultipartFile privUserIdPhoto
+            @RequestParam(value = "privUserIdPhoto", required = false) MultipartFile privUserIdPhoto,
+            @RequestParam(value = "affiliation", required = false) String affiliation,
+            @RequestParam(value = "identificationNumber", required = false) String identificationNumber,
+            @RequestParam(value = "registrationNumber", required = false) String registrationNumber,
+            @RequestParam(value = "affiliationDoc", required = false) MultipartFile affiliationDoc
     ) {
         // Validate NID length - typically 10-17 characters depending on country
         if (nid == null || nid.trim().length() < 10 || nid.trim().length() > 17) {
@@ -77,12 +84,41 @@ public class AuthController {
             return ResponseEntity.badRequest().body("User already exists");
         }
         try {
+            // Debug logging to see what we're receiving
+            System.out.println("=== SIGNUP DEBUG INFO ===");
+            System.out.println("Received categories: " + categories);
+            System.out.println("Received affiliation: " + affiliation);
+            System.out.println("Received identificationNumber: " + identificationNumber);
+            System.out.println("Received registrationNumber: " + registrationNumber);
+            System.out.println("AffiliationDoc provided: " + (affiliationDoc != null && !affiliationDoc.isEmpty()));
+            
             // Only accept new format for categories
             String mappedCategory = "normal";
             if (categories != null) {
                 String cat = categories.trim().toLowerCase();
                 if (cat.equals("police") || cat.equals("fire") || cat.equals("animal") || cat.equals("city") || cat.equals("normal") || cat.equals("admin")) {
                     mappedCategory = cat;
+                }
+            }
+            
+            System.out.println("Final mapped category: " + mappedCategory);
+
+            // Additional validation for privileged users
+            if (!"normal".equals(mappedCategory) && affiliation != null && !affiliation.isEmpty()) {
+                // For police, fire, and city corp - identification number is required
+                if (("police".equals(mappedCategory) || "fire".equals(mappedCategory) || "city".equals(mappedCategory)) 
+                    && (identificationNumber == null || identificationNumber.trim().isEmpty())) {
+                    return ResponseEntity.badRequest().body("Identification number is required for " + affiliation);
+                }
+                
+                // For animal shelter - registration number is required
+                if ("animal".equals(mappedCategory) && (registrationNumber == null || registrationNumber.trim().isEmpty())) {
+                    return ResponseEntity.badRequest().body("Registration number is required for animal shelter");
+                }
+                
+                // Affiliation document is required for all privileged users
+                if (affiliationDoc == null || affiliationDoc.isEmpty()) {
+                    return ResponseEntity.badRequest().body("Affiliation document is required for privileged users");
                 }
             }
 
@@ -93,21 +129,37 @@ public class AuthController {
             String userPhotoUrl = null;
             String nidPhotoUrl = null;
             String privUserIdPhotoUrl = null;
+            String affiliationDocUrl = null;
             
             try {
-                passportImgUrl = passportImg != null && !passportImg.isEmpty() ? 
-                    cloudinaryService.uploadImage(passportImg, "nirapod/user-documents") : null;
-                drivingLicenseImgUrl = drivingLicenseImg != null && !drivingLicenseImg.isEmpty() ? 
-                    cloudinaryService.uploadImage(drivingLicenseImg, "nirapod/user-documents") : null;
+                // Handle passport image - support both parameter names
+                MultipartFile passportImgFile = passportImg != null && !passportImg.isEmpty() ? passportImg : passportPhoto;
+                passportImgUrl = passportImgFile != null && !passportImgFile.isEmpty() ? 
+                    cloudinaryService.uploadImage(passportImgFile, "nirapod/user-documents") : null;
+                
+                // Handle driving license image - support both parameter names
+                MultipartFile drivingLicenseImgFile = drivingLicenseImg != null && !drivingLicenseImg.isEmpty() ? 
+                    drivingLicenseImg : drivingLicencePhoto;
+                drivingLicenseImgUrl = drivingLicenseImgFile != null && !drivingLicenseImgFile.isEmpty() ? 
+                    cloudinaryService.uploadImage(drivingLicenseImgFile, "nirapod/user-documents") : null;
+                
+                // Handle other required uploads
                 utilityBillPhotoUrl = cloudinaryService.uploadImage(utilityBillPhoto, "nirapod/user-documents");
                 userPhotoUrl = cloudinaryService.uploadImage(userPhoto, "nirapod/user-photos");
                 nidPhotoUrl = cloudinaryService.uploadImage(nidPhoto, "nirapod/user-documents");
+                
+                // Handle optional uploads
                 privUserIdPhotoUrl = privUserIdPhoto != null && !privUserIdPhoto.isEmpty() ? 
                     cloudinaryService.uploadImage(privUserIdPhoto, "nirapod/user-documents") : null;
+                affiliationDocUrl = affiliationDoc != null && !affiliationDoc.isEmpty() ? 
+                    cloudinaryService.uploadImage(affiliationDoc, "nirapod/user-documents") : null;
             } catch (IOException e) {
                 System.err.println("Cloudinary upload failed: " + e.getMessage());
                 return ResponseEntity.status(500).body("Failed to upload images to cloud storage: " + e.getMessage());
             }
+            
+            // Handle driving license string - support both parameter names
+            String finalDrivingLicense = drivingLicense != null && !drivingLicense.isEmpty() ? drivingLicense : drivingLicence;
                 
             User user = User.builder()
                     .nid(nid)
@@ -120,7 +172,7 @@ public class AuthController {
                     .permanentAddress(permanentAddress)
                     .passport(passport)
                     .passportImg(passportImgUrl)
-                    .drivingLicense(drivingLicense)
+                    .drivingLicense(finalDrivingLicense)
                     .drivingLicenseImg(drivingLicenseImgUrl)
                     .utilityBillCustomerId(utilityBillCustomerId)
                     .utilityBillPhoto(utilityBillPhotoUrl)
@@ -128,6 +180,10 @@ public class AuthController {
                     .nidPhoto(nidPhotoUrl)
                     .privUserId(privUserId)
                     .privUserIdPhoto(privUserIdPhotoUrl)
+                    .affiliation(affiliation)
+                    .identificationNumber(identificationNumber)
+                    .registrationNumber(registrationNumber)
+                    .affiliationDoc(affiliationDocUrl)
                     .build();
             User saved = authService.registerUser(user);
             if (email != null && !email.isEmpty()) {

@@ -65,6 +65,18 @@ public class User {
     @Column(name = "priv_user_ID_photo")
     private String privUserIdPhoto;
 
+    @Column(name = "affiliation")
+    private String affiliation;
+
+    @Column(name = "identification_number")
+    private String identificationNumber;
+
+    @Column(name = "registration_number")
+    private String registrationNumber;
+
+    @Column(name = "affiliation_doc")
+    private String affiliationDoc;
+
     public String getUtilityBillCustomerID() {
         return this.utilityBillCustomerId;
     }
