@@ -168,3 +168,55 @@ img {
 .animation-complete {
   will-change: auto;
 }
+
+/* Mobile-specific anti-shake optimizations */
+@media (max-width: 768px) {
+  /* Fix mobile viewport shaking */
+  html, body {
+    overflow-x: hidden !important;
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  /* Disable all potentially shaky animations on mobile */
+  * {
+    animation-duration: 0.2s !important;
+    animation-fill-mode: forwards !important;
+  }
+  
+  /* Prevent transform-based shaking */
+  .background-layer-1,
+  .background-layer-2, 
+  .background-layer-3,
+  .login-bg *,
+  .signup-bg *,
+  .page-layout *:not(.loader-ring):not(.loader-pulse) {
+    transform: none !important;
+    animation: none !important;
+  }
+  
+  /* Force stable positioning */
+  .page-layout {
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    position: relative !important;
+  }
+}
+
+/* Ultra mobile optimizations for very small screens */
+@media (max-width: 480px) {
+  /* Complete animation shutdown for performance */
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+  
+  /* Keep only essential animations */
+  .loader-ring {
+    animation: spin 1s linear infinite !important;
+  }
+}

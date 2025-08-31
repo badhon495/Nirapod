@@ -80,11 +80,11 @@
     opacity: 1;
   }
   33% { 
-    transform: translate(-2%, 1%) scale(1.02);
+    transform: translate(0, 0) scale(1);
     opacity: 0.9;
   }
   66% { 
-    transform: translate(1%, -1%) scale(0.98);
+    transform: translate(0, 0) scale(1);
     opacity: 0.95;
   }
 }
@@ -225,5 +225,41 @@
   .loader-pulse {
     animation: none;
     opacity: 0.8;
+  }
+}
+
+/* Mobile-specific fixes to prevent shaking */
+@media (max-width: 768px) {
+  .background-layer-1,
+  .background-layer-2,
+  .background-layer-3 {
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  /* Simplify background on mobile to prevent performance issues */
+  .background-layer-1 {
+    background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.08) 0%, transparent 60%) !important;
+  }
+  
+  .background-layer-2 {
+    background: radial-gradient(circle at 30% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 70%) !important;
+  }
+  
+  .background-layer-3 {
+    background: radial-gradient(circle at 70% 30%, rgba(96, 165, 250, 0.04) 0%, transparent 80%) !important;
+  }
+}
+
+/* Extra mobile optimizations for very small screens */
+@media (max-width: 480px) {
+  .background-layer-1,
+  .background-layer-2,
+  .background-layer-3 {
+    opacity: 0.5 !important;
+  }
+  
+  .page-content-wrapper {
+    transform: none !important;
   }
 }
