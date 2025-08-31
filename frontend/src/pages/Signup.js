@@ -495,7 +495,7 @@ function Signup() {
             )}
             {step === 6 && (
               <div>
-                <h3>Your signup is complete. Account approval takes 1-48 hours. Check your registered email for updates.</h3>
+                <h3>Your signup is complete. Check your registered email for updates.</h3>
                 <button className="signup-btn" onClick={() => window.location.href = '/login'}>Done</button>
               </div>
             )}
