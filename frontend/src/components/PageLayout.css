@@ -1,0 +1,227 @@
+/* Page Layout Styles - Unified Background & Smooth Transitions */
+
+.page-layout {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  /* Performance optimizations */
+  will-change: contents;
+  contain: layout style paint;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Persistent Background Layers */
+.page-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  /* Prevent background from flickering */
+  will-change: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.background-layer-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 15% 15%, rgba(102, 126, 234, 0.15) 0%, transparent 40%),
+              radial-gradient(circle at 85% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
+              radial-gradient(circle at 70% 80%, rgba(96, 165, 250, 0.1) 0%, transparent 50%);
+  animation: backgroundShift 20s ease-in-out infinite;
+}
+
+.background-layer-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 25% 75%, rgba(168, 85, 247, 0.08) 0%, transparent 55%),
+              radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
+  animation: backgroundShift 25s ease-in-out infinite reverse;
+}
+
+.background-layer-3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 80% 30%, rgba(120, 119, 198, 0.06) 0%, transparent 45%),
+              radial-gradient(circle at 20% 80%, rgba(255, 119, 198, 0.04) 0%, transparent 50%);
+  animation: backgroundShift 30s ease-in-out infinite;
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.02) 50%, transparent 100%),
+              linear-gradient(-45deg, transparent 0%, rgba(255, 255, 255, 0.01) 50%, transparent 100%);
+  opacity: 0.8;
+}
+
+@keyframes backgroundShift {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  33% { 
+    transform: translate(-2%, 1%) scale(1.02);
+    opacity: 0.9;
+  }
+  66% { 
+    transform: translate(1%, -1%) scale(0.98);
+    opacity: 0.95;
+  }
+}
+
+/* Page Content Wrapper */
+.page-content-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Performance optimizations */
+  will-change: opacity, transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.page-content-wrapper.transitioning {
+  opacity: 0;
+  transform: translateY(10px) scale(0.99);
+}
+
+.page-content {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  /* Remove individual page backgrounds since we have global background */
+  background: transparent !important;
+}
+
+/* Transition Overlay */
+.page-transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.transition-loader {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-ring {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  border-top: 2px solid rgba(102, 126, 234, 0.8);
+  border-radius: 50%;
+  animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+}
+
+.loader-pulse {
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.8) 0%, rgba(139, 92, 246, 0.6) 100%);
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-content-wrapper {
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+  }
+  
+  .transition-loader {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .loader-ring {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .loader-pulse {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Performance optimizations for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .page-content-wrapper {
+    transition: opacity 0.2s ease-out;
+  }
+  
+  .page-content-wrapper.transitioning {
+    transform: none;
+  }
+  
+  .background-layer-1,
+  .background-layer-2,
+  .background-layer-3 {
+    animation: none;
+  }
+  
+  .loader-ring {
+    animation: spin 2s linear infinite;
+  }
+  
+  .loader-pulse {
+    animation: none;
+    opacity: 0.8;
+  }
+}

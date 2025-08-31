@@ -8,6 +8,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from 'react-hot-toast';
 import ErrorBoundary from './components/ErrorBoundary';
+// Import for side effects - initializes performance optimizations
+import './utils/PerformanceOptimizer';
 
 const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 

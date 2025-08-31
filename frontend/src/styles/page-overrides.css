@@ -1,0 +1,187 @@
+/* Page Background Override Styles */
+/* This file removes individual page backgrounds to use the unified PageLayout background */
+
+/* Override individual page container backgrounds */
+.home-container,
+.tracker-container,
+.profile-container,
+.login-bg,
+.signup-container,
+.faq-container,
+.contact-container,
+.reach-out-container,
+.create-complain-container,
+.level-container,
+.complaint-list-container,
+.complaint-details-container,
+.investigate-container,
+.notifications-container,
+.livechat-container,
+.admin-container {
+  background: transparent !important;
+  min-height: auto !important;
+}
+
+/* Remove individual page pseudo-elements for backgrounds */
+.home-container::before,
+.home-container::after,
+.tracker-container::before,
+.tracker-container::after,
+.profile-container::before,
+.profile-container::after,
+.login-bg::before,
+.login-bg::after,
+.signup-container::before,
+.signup-container::after,
+.faq-container::before,
+.faq-container::after,
+.contact-container::before,
+.contact-container::after,
+.reach-out-container::before,
+.reach-out-container::after,
+.create-complain-container::before,
+.create-complain-container::after,
+.level-container::before,
+.level-container::after,
+.complaint-list-container::before,
+.complaint-list-container::after,
+.complaint-details-container::before,
+.complaint-details-container::after,
+.investigate-container::before,
+.investigate-container::after,
+.notifications-container::before,
+.notifications-container::after,
+.livechat-container::before,
+.livechat-container::after,
+.admin-container::before,
+.admin-container::after {
+  display: none !important;
+}
+
+/* Ensure consistent padding and layout */
+.home-container,
+.tracker-container,
+.profile-container,
+.faq-container,
+.contact-container,
+.reach-out-container,
+.create-complain-container,
+.level-container,
+.complaint-list-container,
+.complaint-details-container,
+.investigate-container,
+.notifications-container,
+.livechat-container,
+.admin-container {
+  padding-top: calc(70px + 2rem) !important;
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  padding-bottom: 2rem !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Special handling for login and signup pages */
+.login-bg,
+.signup-container {
+  padding: 0 !important;
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Ensure proper content spacing */
+.home-content,
+.tracker-content,
+.profile-content,
+.faq-content,
+.contact-content,
+.reach-out-content,
+.create-complain-content,
+.level-content,
+.complaint-list-content,
+.complaint-details-content,
+.investigate-content,
+.notifications-content,
+.livechat-content,
+.admin-content {
+  position: relative;
+  z-index: 2;
+  animation: pageContentFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageContentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Performance optimizations for all page containers */
+.home-container,
+.tracker-container,
+.profile-container,
+.login-bg,
+.signup-container,
+.faq-container,
+.contact-container,
+.reach-out-container,
+.create-complain-container,
+.level-container,
+.complaint-list-container,
+.complaint-details-container,
+.investigate-container,
+.notifications-container,
+.livechat-container,
+.admin-container {
+  will-change: auto !important;
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  contain: layout style paint !important;
+}
+
+/* Ensure smooth scrolling for all pages */
+.home-container,
+.tracker-container,
+.profile-container,
+.faq-container,
+.contact-container,
+.reach-out-container,
+.create-complain-container,
+.level-container,
+.complaint-list-container,
+.complaint-details-container,
+.investigate-container,
+.notifications-container,
+.livechat-container,
+.admin-container {
+  scroll-behavior: smooth !important;
+  overflow-x: hidden !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .home-container,
+  .tracker-container,
+  .profile-container,
+  .faq-container,
+  .contact-container,
+  .reach-out-container,
+  .create-complain-container,
+  .level-container,
+  .complaint-list-container,
+  .complaint-details-container,
+  .investigate-container,
+  .notifications-container,
+  .livechat-container,
+  .admin-container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: calc(70px + 1rem) !important;
+    padding-bottom: 1rem !important;
+  }
+}

@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import axios from 'axios';
+import InlineLoader from '../components/InlineLoader';
 import './Tracker.css';
 
 function Tracker() {
@@ -8,16 +9,6 @@ function Tracker() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [userDataLoading, setUserDataLoading] = useState(false);
-  const [pageLoading, setPageLoading] = useState(true);
-
-  // Simulate page loading for better UX
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setPageLoading(false);
-    }, 800); // Show loading animation for 800ms
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleSearch = useCallback(async (e) => {
     e.preventDefault();
@@ -101,33 +92,6 @@ function Tracker() {
     return <span className={className}>{statusText}</span>;
   }, []);
 
-  // Loading skeleton component
-  const LoadingSkeleton = () => (
-    <div className="tracker-container">
-      <div className="tracker-content">
-        <div className="skeleton-title"></div>
-        <div className="skeleton-subtitle"></div>
-        <div className="skeleton-form">
-          <div className="skeleton-input"></div>
-          <div className="skeleton-button"></div>
-        </div>
-        <div className="loading-text">
-          <div className="loading-dots">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <p>Loading Tracker...</p>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Show loading skeleton while page is loading
-  if (pageLoading) {
-    return <LoadingSkeleton />;
-  }
-
   return (
     <div className="tracker-container">
       <div className="tracker-content">
@@ -162,22 +126,12 @@ function Tracker() {
         </form>
         
         {loading && !complain && (
-          <div className="search-loading-overlay">
-            <div className="search-loading-content">
-              <div className="search-loading-spinner">
-                <div className="spinner-ring"></div>
-                <div className="spinner-ring"></div>
-                <div className="spinner-ring"></div>
-              </div>
-              <div className="search-loading-text">
-                <h3>Searching for your complaint...</h3>
-                <p>Please wait while we fetch your data</p>
-                <div className="progress-bar">
-                  <div className="progress-fill"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <InlineLoader 
+            message="Searching for your complaint..." 
+            size="medium"
+            variant="search"
+            showProgress={false}
+          />
         )}
         
         {error && <div className="tracker-error"> {error}</div>}

@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 @import './styles/animations.css';
 @import './styles/loading.css';
+@import './styles/page-overrides.css';
 
 /* Global Styles */
 * {
@@ -10,38 +11,61 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: #0a0a0a;
-  min-height: 100vh;
-  color: #ffffff;
+html {
+  /* Improve rendering performance */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  /* Enable hardware acceleration for better performance */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-/* Modern scrollbar */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: transparent; /* Let PageLayout handle background */
+  min-height: 100vh;
+  color: #ffffff;
+  overflow-x: hidden;
+  /* Performance optimizations */
+  will-change: auto;
+  contain: layout style paint;
+}
+
+/* Ensure consistent scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Improved scrollbar for webkit browsers */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: rgba(26, 26, 26, 0.8);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #404040;
-  border-radius: 3px;
+  background: rgba(102, 126, 234, 0.6);
+  border-radius: 4px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555555;
+  background: rgba(102, 126, 234, 0.8);
 }
 
 /* Base App Styles */
 .App {
-  background: #0a0a0a;
+  background: transparent; /* Let PageLayout handle background */
   min-height: 100vh;
+  position: relative;
+  /* Performance optimizations */
+  will-change: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Modern Button Styles */
