@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ComplaintService from './ComplaintService';
 import './ComplaintList.css';
 import axios from 'axios';
+import PageLoader from '../components/PageLoader';
 
 const ComplaintList = () => {
     const [complaints, setComplaints] = useState([]);
@@ -83,49 +84,11 @@ const ComplaintList = () => {
         setSearchTerm(e.target.value);
     };
 
+    if (initialLoading) return <PageLoader message="Loading complaints..." />;
     if (error) return <div className="error">{error}</div>;
 
     return (
         <div className="complaint-list-container">
-            {initialLoading ? (
-                <div className="initial-loading-container">
-                    <div className="initial-loading-text">
-                        <div className="initial-loading-spinner"></div>
-                        <span>Loading complaints...</span>
-                    </div>
-                    {/* Skeleton complaint cards */}
-                    <div className="complaints-grid">
-                        {[1, 2, 3].map((index) => (
-                            <div key={index} className={`complaint-skeleton skeleton-${index}`}>
-                                <div className="complaint-header">
-                                    <div className="skeleton-element skeleton-id"></div>
-                                    <div className="skeleton-element skeleton-status"></div>
-                                </div>
-                                <div className="complaint-info">
-                                    <div className="skeleton-row">
-                                        <div className="skeleton-element skeleton-label"></div>
-                                        <div className="skeleton-element skeleton-value"></div>
-                                    </div>
-                                    <div className="skeleton-row">
-                                        <div className="skeleton-element skeleton-label"></div>
-                                        <div className="skeleton-element skeleton-value"></div>
-                                    </div>
-                                    <div className="skeleton-row">
-                                        <div className="skeleton-element skeleton-label"></div>
-                                        <div className="skeleton-element skeleton-value"></div>
-                                    </div>
-                                    <div className="skeleton-row">
-                                        <div className="skeleton-element skeleton-label"></div>
-                                        <div className="skeleton-element skeleton-value"></div>
-                                    </div>
-                                </div>
-                                <div className="skeleton-element skeleton-button"></div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ) : (
-                <>
             {/* Modern Filter Section */}
             <div className="filter-section">
                 <div className="filter-container">
@@ -236,60 +199,70 @@ const ComplaintList = () => {
                     onChange={handleSearch}
                 />
             </div>
-            {filteredComplaints.map((complaint) => {
-                console.log('Complaint object:', complaint); // Debug: check structure
-                const displayTime = (() => {
-                    if (!complaint.time) return 'N/A';
-                    if (typeof complaint.time === 'string' && complaint.time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
-                        let iso = complaint.time;
-                        if (iso.includes('.')) iso = iso.split('.')[0];
-                        if (!iso.endsWith('Z')) iso = iso + 'Z';
-                        const d = new Date(iso);
-                        return isNaN(d) ? complaint.time : d.toLocaleString();
-                    }
-                    return complaint.time;
-                })();
-                return (
-                    <div key={complaint.trackingId} className="complaint-card">
-                        <div className="complaint-header">
-                            <div className="complaint-id">
-                                <span className="label">Tracking ID : </span>
-                                <span className="value">{complaint.trackingId}</span>
+            {filteredComplaints.length === 0 ? (
+                <div className="empty-state-container">
+                    <div className="empty-state-icon">🤷‍♂️</div>
+                    <h3 className="empty-state-title">No Complaints Found</h3>
+                    <p className="empty-state-message">
+                        It looks like there are no complaints matching your criteria.
+                        <br />
+                        Try adjusting your filters or search term.
+                    </p>
+                </div>
+            ) : (
+                filteredComplaints.map((complaint) => {
+                    console.log('Complaint object:', complaint); // Debug: check structure
+                    const displayTime = (() => {
+                        if (!complaint.time) return 'N/A';
+                        if (typeof complaint.time === 'string' && complaint.time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+                            let iso = complaint.time;
+                            if (iso.includes('.')) iso = iso.split('.')[0];
+                            if (!iso.endsWith('Z')) iso = iso + 'Z';
+                            const d = new Date(iso);
+                            return isNaN(d) ? complaint.time : d.toLocaleString();
+                        }
+                        return complaint.time;
+                    })();
+                    return (
+                        <div key={complaint.trackingId} className="complaint-card">
+                            <div className="complaint-header">
+                                <div className="complaint-id">
+                                    <span className="label">Tracking ID : </span>
+                                    <span className="value">{complaint.trackingId}</span>
+                                </div>
+                                <div className={`complaint-status ${getStatusClassName(complaint.status)}`}>
+                                    {complaint.status || 'Unsolved'}
+                                </div>
                             </div>
-                            <div className={`complaint-status ${getStatusClassName(complaint.status)}`}>
-                                {complaint.status || 'Unsolved'}
-                            </div>
-                        </div>
 
-                        <div className="complaint-info">
-                            <div>
-                                <span className="label">Name : </span>
-                                <span className="value">{complaint.userName}</span>
+                            <div className="complaint-info">
+                                <div>
+                                    <span className="label">Name : </span>
+                                    <span className="value">{complaint.userName}</span>
+                                </div>
+                                <div>
+                                    <span className="label">Complained Time : </span>
+                                    <span className="value">{displayTime}</span>
+                                </div>
+                                <div>
+                                    <span className="label">Tag  : </span>
+                                    <span className="value">{complaint.tags}</span>
+                                </div>
+                                <div>
+                                    <span className="label">Urgency : </span>
+                                    <span className="value">{complaint.urgency}</span>
+                                </div>
                             </div>
-                            <div>
-                                <span className="label">Complained Time : </span>
-                                <span className="value">{displayTime}</span>
-                            </div>
-                            <div>
-                                <span className="label">Tag  : </span>
-                                <span className="value">{complaint.tags}</span>
-                            </div>
-                            <div>
-                                <span className="label">Urgency : </span>
-                                <span className="value">{complaint.urgency}</span>
-                            </div>
+                            <div style={{ flex: 1 }} />
+                            <button
+                                className="details-button"
+                                onClick={() => handleDetailsClick(complaint.trackingId)}
+                            >
+                                Details
+                            </button>
                         </div>
-                        <div style={{ flex: 1 }} />
-                        <button
-                            className="details-button"
-                            onClick={() => handleDetailsClick(complaint.trackingId)}
-                        >
-                            Details
-                        </button>
-                    </div>
-                );
-            })}
-                </>
+                    );
+                })
             )}
 
             {loading && !initialLoading && (
@@ -343,9 +316,25 @@ export const UserComplaintList = () => {
         return 'status-unsolved';
     };
 
-    if (loading) return <div className="loading">Loading...</div>;
+    if (loading) return <PageLoader message="Loading your complaints..." />;
     if (error) return <div className="error">{error}</div>;
-    if (!complaints.length) return <div className="not-found">No complaints found.</div>;
+
+    if (!complaints.length) {
+        return (
+            <div className="complaint-list-container centered">
+                <div className="empty-state-card">
+                    <h2 className="empty-state-title">No Complaints Found</h2>
+                    <p className="empty-state-subtitle">You have not lodged any complaints yet.</p>
+                    <button 
+                        className="lodge-complaint-btn"
+                        onClick={() => navigate('/create-complain')}
+                    >
+                        <span role="img" aria-label="Lodge a complaint">📧</span> Lodge a Complaint
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="complaint-list-container">
@@ -361,6 +350,7 @@ export const UserComplaintList = () => {
                     }
                     return complaint.time;
                 })();
+
                 return (
                     <div key={complaint.trackingId} className="complaint-card">
                         <div className="complaint-header">
@@ -372,6 +362,7 @@ export const UserComplaintList = () => {
                                 {complaint.status || 'Unsolved'}
                             </div>
                         </div>
+
                         <div className="complaint-info">
                             <div>
                                 <span className="label">Name : </span>
@@ -382,7 +373,7 @@ export const UserComplaintList = () => {
                                 <span className="value">{displayTime}</span>
                             </div>
                             <div>
-                                <span className="label">Tag : </span>
+                                <span className="label">Tag  : </span>
                                 <span className="value">{complaint.tags}</span>
                             </div>
                             <div>
@@ -390,6 +381,13 @@ export const UserComplaintList = () => {
                                 <span className="value">{complaint.urgency}</span>
                             </div>
                         </div>
+                        <div style={{ flex: 1 }} />
+                        <button
+                            className="details-button"
+                            onClick={() => navigate(`/complaint/${complaint.trackingId}`)}
+                        >
+                            Details
+                        </button>
                     </div>
                 );
             })}

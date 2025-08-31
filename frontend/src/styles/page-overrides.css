@@ -76,7 +76,6 @@
 .notifications-container,
 .livechat-container,
 .admin-container {
-  padding-top: calc(70px + 2rem) !important;
   padding-left: 2rem !important;
   padding-right: 2rem !important;
   padding-bottom: 2rem !important;
