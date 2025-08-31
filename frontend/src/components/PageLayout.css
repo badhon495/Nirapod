@@ -10,6 +10,8 @@
   contain: layout style paint;
   transform: translateZ(0);
   backface-visibility: hidden;
+  /* Ensure navbar stays on top */
+  z-index: 1;
 }
 
 /* Persistent Background Layers */

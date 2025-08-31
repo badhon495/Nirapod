@@ -264,4 +264,4 @@ function Navbar() {
   return renderNavbar();
 }
 
-export default Navbar;
+export default React.memo(Navbar);

@@ -16,6 +16,7 @@
 .complaint-details-container,
 .investigate-container,
 .notifications-container,
+.notifications-wrapper,
 .livechat-container,
 .admin-container {
   background: transparent !important;
@@ -51,6 +52,8 @@
 .investigate-container::after,
 .notifications-container::before,
 .notifications-container::after,
+.notifications-wrapper::before,
+.notifications-wrapper::after,
 .livechat-container::before,
 .livechat-container::after,
 .admin-container::before,
@@ -81,6 +84,16 @@
   z-index: 1 !important;
 }
 
+/* Special handling for notifications wrapper */
+.notifications-wrapper {
+  padding-top: calc(70px + 2rem) !important;
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  padding-bottom: 2rem !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
 /* Special handling for login and signup pages */
 .login-bg,
 .signup-container {
@@ -103,6 +116,7 @@
 .complaint-details-content,
 .investigate-content,
 .notifications-content,
+.notifications-list,
 .livechat-content,
 .admin-content {
   position: relative;
@@ -136,6 +150,7 @@
 .complaint-details-container,
 .investigate-container,
 .notifications-container,
+.notifications-wrapper,
 .livechat-container,
 .admin-container {
   will-change: auto !important;
@@ -157,6 +172,7 @@
 .complaint-details-container,
 .investigate-container,
 .notifications-container,
+.notifications-wrapper,
 .livechat-container,
 .admin-container {
   scroll-behavior: smooth !important;
@@ -177,6 +193,7 @@
   .complaint-details-container,
   .investigate-container,
   .notifications-container,
+  .notifications-wrapper,
   .livechat-container,
   .admin-container {
     padding-left: 1rem !important;

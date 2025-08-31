@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Notifications.css';
@@ -10,7 +10,34 @@ function Notifications() {
   const userId = localStorage.getItem('nirapod_identifier');
   const navigate = useNavigate();
 
-  const fetchNotifications = async () => {
+  const markAllAsRead = useCallback(async (notificationsList) => {
+    if (!userId || !notificationsList) return;
+
+    const unreadNotifications = notificationsList.filter(n => !n.read);
+    
+    if (unreadNotifications.length === 0) return;
+
+    try {
+      // Mark all unread notifications as read in parallel
+      const markReadPromises = unreadNotifications.map(notification => 
+        axios.put(`/api/notifications/${notification.id}/read`)
+      );
+
+      await Promise.all(markReadPromises);
+
+      // Update the local state to reflect all notifications as read
+      setNotifications(prevNotifications => 
+        prevNotifications.map(n => ({ ...n, read: true }))
+      );
+
+      console.log(`Marked ${unreadNotifications.length} notifications as read`);
+    } catch (err) {
+      console.error('Failed to mark notifications as read:', err);
+      // Don't show error to user as this is a background operation
+    }
+  }, [userId]);
+
+  const fetchNotifications = useCallback(async () => {
     if (!userId) {
       setError('Please log in to view notifications');
       setLoading(false);
@@ -45,34 +72,7 @@ function Notifications() {
       setError('Failed to fetch notifications. Please try again later.');
       setLoading(false);
     }
-  };
-
-  const markAllAsRead = async (notificationsList) => {
-    if (!userId || !notificationsList) return;
-
-    const unreadNotifications = notificationsList.filter(n => !n.read);
-    
-    if (unreadNotifications.length === 0) return;
-
-    try {
-      // Mark all unread notifications as read in parallel
-      const markReadPromises = unreadNotifications.map(notification => 
-        axios.put(`/api/notifications/${notification.id}/read`)
-      );
-
-      await Promise.all(markReadPromises);
-
-      // Update the local state to reflect all notifications as read
-      setNotifications(prevNotifications => 
-        prevNotifications.map(n => ({ ...n, read: true }))
-      );
-
-      console.log(`Marked ${unreadNotifications.length} notifications as read`);
-    } catch (err) {
-      console.error('Failed to mark notifications as read:', err);
-      // Don't show error to user as this is a background operation
-    }
-  };
+  }, [userId, markAllAsRead]);
 
   const handleClick = async (notification) => {
     if (!userId) {
@@ -109,7 +109,7 @@ function Notifications() {
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchNotifications]);
 
   const getNotificationStyle = (notification) => {
     // All notifications appear the same since they're auto-marked as read
@@ -147,42 +147,48 @@ function Notifications() {
   };
 
   if (loading) return (
-    <div className="notifications-wrapper">
-      <h2 className="page-title">Notifications</h2>
-      <div className="loading">Loading notifications...</div>
+    <div className="notifications-container">
+      <div className="notifications-wrapper">
+        <h2 className="page-title">Notifications</h2>
+        <div className="loading">Loading notifications...</div>
+      </div>
     </div>
   );
 
   if (error) return (
-    <div className="notifications-wrapper">
-      <h2 className="page-title">Notifications</h2>
-      <div className="error">{error}</div>
+    <div className="notifications-container">
+      <div className="notifications-wrapper">
+        <h2 className="page-title">Notifications</h2>
+        <div className="error">{error}</div>
+      </div>
     </div>
   );
 
   return (
-    <div className="notifications-wrapper">
-      <h2 className="page-title">Notifications</h2>
-      {notifications.length === 0 ? (
-        <div className="empty-state">
-          No notifications yet
-        </div>
-      ) : (
-        <div className="notifications-list">
-          {notifications.map(notification => (
-            <div
-              key={notification.id}
-              className={getNotificationStyle(notification)}
-              onClick={() => handleClick(notification)}
-            >
-              <div className="notification-content">
-                <div className="notification-message">{notification.message}</div>
-                <div className="notification-time">{formatTime(notification.createdAt)}</div>
+    <div className="notifications-container">
+      <div className="notifications-wrapper">
+        <h2 className="page-title">Notifications</h2>
+        {notifications.length === 0 ? (
+          <div className="empty-state">
+            No notifications yet
+          </div>
+        ) : (
+          <div className="notifications-list">
+            {notifications.map(notification => (
+              <div
+                key={notification.id}
+                className={getNotificationStyle(notification)}
+                onClick={() => handleClick(notification)}
+              >
+                <div className="notification-content">
+                  <div className="notification-message">{notification.message}</div>
+                  <div className="notification-time">{formatTime(notification.createdAt)}</div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

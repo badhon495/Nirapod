@@ -1,9 +1,8 @@
 import React, { useEffect, Suspense, lazy } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import Navbar from './components/Navbar';
+import PersistentNavbar from './components/PersistentNavbar';
 import PageLayout from './components/PageLayout';
 import PageLoader from './components/PageLoader';
 import performanceOptimizer from './utils/PerformanceOptimizer';
@@ -35,19 +34,17 @@ const LoadingSpinner = () => (
 );
 
 function App() {
-  const location = useLocation();
-
   // Initialize performance optimizations
   useEffect(() => {
     performanceOptimizer.setupPerformanceMonitoring();
   }, []);
 
-  const hideNavbar = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/faq' || location.pathname === '/contact' || location.pathname === '/complain' || location.pathname === '/ReachOut';
-
   return (
     <AuthProvider>
+      {/* Persistent Navbar - Stays consistent across all pages */}
+      <PersistentNavbar />
+      
       <PageLayout>
-        {!hideNavbar && <Navbar />}
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             {/* Public Routes */}

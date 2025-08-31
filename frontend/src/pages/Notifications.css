@@ -1,34 +1,37 @@
-/* Modern Notifications Component Styles */
-.notifications-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+/* Modern Notifications Component Styles - Compatible with PageLayout */
+.notifications-container {
   min-height: 100vh;
-  width: 100vw;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* Apply content fade-in animation */
+  animation: pageContentFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.notifications-wrapper {
+  flex: 1;
+  width: 100%;
+  /* Remove conflicting background - let PageLayout handle it */
+  background: transparent !important;
   padding: 2rem;
   padding-top: calc(70px + 2rem); /* Add navbar height + original padding */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   margin: 0;
   box-sizing: border-box;
   overflow-y: auto;
+  position: relative;
   z-index: 1;
+  /* Performance optimizations */
+  will-change: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout style paint;
 }
 
+/* Remove conflicting pseudo-element background */
 .notifications-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 40% 40%, rgba(120, 255, 198, 0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 .page-title {
@@ -61,12 +64,16 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   animation: slideInLeft 0.5s ease-out;
+  /* Performance optimizations */
+  will-change: transform, border-color, box-shadow;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .notification-item:hover {
-  transform: translateX(5px);
+  transform: translateX(5px) translateZ(0);
   border-color: rgba(96, 165, 250, 0.3);
   box-shadow: 0 8px 32px rgba(96, 165, 250, 0.15);
 }
