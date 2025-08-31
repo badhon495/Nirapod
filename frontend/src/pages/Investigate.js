@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Investigate.css';
+import { getImageUrl } from '../utils/urlHelper';
 
 const searchOptions = [
   { label: '🆔 NID', value: 'nid', placeholder: 'Enter National ID Number', icon: '🆔' },
@@ -43,16 +44,12 @@ function Investigate() {
   const renderPhoto = (photoPath, alt = 'Photo') => {
     if (!photoPath) return null;
     
-    // If it's a full URL (Cloudinary), use it directly
-    // If it's a relative path, add the backend URL
-    const src = photoPath.startsWith('http') ? photoPath : `http://localhost:8080/${photoPath.replace('/uploads/', '')}`;
-    
     return (
       <img 
-        src={src} 
+        src={getImageUrl(photoPath)} 
         alt={alt}
         className="user-document-photo"
-        onClick={() => window.open(src, '_blank')}
+        onClick={() => window.open(getImageUrl(photoPath), '_blank')}
       />
     );
   };
@@ -62,13 +59,9 @@ function Investigate() {
       return <span className="document-unavailable">Not Available</span>;
     }
     
-    // If it's a full URL (Cloudinary), use it directly
-    // If it's a relative path, add the backend URL
-    const src = photoPath.startsWith('http') ? photoPath : `http://localhost:8080/${photoPath.replace('/uploads/', '')}`;
-    
     return (
       <a 
-        href={src} 
+        href={getImageUrl(photoPath)} 
         target="_blank" 
         rel="noopener noreferrer" 
         className="document-link"

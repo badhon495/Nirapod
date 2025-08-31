@@ -5,6 +5,7 @@ import logo from '../image/logo.png';
 import { GoogleLogin, googleLogout } from '@react-oauth/google';
 import googleIcon from '../image/google-icon.png';
 import useGoogleSDK from '../hooks/useGoogleSDK';
+import { usePerformanceAwareMount, useOptimizedImage } from '../hooks/useOptimizedPerformance';
 
 const initialForm = {
   name: '', phoneNumber: '', email: '', password: '', confirmPassword: '',
@@ -36,6 +37,10 @@ function Signup() {
   const [affiliationOpen, setAffiliationOpen] = useState(false);
   const userTypeRef = useRef(null);
   const affiliationRef = useRef(null);
+
+  // Performance optimizations
+  const { isLowEndDevice, shouldReduceAnimations } = usePerformanceAwareMount();
+  const { src: logoSrc, isLoaded: logoLoaded } = useOptimizedImage(logo);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

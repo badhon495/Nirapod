@@ -1,4 +1,4 @@
-/* Optimized Animation Utilities */
+/* Optimized Animation Utilities - Performance Focused */
 
 /* Hardware acceleration base class */
 .gpu-accelerated {
@@ -11,62 +11,62 @@
   -webkit-perspective: 1000px;
 }
 
-/* Optimized fade animations */
+/* Simplified fade animations */
 .fade-in {
-  animation: optimizedFadeIn 0.3s ease-out forwards;
+  animation: optimizedFadeIn 0.2s ease-out forwards;
 }
 
 .fade-in-up {
-  animation: optimizedFadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: optimizedFadeInUp 0.25s ease-out forwards;
 }
 
 .fade-in-down {
-  animation: optimizedFadeInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: optimizedFadeInDown 0.25s ease-out forwards;
 }
 
 .fade-in-left {
-  animation: optimizedFadeInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: optimizedFadeInLeft 0.25s ease-out forwards;
 }
 
 .fade-in-right {
-  animation: optimizedFadeInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: optimizedFadeInRight 0.25s ease-out forwards;
 }
 
-/* Optimized scale animations */
+/* Simplified scale animations */
 .scale-in {
-  animation: optimizedScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: optimizedScaleIn 0.2s ease-out forwards;
 }
 
 .bounce-in {
-  animation: optimizedBounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  animation: optimizedBounceIn 0.3s ease-out forwards;
 }
 
-/* Optimized slide animations */
+/* Simplified slide animations */
 .slide-up {
-  animation: optimizedSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: optimizedSlideUp 0.25s ease-out forwards;
 }
 
 .slide-down {
-  animation: optimizedSlideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: optimizedSlideDown 0.25s ease-out forwards;
 }
 
-/* Staggered animations */
+/* Staggered animations - reduced delays */
 .stagger-item {
   opacity: 0;
-  transform: translateY(20px);
-  animation: optimizedFadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform: translateY(10px);
+  animation: optimizedFadeInUp 0.25s ease-out forwards;
 }
 
-.stagger-item:nth-child(1) { animation-delay: 0.05s; }
-.stagger-item:nth-child(2) { animation-delay: 0.1s; }
-.stagger-item:nth-child(3) { animation-delay: 0.15s; }
-.stagger-item:nth-child(4) { animation-delay: 0.2s; }
-.stagger-item:nth-child(5) { animation-delay: 0.25s; }
-.stagger-item:nth-child(6) { animation-delay: 0.3s; }
-.stagger-item:nth-child(7) { animation-delay: 0.35s; }
-.stagger-item:nth-child(8) { animation-delay: 0.4s; }
+.stagger-item:nth-child(1) { animation-delay: 0.02s; }
+.stagger-item:nth-child(2) { animation-delay: 0.04s; }
+.stagger-item:nth-child(3) { animation-delay: 0.06s; }
+.stagger-item:nth-child(4) { animation-delay: 0.08s; }
+.stagger-item:nth-child(5) { animation-delay: 0.1s; }
+.stagger-item:nth-child(6) { animation-delay: 0.12s; }
+.stagger-item:nth-child(7) { animation-delay: 0.14s; }
+.stagger-item:nth-child(8) { animation-delay: 0.16s; }
 
-/* Optimized keyframes */
+/* Simplified keyframes */
 @keyframes optimizedFadeIn {
   from {
     opacity: 0;
@@ -79,7 +79,7 @@
 @keyframes optimizedFadeInUp {
   from {
     opacity: 0;
-    transform: translate3d(0, 20px, 0);
+    transform: translate3d(0, 10px, 0);
   }
   to {
     opacity: 1;
@@ -90,7 +90,7 @@
 @keyframes optimizedFadeInDown {
   from {
     opacity: 0;
-    transform: translate3d(0, -20px, 0);
+    transform: translate3d(0, -10px, 0);
   }
   to {
     opacity: 1;
@@ -101,7 +101,7 @@
 @keyframes optimizedFadeInLeft {
   from {
     opacity: 0;
-    transform: translate3d(-20px, 0, 0);
+    transform: translate3d(-10px, 0, 0);
   }
   to {
     opacity: 1;
@@ -112,7 +112,7 @@
 @keyframes optimizedFadeInRight {
   from {
     opacity: 0;
-    transform: translate3d(20px, 0, 0);
+    transform: translate3d(10px, 0, 0);
   }
   to {
     opacity: 1;
@@ -123,7 +123,7 @@
 @keyframes optimizedScaleIn {
   from {
     opacity: 0;
-    transform: scale3d(0.95, 0.95, 1);
+    transform: scale3d(0.98, 0.98, 1);
   }
   to {
     opacity: 1;
@@ -134,20 +134,10 @@
 @keyframes optimizedBounceIn {
   0% {
     opacity: 0;
-    transform: scale3d(0.3, 0.3, 1);
+    transform: scale3d(0.8, 0.8, 1);
   }
-  20% {
-    transform: scale3d(1.1, 1.1, 1);
-  }
-  40% {
-    transform: scale3d(0.9, 0.9, 1);
-  }
-  60% {
-    opacity: 1;
-    transform: scale3d(1.03, 1.03, 1);
-  }
-  80% {
-    transform: scale3d(0.97, 0.97, 1);
+  50% {
+    transform: scale3d(1.02, 1.02, 1);
   }
   100% {
     opacity: 1;
@@ -157,7 +147,7 @@
 
 @keyframes optimizedSlideUp {
   from {
-    transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 20px, 0);
     visibility: visible;
   }
   to {
@@ -167,7 +157,7 @@
 
 @keyframes optimizedSlideDown {
   from {
-    transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -20px, 0);
     visibility: visible;
   }
   to {
@@ -175,9 +165,9 @@
   }
 }
 
-/* Optimized loading animations */
+/* Simplified loading animations */
 .pulse-loader {
-  animation: optimizedPulse 1.5s ease-in-out infinite;
+  animation: optimizedPulse 1s ease-in-out infinite;
 }
 
 @keyframes optimizedPulse {
@@ -186,8 +176,8 @@
     transform: scale3d(1, 1, 1);
   }
   50% {
-    opacity: 0.7;
-    transform: scale3d(1.05, 1.05, 1);
+    opacity: 0.8;
+    transform: scale3d(1.02, 1.02, 1);
   }
 }
 

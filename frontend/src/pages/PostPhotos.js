@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ComplaintService from './ComplaintService';
 import axios from 'axios';
 import './PostPhotos.css';
+import { getImageUrl, processPhotosForViewer } from '../utils/urlHelper';
 
 function PostPhotos() {
   const { trackingId } = useParams();
@@ -71,21 +72,7 @@ function PostPhotos() {
 
   // Photo viewer handlers
   const handleOpenPhotoViewer = (photos, index = 0) => {
-    const processedPhotos = photos.map(photo => {
-      // If the photo URL already starts with http (Cloudinary URL), use it as is
-      if (photo.startsWith('http')) {
-        return {
-          primary: photo,
-          fallback: photo
-        };
-      }
-      // Clean local photos
-      const cleanPhoto = photo.replace('/uploads/', '');
-      return {
-        primary: `http://localhost:8080/uploads/${cleanPhoto}`,
-        fallback: `http://localhost:8080/${cleanPhoto}`
-      };
-    });
+    const processedPhotos = processPhotosForViewer(photos);
     setPhotoViewer({ isOpen: true, photos: processedPhotos, currentIndex: index });
   };
 
@@ -207,7 +194,7 @@ function PostPhotos() {
               <div className="social-avatar">
                 {post.userProfileImage && post.userProfileImage !== 'null' && post.userProfileImage !== '' ? (
                   <img 
-                    src={post.userProfileImage.startsWith('http') ? post.userProfileImage : `http://localhost:8080/uploads/${post.userProfileImage.replace('/uploads/', '')}`} 
+                    src={getImageUrl(post.userProfileImage)} 
                     alt="Profile" 
                     className="social-avatar-image"
                     onError={(e) => {
@@ -299,21 +286,10 @@ function PostPhotos() {
               <div className="social-photos-carousel">
                 <div className="social-photo-container">
                   <img 
-                    src={photoArr[currentPhotoIndex].startsWith('http') ? 
-                          photoArr[currentPhotoIndex] : 
-                          `http://localhost:8080/uploads/${photoArr[currentPhotoIndex].replace('/uploads/', '')}`} 
+                    src={getImageUrl(photoArr[currentPhotoIndex])} 
                     alt={`Post Photo ${currentPhotoIndex + 1}`} 
                     className="social-post-image"
                     onClick={() => handleOpenPhotoViewer(photoArr, currentPhotoIndex)}
-                    onError={(e) => {
-                      const currentPhoto = photoArr[currentPhotoIndex];
-                      if (!currentPhoto.startsWith('http')) {
-                        const altSrc = `http://localhost:8080/${currentPhoto.replace('/uploads/', '')}`;
-                        if (e.target.src !== altSrc) {
-                          e.target.src = altSrc;
-                        }
-                      }
-                    }}
                   />
                   
                   {photoArr.length > 1 && (
@@ -356,18 +332,10 @@ function PostPhotos() {
                 {uploadPhotoArr.map((photo, index) => (
                   <div key={index} className="photo-item">
                     <img
-                      src={photo.startsWith('http') ? photo : `http://localhost:8080/uploads/${photo.replace('/uploads/', '')}`}
+                      src={getImageUrl(photo)}
                       alt={`User upload ${index + 1}`}
                       className="gallery-photo"
                       onClick={() => handleOpenPhotoViewer(uploadPhotoArr, index)}
-                      onError={(e) => {
-                        if (!photo.startsWith('http')) {
-                          const altSrc = `http://localhost:8080/${photo.replace('/uploads/', '')}`;
-                          if (e.target.src !== altSrc) {
-                            e.target.src = altSrc;
-                          }
-                        }
-                      }}
                     />
                   </div>
                 ))}

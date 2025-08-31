@@ -6,6 +6,7 @@ import PersistentNavbar from './components/PersistentNavbar';
 import PageLayout from './components/PageLayout';
 import PageLoader from './components/PageLoader';
 import performanceOptimizer from './utils/PerformanceOptimizer';
+import './styles/performance.css'; // Import performance optimizations
 
 // Lazy load components for better performance
 const Login = lazy(() => import('./pages/Login'));
@@ -30,7 +31,7 @@ const AdminHome = lazy(() => import('./pages/AdminHome'));
 const ReportList = lazy(() => import('./pages/ReportList'));
 const AddAdmin = lazy(() => import('./pages/AddAdmin'));
 
-// Enhanced Loading component with consistent styling
+// Optimized Loading component with performance focus
 const LoadingSpinner = () => (
   <PageLoader message="Loading page..." size="medium" />
 );
@@ -39,6 +40,22 @@ function App() {
   // Initialize performance optimizations
   useEffect(() => {
     performanceOptimizer.setupPerformanceMonitoring();
+    
+    // Add optimized text class to body
+    document.body.classList.add('optimized-text');
+    
+    // Preload critical fonts for better performance
+    const fontLink = document.createElement('link');
+    fontLink.rel = 'preload';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+    fontLink.as = 'style';
+    fontLink.crossOrigin = 'anonymous';
+    document.head.appendChild(fontLink);
+    
+    return () => {
+      // Cleanup on unmount
+      performanceOptimizer.performMemoryCleanup();
+    };
   }, []);
 
   return (

@@ -8,6 +8,7 @@ import axios from 'axios';
 import L from 'leaflet';
 import 'leaflet-control-geocoder';
 import pinGif from '../image/pin.gif';
+import { getImageUrl, processPhotosForViewer } from '../utils/urlHelper';
 
 function ComplaintDetails() {
   const { id } = useParams();
@@ -110,13 +111,7 @@ function ComplaintDetails() {
 
   // Photo viewer handlers
   const handleOpenPhotoViewer = (photos, index = 0) => {
-    const processedPhotos = photos.map(photo => {
-      const cleanPhoto = photo.replace('/uploads/', '');
-      return {
-        primary: `http://localhost:8080/uploads/${cleanPhoto}`,
-        fallback: `http://localhost:8080/${cleanPhoto}`
-      };
-    });
+    const processedPhotos = processPhotosForViewer(photos);
     setPhotoViewer({ isOpen: true, photos: processedPhotos, currentIndex: index });
   };
 
@@ -181,11 +176,7 @@ function ComplaintDetails() {
       <div className="complaint-detail-card">
         {/* Centered user photo at the top */}
         {complaint.userPhoto && (() => {
-          // If it's a full URL (Cloudinary), use it directly
-          // If it's a relative path, add the backend URL
-          const src = complaint.userPhoto.startsWith('http') ? 
-            complaint.userPhoto : 
-            `http://localhost:8080/${complaint.userPhoto.replace('/uploads/', '')}`;
+          const src = getImageUrl(complaint.userPhoto);
           return (
             <div className="user-photo-container">
               <img src={src} alt="User" className="user-photo" />
@@ -276,13 +267,7 @@ function ComplaintDetails() {
               return (
                 <div className="photos-container">
                   {photoArray.map((photo, idx) => {
-                    let trimmed = photo.trim();
-                    // Do not include /uploads in the image URL
-                    if (trimmed.startsWith('/uploads/')) {
-                      trimmed = trimmed.replace('/uploads/', '');
-                    }
-                    const backendUrl = "http://localhost:8080";
-                    const src = `${backendUrl}/${trimmed}`;
+                    const src = getImageUrl(photo.trim());
                     return (
                       <img
                         key={idx}

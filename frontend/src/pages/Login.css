@@ -1,4 +1,4 @@
-/* Modern Login Styles for Nirapod */
+/* Optimized Login Styles for Nirapod - Performance Focused */
 
 html, body {
   margin: 0;
@@ -12,23 +12,13 @@ html, body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  /* Simplified gradient for better performance */
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
   position: relative;
   overflow-x: hidden;
 }
 
-.login-bg::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 40% 40%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
-  pointer-events: none;
-}
+/* Removed complex background pseudo-element for performance */
 
 .login-split {
   display: flex;
@@ -61,11 +51,12 @@ html, body {
   font-weight: 800;
   letter-spacing: 2px;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+  /* Simplified gradient for better performance */
+  background: linear-gradient(135deg, #6366f1, #a855f7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+  /* Removed text-shadow for performance */
 }
 
 .login-logo-img {
@@ -73,14 +64,12 @@ html, body {
   height: 180px;
   object-fit: contain;
   margin-bottom: 1.5rem;
-  filter: drop-shadow(0 8px 32px rgba(99, 102, 241, 0.3));
-  animation: float 3s ease-in-out infinite;
+  /* Simplified filter for better performance */
+  filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.2));
+  /* Removed heavy float animation */
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
+/* Removed keyframes float animation for performance */
 
 .login-tagline {
   font-size: 1.4rem;
@@ -103,11 +92,12 @@ html, body {
 }
 
 .login-form-box {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
+  /* Simplified glass effect for better performance */
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  /* Simplified shadow */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   padding: 3rem 2.5rem;
   min-width: 380px;
   max-width: 420px;
@@ -118,6 +108,9 @@ html, body {
   align-items: stretch;
   position: relative;
   overflow: hidden;
+  /* Performance optimizations */
+  transform: translateZ(0);
+  will-change: auto;
 }
 
 .login-form-box::before {
@@ -127,7 +120,7 @@ html, body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+  background: linear-gradient(90deg, #6366f1, #a855f7);
 }
 
 .login-form-box h2 {
@@ -151,11 +144,12 @@ html, body {
   padding: 1rem 1.2rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  /* Simplified background for better performance */
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
   color: #fff;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  /* Simplified transition */
+  transition: border-color 0.2s ease, background-color 0.2s ease;
   position: relative;
 }
 
@@ -167,8 +161,7 @@ html, body {
   outline: none;
   border-color: #6366f1;
   background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-  transform: translateY(-2px);
+  /* Removed heavy transform animation */
 }
 
 .login-btn {
@@ -181,35 +174,23 @@ html, body {
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 1.5rem;
-  transition: all 0.3s ease;
+  /* Simplified transition for better performance */
+  transition: background-color 0.2s ease, transform 0.15s ease;
   width: 100%;
   position: relative;
   overflow: hidden;
+  /* Performance optimization */
+  transform: translateZ(0);
 }
 
-.login-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.login-btn:hover::before {
-  left: 100%;
-}
-
+/* Simplified hover effect */
 .login-btn:hover {
   background: linear-gradient(135deg, #5855eb, #7c3aed);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+  /* Removed heavy transform and box-shadow */
 }
 
 .login-btn:active {
-  transform: translateY(0);
+  transform: translateY(1px);
 }
 
 .login-btn:disabled {
@@ -217,6 +198,8 @@ html, body {
   cursor: not-allowed;
   transform: none;
 }
+
+/* Removed complex before pseudo-element animation */
 
 .login-error {
   color: #ff6b6b;
@@ -226,7 +209,7 @@ html, body {
   background: rgba(255, 107, 107, 0.1);
   border: 1px solid rgba(255, 107, 107, 0.2);
   border-radius: 8px;
-  backdrop-filter: blur(10px);
+  /* Removed backdrop-filter for performance */
 }
 
 .login-links {
@@ -238,16 +221,16 @@ html, body {
 }
 
 .login-link-btn {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  /* Simplified background for better performance */
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   font-size: 0.95rem;
   text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Simplified transition */
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
   padding: 0.875rem 1.5rem;
   display: flex;
   align-items: center;
@@ -256,32 +239,21 @@ html, body {
   width: 100%;
   max-width: 280px;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+  /* Performance optimization */
+  transform: translateZ(0);
 }
 
-.login-link-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s ease;
-}
-
-.login-link-btn:hover::before {
-  left: 100%;
-}
-
+/* Simplified hover effect - removed complex animations */
 .login-link-btn:hover {
-  transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.12);
+  /* Removed heavy transform and box-shadow */
 }
+
+/* Removed complex before pseudo-element animation */
 
 .forgot-password-btn:hover {
   border-color: rgba(239, 68, 68, 0.4);
@@ -520,23 +492,5 @@ html, body {
     border-radius: 16px;
     margin-bottom: 1rem;
     max-width: 95%;
-  }
-  
-  
-}
-
-/* Animation for form appearance */
-.login-form-box {
-  animation: slideUp 0.6s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }

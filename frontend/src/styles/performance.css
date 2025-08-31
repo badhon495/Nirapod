@@ -1,0 +1,170 @@
+/* Performance Optimizations for Low-End Devices */
+
+/* Global performance optimizations */
+* {
+  box-sizing: border-box;
+}
+
+/* Hardware acceleration for key elements */
+.page-content,
+.form-container,
+.modal,
+.navbar {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: auto;
+}
+
+/* No animations class for performance-critical scenarios */
+.no-animations,
+.no-animations * {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Low-end device specific optimizations */
+.low-end-device * {
+  /* Disable heavy effects */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  
+  /* Simplify animations */
+  animation-duration: 0.1s !important;
+  transition-duration: 0.1s !important;
+}
+
+/* Simplified backgrounds for low-end devices */
+.low-end-device .login-bg,
+.low-end-device .signup-bg {
+  background: #0a0a0a !important;
+}
+
+.low-end-device .login-form-box,
+.low-end-device .signup-form-box {
+  background: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.low-end-device .login-btn,
+.low-end-device .signup-btn {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Simplified hover effects for low-end devices */
+.low-end-device .login-btn:hover,
+.low-end-device .signup-btn:hover,
+.low-end-device .login-link-btn:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Performance-optimized text rendering */
+.optimized-text {
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reduced motion for accessibility and performance */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile performance optimizations */
+@media (max-width: 768px) {
+  /* Reduce heavy effects on mobile */
+  .login-form-box,
+  .signup-form-box {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  
+  /* Simplify shadows on mobile */
+  .login-form-box,
+  .signup-form-box,
+  .login-btn,
+  .signup-btn {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  /* Faster transitions on mobile */
+  * {
+    transition-duration: 0.15s !important;
+    animation-duration: 0.15s !important;
+  }
+}
+
+/* Very small devices optimization */
+@media (max-width: 480px) {
+  /* Remove all heavy effects */
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+  }
+  
+  /* Essential shadows only */
+  .login-form-box,
+  .signup-form-box {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  /* Minimal transitions */
+  * {
+    transition-duration: 0.1s !important;
+    animation-duration: 0.1s !important;
+  }
+}
+
+/* Container optimization */
+.optimized-container {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Scroll performance */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+.low-end-device .smooth-scroll {
+  scroll-behavior: auto;
+}
+
+/* Image optimization */
+img {
+  image-rendering: auto;
+}
+
+.low-end-device img {
+  image-rendering: optimizeSpeed;
+}
+
+/* Performance monitoring utility classes */
+.performance-monitor {
+  /* Used for identifying performance bottlenecks */
+  outline: 1px dashed rgba(255, 0, 0, 0.3);
+}
+
+/* GPU acceleration for critical animations only */
+.critical-animation {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Disable will-change after animations complete */
+.animation-complete {
+  will-change: auto;
+}

@@ -4,6 +4,7 @@ import ComplaintService from './ComplaintService';
 import axios from 'axios';
 import PageLoader from '../components/PageLoader';
 import './Home.css';
+import { getImageUrl, processPhotosForViewer } from '../utils/urlHelper';
 
 const urgencyOptions = [
   { label: 'All', value: '' },
@@ -208,22 +209,7 @@ function Home() {
 
   // Photo viewer handlers
   const handleOpenPhotoViewer = (photos, index = 0) => {
-    const processedPhotos = photos.map(photo => {
-      // If the photo URL already starts with http (Cloudinary URL), use it as is
-      if (photo.startsWith('http')) {
-        return {
-          primary: photo,
-          fallback: photo
-        };
-      }
-      // Otherwise, use localhost fallback (for old local images)
-      const cleanPhoto = photo.replace('/uploads/', '');
-      return {
-        primary: `http://localhost:8080/uploads/${cleanPhoto}`,
-        fallback: `http://localhost:8080/${cleanPhoto}`
-      };
-    });
-    
+    const processedPhotos = processPhotosForViewer(photos);
     setPhotoViewer({ isOpen: true, photos: processedPhotos, currentIndex: index });
   };
 
@@ -454,7 +440,7 @@ function Home() {
                       <div className="social-avatar">
                         {post.userProfileImage && post.userProfileImage !== 'null' && post.userProfileImage !== '' ? (
                           <img 
-                            src={post.userProfileImage.startsWith('http') ? post.userProfileImage : `http://localhost:8080/uploads/${post.userProfileImage.replace('/uploads/', '')}`} 
+                            src={getImageUrl(post.userProfileImage)} 
                             alt="Profile" 
                             className="social-avatar-image"
                             onError={(e) => {
@@ -545,21 +531,10 @@ function Home() {
                       <div className="social-photos-carousel">
                         <div className="social-photo-container">
                           <img 
-                            src={photoArr[currentPhotoIndex[post.trackingId] || 0].startsWith('http') ? 
-                                  photoArr[currentPhotoIndex[post.trackingId] || 0] : 
-                                  `http://localhost:8080/uploads/${photoArr[currentPhotoIndex[post.trackingId] || 0].replace('/uploads/', '')}`} 
+                            src={getImageUrl(photoArr[currentPhotoIndex[post.trackingId] || 0])} 
                             alt={`Post Photo ${(currentPhotoIndex[post.trackingId] || 0) + 1}`} 
                             className="social-post-image"
                             onClick={() => handleOpenPhotoViewer(photoArr, currentPhotoIndex[post.trackingId] || 0)}
-                            onError={(e) => {
-                              const currentPhoto = photoArr[currentPhotoIndex[post.trackingId] || 0];
-                              if (!currentPhoto.startsWith('http')) {
-                                const altSrc = `http://localhost:8080/${currentPhoto.replace('/uploads/', '')}`;
-                                if (e.target.src !== altSrc) {
-                                  e.target.src = altSrc;
-                                }
-                              }
-                            }}
                           />
                           
                           {photoArr.length > 1 && (

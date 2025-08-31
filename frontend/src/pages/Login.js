@@ -7,6 +7,7 @@ import logo from '../image/logo.png';
 import googleIcon from '../image/google-icon.png';
 import { useAuth } from '../contexts/AuthContext';
 import useGoogleSDK from '../hooks/useGoogleSDK';
+import { usePerformanceAwareMount, useOptimizedImage } from '../hooks/useOptimizedPerformance';
 
 function Login() {
   const [step, setStep] = useState(1);
@@ -19,6 +20,10 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isReady: googleSDKReady } = useGoogleSDK();
+  
+  // Performance optimizations
+  const { isLowEndDevice, shouldReduceAnimations } = usePerformanceAwareMount();
+  const { src: logoSrc, isLoaded: logoLoaded } = useOptimizedImage(logo);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -150,12 +155,20 @@ function Login() {
     <div className="login-bg">
       <div className="login-split">
         <div className="login-left">
-          <img src={logo} alt="Nirapod Logo" className="login-logo-img" />
+          {logoLoaded && (
+            <img 
+              src={logoSrc} 
+              alt="Nirapod Logo" 
+              className="login-logo-img"
+              loading="eager"
+              decoding="async"
+            />
+          )}
           <div className="login-logo">Nirapod</div>
           <div className="login-tagline">Your Safety, Our Priority</div>
         </div>
         <div className="login-right">
-          <div className="login-form-box">
+          <div className={`login-form-box ${shouldReduceAnimations ? 'no-animations' : ''}`}>
             <h2>Login</h2>
             {step === 1 && (
               <form onSubmit={handleLogin}>
