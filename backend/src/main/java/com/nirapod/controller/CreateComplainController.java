@@ -60,6 +60,7 @@ public class CreateComplainController {
                     .photos(String.join(",", photoUrls))
                     .postOnTimeline("1".equals(postOnTimeline))
                     .location(location)
+                    .time(java.time.LocalDateTime.now()) // Set current timestamp
                     .status(0)
                     .follow(nid)
                     .comment("")

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ComplaintService from './ComplaintService';
 import axios from 'axios';
+import PageLoader from '../components/PageLoader';
 import './Home.css';
 
 const urgencyOptions = [
@@ -424,35 +425,7 @@ function Home() {
           {/* Posts Timeline */}
           <div className="timeline">
             {initialLoading ? (
-              // Initial loading skeleton
-              <div className="initial-loading-container">
-                <div className="initial-loading-text">
-                  <div className="initial-loading-spinner"></div>
-                  <span>Loading posts...</span>
-                </div>
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="post-skeleton" style={{ animationDelay: `${i * 0.1}s` }}>
-                    <div className="skeleton-header">
-                      <div className="skeleton-avatar"></div>
-                      <div className="skeleton-meta">
-                        <div className="skeleton-line skeleton-name"></div>
-                        <div className="skeleton-line skeleton-time"></div>
-                      </div>
-                    </div>
-                    <div className="skeleton-content">
-                      <div className="skeleton-line skeleton-title"></div>
-                      <div className="skeleton-line skeleton-desc"></div>
-                      <div className="skeleton-line skeleton-desc short"></div>
-                    </div>
-                    <div className="skeleton-image"></div>
-                    <div className="skeleton-actions">
-                      <div className="skeleton-button"></div>
-                      <div className="skeleton-button"></div>
-                      <div className="skeleton-button"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <PageLoader message="Loading posts..." />
             ) : (
               posts.map((post, idx) => {
               const isLast = idx === posts.length - 1;

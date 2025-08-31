@@ -2,6 +2,7 @@ package com.nirapod.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usr_complain")
@@ -44,6 +45,9 @@ public class CreateComplain {
 
     @Column(name = "Location")
     private String location;
+
+    @Column(name = "Time")
+    private LocalDateTime time;
 
     @Column(name = "Update")
     private String update;

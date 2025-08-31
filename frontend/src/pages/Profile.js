@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import PageLoader from '../components/PageLoader';
 import './Profile.css';
 
 function Profile() {
@@ -83,11 +84,7 @@ function Profile() {
     }
   };
 
-  if (!user) return (
-    <div className="loading-container">
-      <div className="loading-spinner"></div>
-    </div>
-  );
+  if (!user) return <PageLoader message="Loading profile..." />;
 
   return (
     <div className="profile-container">

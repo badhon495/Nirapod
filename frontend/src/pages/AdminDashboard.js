@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import PageLoader from '../components/PageLoader';
 import './AdminDashboard.css';
 
 function AdminDashboard() {
@@ -103,9 +104,7 @@ function AdminDashboard() {
           </div>
 
           {loading ? (
-            <div className="loading-container">
-              <div className="loading-spinner"></div>
-            </div>
+            <PageLoader message="Loading users..." />
           ) : getFilteredUsers().length === 0 ? (
             <div className="no-data">
               <div className="no-data-icon">📭</div>

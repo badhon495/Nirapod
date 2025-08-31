@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ComplaintService from './ComplaintService';
+import PageLoader from '../components/PageLoader';
 import './ComplaintList.css';
 
 const UserComplainList = () => {
@@ -51,42 +52,7 @@ const UserComplainList = () => {
                 </div>
 
                 {initialLoading ? (
-                    <div className="initial-loading-container">
-                        <div className="initial-loading-text">
-                            <div className="initial-loading-spinner"></div>
-                            <span>Loading your complaints...</span>
-                        </div>
-                        {/* Skeleton complaint cards */}
-                        <div className="complaints-grid">
-                            {[1, 2, 3].map((index) => (
-                                <div key={index} className={`complaint-skeleton skeleton-${index}`}>
-                                    <div className="complaint-header">
-                                        <div className="skeleton-element skeleton-id"></div>
-                                        <div className="skeleton-element skeleton-status"></div>
-                                    </div>
-                                    <div className="complaint-info">
-                                        <div className="skeleton-row">
-                                            <div className="skeleton-element skeleton-label"></div>
-                                            <div className="skeleton-element skeleton-value"></div>
-                                        </div>
-                                        <div className="skeleton-row">
-                                            <div className="skeleton-element skeleton-label"></div>
-                                            <div className="skeleton-element skeleton-value"></div>
-                                        </div>
-                                        <div className="skeleton-row">
-                                            <div className="skeleton-element skeleton-label"></div>
-                                            <div className="skeleton-element skeleton-value"></div>
-                                        </div>
-                                        <div className="skeleton-row">
-                                            <div className="skeleton-element skeleton-label"></div>
-                                            <div className="skeleton-element skeleton-value"></div>
-                                        </div>
-                                    </div>
-                                    <div className="skeleton-element skeleton-button"></div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    <PageLoader message="Loading your complaints..." />
                 ) : complaints.length === 0 ? (
                     <div className="empty-state">
                         <div className="empty-icon">📝</div>
