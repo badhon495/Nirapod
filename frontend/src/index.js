@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from 'react-hot-toast';
 import ErrorBoundary from './components/ErrorBoundary';
+import toast from 'react-hot-toast';
 // Import for side effects - initializes performance optimizations
 import './utils/PerformanceOptimizer';
 
@@ -69,6 +70,29 @@ const AppWithProviders = () => {
     </ErrorBoundary>
   );
 };
+
+// Perform initial backend connectivity check
+
+// Kick off health check for backend on first load
+const checkBackendConnectivity = async () => {
+  let toastId;
+  let toastShown = false;
+  // Show loading toast only if backend does not respond within 1 second
+  const timer = setTimeout(() => {
+    toastId = toast.loading('Connecting to backend...');
+    toastShown = true;
+  }, 1000);
+  try {
+    await axios.get('/'); // Ping base URL for health check
+  } catch (error) {
+    // Optionally handle error
+  } finally {
+    clearTimeout(timer);
+    if (toastShown) toast.dismiss(toastId);
+  }
+};
+
+checkBackendConnectivity();
 
 // Configure axios defaults
 // Set the base URL for API requests
