@@ -10,8 +10,8 @@ const PersistentNavbar = () => {
   const lastScrollY = useRef(0);
   const scrollTimeout = useRef(null);
   
-  // Only hide navbar on login and signup pages
-  const hiddenPaths = ['/login', '/signup'];
+  // Only hide navbar on login, signup, faq, contact, and reachout pages
+  const hiddenPaths = ['/login', '/signup', '/faq', '/contact', '/ReachOut'];
   const shouldHideNavbar = hiddenPaths.includes(location.pathname);
 
   // Handle scroll-based navbar behavior
