@@ -196,6 +196,76 @@ html, body {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
+/* === Custom Select Dropdown === */
+.custom-select-wrapper {
+  position: relative;
+}
+
+.custom-select-value {
+  position: relative;
+  padding: 1rem 2.5rem 1rem 3rem; /* Match input padding */
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none; /* Prevent text selection */
+}
+
+.custom-select-wrapper:hover .custom-select-value {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #fff;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.select-arrow.open {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-select-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  list-style: none;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  backdrop-filter: blur(10px);
+}
+
+.custom-select-options li {
+  padding: 0.75rem 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.custom-select-options li:hover {
+  background-color: rgba(99, 102, 241, 0.3);
+  color: #fff;
+}
+
 .signup-btn {
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: #fff;
@@ -291,6 +361,20 @@ html, body {
   background: rgba(255, 255, 255, 0.2);
 }
 
+.signup-error {
+  color: #ff9a9a;
+  text-align: center;
+  margin-top: 1.5rem;
+  padding: 0.8rem;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  font-size: 0.95rem;
+  font-weight: 500;
+  animation: slideUp 0.4s ease-out;
+}
+
 .signup-links {
   display: flex;
   flex-direction: column;
@@ -339,21 +423,116 @@ html, body {
   margin-bottom: 1rem; 
 }
 
-.resend-code-wrapper {
-  text-align: center;
-  margin-top: 1.5rem;
+.input-wrapper input[type="password"] {
+  padding-right: 3rem; /* Make space for eye icon */
 }
 
-.resend-code-link {
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  font-size: 0.9rem;
+.signup-eye-btn {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  bottom: 1px;
+  width: 48px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: color 0.3s ease;
 }
 
-.resend-code-link:hover {
-  color: #fff;
+.signup-eye-btn:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.generate-password-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.75rem; /* Pull it up slightly */
+  margin-bottom: 0.5rem;
+}
+
+.signup-password-generator-btn {
+  background: transparent;
+  color: #60a5fa;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.signup-password-generator-btn:hover {
+  color: #93c5fd;
   text-decoration: underline;
+}
+
+.resend-code-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.signup-link-btn.resend-btn {
+  width: auto; /* Override full-width */
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.resend-code-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.signup-link-btn.resend-btn {
+  width: auto; /* Override full-width */
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+
+
+/* === Custom File Input === */
+label.file-input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+label.file-input-wrapper:hover {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.file-input-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.file-name-display {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  background: rgba(0,0,0,0.2);
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
 }
 
 /* Responsive adjustments */

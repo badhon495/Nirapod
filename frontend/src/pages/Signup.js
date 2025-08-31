@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './Signup.css';
 import logo from '../image/logo.png';
@@ -14,6 +14,15 @@ const initialForm = {
   utilityBillCustomerId: ''
 };
 
+const fileInputLabels = {
+  nidFile: 'NID File',
+  drivingLicenceFile: 'Driving Licence',
+  passportFile: 'Passport',
+  utilityBillFile: 'Utility Bill',
+  photoFile: 'Your Photo',
+  affiliationDocFile: 'Affiliation Doc'
+};
+
 function Signup() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
@@ -22,6 +31,36 @@ function Signup() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isGoogleSignup, setIsGoogleSignup] = useState(false);
   const { isReady: googleSDKReady } = useGoogleSDK();
+
+  const [userTypeOpen, setUserTypeOpen] = useState(false);
+  const [affiliationOpen, setAffiliationOpen] = useState(false);
+  const userTypeRef = useRef(null);
+  const affiliationRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userTypeRef.current && !userTypeRef.current.contains(event.target)) {
+        setUserTypeOpen(false);
+      }
+      if (affiliationRef.current && !affiliationRef.current.contains(event.target)) {
+        setAffiliationOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleUserTypeSelect = (value) => {
+    setForm(f => ({ ...f, userType: value }));
+    setUserTypeOpen(false);
+  };
+
+  const handleAffiliationSelect = (value) => {
+    setForm(f => ({ ...f, affiliation: value }));
+    setAffiliationOpen(false);
+  };
 
   // Google Signup handler
   const handleGoogleSignup = async (credentialResponse) => {
@@ -58,6 +97,33 @@ function Signup() {
 
   const handleChange = e => {
     const { name, value, files } = e.target;
+
+    if (e.target.type === 'file') {
+      const file = files[0];
+      if (!file) {
+        setForm(f => ({ ...f, [name]: null }));
+        return;
+      }
+
+      // --- Validation Logic ---
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+      const maxSize = 2 * 1024 * 1024; // 2MB
+      const label = fileInputLabels[name] || 'The file';
+
+      if (!allowedTypes.includes(file.type)) {
+        setMessage(`${label} has an invalid file type. Please select an image or PDF.`);
+        e.target.value = null; // Clear the invalid file selection
+        return;
+      }
+
+      if (file.size > maxSize) {
+        setMessage(`${label} is too large. Maximum size is 2MB.`);
+        e.target.value = null; // Clear the invalid file selection
+        return;
+      }
+      // --- End Validation Logic ---
+    }
+
     setForm(f => ({ ...f, [name]: files ? files[0] : value }));
   };
 
@@ -101,46 +167,53 @@ function Signup() {
     } else if (step === 4) {
       setStep(5);
     } else if (step === 5) {
-      // Prepare FormData for all fields and files
       const formData = new FormData();
-      // Map userType/affiliation to backend categories
+
+      // Append all text and number values from the form state
+      formData.append('name', form.name);
+      formData.append('email', form.email);
+      formData.append('phoneNumber', form.phoneNumber);
+      formData.append('password', form.password);
+      formData.append('nid', form.nid);
+      formData.append('presentAddress', form.presentAddress);
+      formData.append('permanentAddress', form.permanentAddress);
+      formData.append('drivingLicence', form.drivingLicence);
+      formData.append('passport', form.passport);
+      formData.append('utilityBillCustomerId', form.utilityBillCustomerId);
+
+      // Handle category mapping
       let categories = 'normal';
       if (form.userType === 'PRIVILEGED') {
         if (form.affiliation === 'Police Dept') categories = 'police';
         else if (form.affiliation === 'Fire Dept') categories = 'fire';
         else if (form.affiliation === 'Animal Shelter') categories = 'animal';
         else if (form.affiliation === 'City Corp') categories = 'city';
+        formData.append('affiliation', form.affiliation);
+        formData.append('identificationNumber', form.identificationNumber);
+        formData.append('registrationNumber', form.registrationNumber);
       }
       formData.append('categories', categories);
-      formData.append('phoneNumber', form.phoneNumber); // Changed from 'phone' to 'phoneNumber'
-      Object.entries(form).forEach(([key, value]) => {
-        if (value !== null && value !== undefined) {
-          if (key === 'utilityBillFile') {
-            formData.append('utilityBillPhoto', value);
-          } else if (key === 'photoFile') {
-            formData.append('userPhoto', value);
-          } else if (key === 'nidFile') {
-            formData.append('nidPhoto', value);
-          } else if (key === 'userType' || key === 'affiliation' || key === 'phoneNumber') {
-            // skip, already handled or mapped
-          } else if (value instanceof File || (typeof value === 'string' && value !== '') || typeof value === 'number') {
-            formData.append(key, value);
-          }
-        }
-      });
+
+      // Append files with correct backend keys
+      if (form.nidFile) formData.append('nidPhoto', form.nidFile);
+      if (form.drivingLicenceFile) formData.append('drivingLicencePhoto', form.drivingLicenceFile);
+      if (form.passportFile) formData.append('passportPhoto', form.passportFile);
+      if (form.utilityBillFile) formData.append('utilityBillPhoto', form.utilityBillFile);
+      if (form.photoFile) formData.append('userPhoto', form.photoFile);
+      if (form.affiliationDocFile) formData.append('affiliationDoc', form.affiliationDocFile);
+
       try {
         await axios.post('/api/auth/signup', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
-          maxContentLength: 20 * 1024 * 1024, // 20MB
-          maxBodyLength: 20 * 1024 * 1024 // 20MB
         });
         setStep(6);
       } catch (err) {
+        let errorMessage = 'Signup failed. Please try again.';
         if (err.response && err.response.data) {
-          setMessage(typeof err.response.data === 'string' ? err.response.data : JSON.stringify(err.response.data));
-        } else {
-          setMessage('Signup failed');
+          // If the backend sends a specific error message, use it
+          errorMessage = typeof err.response.data === 'string' ? err.response.data : JSON.stringify(err.response.data);
         }
+        setMessage(errorMessage);
       }
     }
   };
@@ -216,7 +289,7 @@ function Signup() {
                   <button className="signup-btn" type="submit">Next</button>
                 </div>
                 <div className="resend-code-wrapper">
-                  <a href="#" onClick={(e) => {e.preventDefault(); setMessage('Resend not implemented')}} className="resend-code-link">Resend Code</a>
+                  <a href="#" onClick={(e) => {e.preventDefault(); setMessage('Resend not implemented')}} className="signup-link-btn resend-btn">Resend Code</a>
                 </div>
               </form>
             )}
@@ -228,16 +301,20 @@ function Signup() {
             )}
             {step === 3 && (
               <form onSubmit={handleNext}>
-                <input 
-                  name="phoneNumber" 
-                  placeholder="Phone Number (10-15 digits)" 
-                  value={form.phoneNumber} 
-                  onChange={handleChange} 
-                  pattern="[0-9]{10,15}"
-                  title="Phone number must be between 10 and 15 digits"
-                  required 
-                />
-                <div className="signup-password-input-wrapper">
+                <div className="input-wrapper">
+                  <span className="input-icon">📞</span>
+                  <input 
+                    name="phoneNumber" 
+                    placeholder="Phone Number (10-15 digits)" 
+                    value={form.phoneNumber} 
+                    onChange={handleChange} 
+                    pattern="[0-9]{10,15}"
+                    title="Phone number must be between 10 and 15 digits"
+                    required 
+                  />
+                </div>
+                <div className="input-wrapper">
+                  <span className="input-icon">🔒</span>
                   <input
                     name="password"
                     type={showPassword ? "text" : "password"}
@@ -255,7 +332,8 @@ function Signup() {
                     {showPassword ? '🙈' : '👁'}
                   </button>
                 </div>
-                <div className="signup-password-input-wrapper">
+                <div className="input-wrapper">
+                  <span className="input-icon">🔒</span>
                   <input
                     name="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
@@ -273,7 +351,9 @@ function Signup() {
                     {showConfirmPassword ? '🙈' : '👁'}
                   </button>
                 </div>
-                <button type="button" className="signup-password-generator-btn" onClick={generatePassword}>Generate Password</button>
+                <div className="generate-password-wrapper">
+                  <button type="button" className="signup-password-generator-btn" onClick={generatePassword}>Generate Password</button>
+                </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
                   <button type="button" className="signup-btn" onClick={handlePrevious}>Previous</button>
                   <button className="signup-btn" type="submit">Next</button>
@@ -282,40 +362,81 @@ function Signup() {
             )}
             {step === 4 && (
               <form onSubmit={handleNext}>
-                <input 
-                  name="nid" 
-                  placeholder="NID (10-17 characters)" 
-                  value={form.nid} 
-                  onChange={handleChange} 
-                  minLength="10"
-                  maxLength="17"
-                  pattern="[0-9A-Za-z]{10,17}"
-                  title="NID must be between 10 and 17 characters"
-                  required 
-                />
-                <input name="presentAddress" placeholder="Present Address" value={form.presentAddress} onChange={handleChange} required />
-                <input name="permanentAddress" placeholder="Permanent Address" value={form.permanentAddress} onChange={handleChange} required />
-                <input name="drivingLicence" placeholder="Driving Licence (optional)" value={form.drivingLicence} onChange={handleChange} />
-                <input name="passport" placeholder="Passport (optional)" value={form.passport} onChange={handleChange} />
-                <input name="utilityBillCustomerId" placeholder="Utility Bill Customer ID" value={form.utilityBillCustomerId} onChange={handleChange} required />
-                <select name="userType" value={form.userType} onChange={handleChange} required>
-                  <option value="NORMAL">Normal User</option>
-                  <option value="PRIVILEGED">Privileged User</option>
-                </select>
+                <div className="input-wrapper">
+                  <span className="input-icon">🆔</span>
+                  <input 
+                    name="nid" 
+                    placeholder="NID (10-17 characters)" 
+                    value={form.nid} 
+                    onChange={handleChange} 
+                    minLength="10"
+                    maxLength="17"
+                    pattern="[0-9A-Za-z]{10,17}"
+                    title="NID must be between 10 and 17 characters"
+                    required 
+                  />
+                </div>
+                <div className="input-wrapper">
+                  <span className="input-icon">🏠</span>
+                  <input name="presentAddress" placeholder="Present Address" value={form.presentAddress} onChange={handleChange} required />
+                </div>
+                <div className="input-wrapper">
+                  <span className="input-icon">🏡</span>
+                  <input name="permanentAddress" placeholder="Permanent Address" value={form.permanentAddress} onChange={handleChange} required />
+                </div>
+                <div className="input-wrapper">
+                  <span className="input-icon">🚗</span>
+                  <input name="drivingLicence" placeholder="Driving Licence (optional)" value={form.drivingLicence} onChange={handleChange} />
+                </div>
+                <div className="input-wrapper">
+                  <span className="input-icon">✈️</span>
+                  <input name="passport" placeholder="Passport (optional)" value={form.passport} onChange={handleChange} />
+                </div>
+                <div className="input-wrapper">
+                  <span className="input-icon">💡</span>
+                  <input name="utilityBillCustomerId" placeholder="Utility Bill Customer ID" value={form.utilityBillCustomerId} onChange={handleChange} required />
+                </div>
+                <div className="input-wrapper custom-select-wrapper" ref={userTypeRef}>
+                  <span className="input-icon">👥</span>
+                  <div className="custom-select-value" onClick={() => setUserTypeOpen(!userTypeOpen)}>
+                    {form.userType === 'NORMAL' ? 'Normal User' : 'Privileged User'}
+                    <span className={`select-arrow ${userTypeOpen ? 'open' : ''}`}></span>
+                  </div>
+                  {userTypeOpen && (
+                    <ul className="custom-select-options">
+                      <li onClick={() => handleUserTypeSelect('NORMAL')}>Normal User</li>
+                      <li onClick={() => handleUserTypeSelect('PRIVILEGED')}>Privileged User</li>
+                    </ul>
+                  )}
+                </div>
                 {form.userType === 'PRIVILEGED' && (
                   <>
-                    <select name="affiliation" value={form.affiliation} onChange={handleChange} required>
-                      <option value="">Select Affiliation</option>
-                      <option value="Police Dept">Police Dept</option>
-                      <option value="Fire Dept">Fire Dept</option>
-                      <option value="City Corp">City Corp</option>
-                      <option value="Animal Shelter">Animal Shelter</option>
-                    </select>
+                    <div className="input-wrapper custom-select-wrapper" ref={affiliationRef}>
+                      <span className="input-icon">🏢</span>
+                      <div className="custom-select-value" onClick={() => setAffiliationOpen(!affiliationOpen)}>
+                        {form.affiliation || 'Select Affiliation'}
+                        <span className={`select-arrow ${affiliationOpen ? 'open' : ''}`}></span>
+                      </div>
+                      {affiliationOpen && (
+                        <ul className="custom-select-options">
+                          <li onClick={() => handleAffiliationSelect('Police Dept')}>Police Dept</li>
+                          <li onClick={() => handleAffiliationSelect('Fire Dept')}>Fire Dept</li>
+                          <li onClick={() => handleAffiliationSelect('City Corp')}>City Corp</li>
+                          <li onClick={() => handleAffiliationSelect('Animal Shelter')}>Animal Shelter</li>
+                        </ul>
+                      )}
+                    </div>
                     {(form.affiliation === 'Police Dept' || form.affiliation === 'Fire Dept' || form.affiliation === 'City Corp') && (
-                      <input name="identificationNumber" placeholder="Identification Number" value={form.identificationNumber} onChange={handleChange} required />
+                      <div className="input-wrapper">
+                        <span className="input-icon">#️⃣</span>
+                        <input name="identificationNumber" placeholder="Identification Number" value={form.identificationNumber} onChange={handleChange} required />
+                      </div>
                     )}
                     {form.affiliation === 'Animal Shelter' && (
-                      <input name="registrationNumber" placeholder="Registration Number" value={form.registrationNumber} onChange={handleChange} required />
+                      <div className="input-wrapper">
+                        <span className="input-icon">#️⃣</span>
+                        <input name="registrationNumber" placeholder="Registration Number" value={form.registrationNumber} onChange={handleChange} required />
+                      </div>
                     )}
                   </>
                 )}
@@ -327,15 +448,46 @@ function Signup() {
             )}
             {step === 5 && (
               <form onSubmit={handleNext}>
-                <label>NID File: <input type="file" name="nidFile" onChange={handleChange} required /></label>
-                <label>Driving Licence File: <input type="file" name="drivingLicenceFile" onChange={handleChange} /></label>
-                <label>Passport File: <input type="file" name="passportFile" onChange={handleChange} /></label>
-                <label>Utility Bill File: <input type="file" name="utilityBillFile" onChange={handleChange} required /></label>
-                <label>Photo (webcam): <input type="file" name="photoFile" onChange={handleChange} required /></label>
+                <label htmlFor="nidFile" className="file-input-wrapper">
+                  <span className="file-input-label">NID File</span>
+                  <span className="file-name-display">{form.nidFile ? form.nidFile.name : 'No file selected'}</span>
+                </label>
+                <input id="nidFile" type="file" name="nidFile" className="hidden-file-input" onChange={handleChange} required />
+
+                <label htmlFor="drivingLicenceFile" className="file-input-wrapper">
+                  <span className="file-input-label">Driving Licence</span>
+                  <span className="file-name-display">{form.drivingLicenceFile ? form.drivingLicenceFile.name : 'No file selected'}</span>
+                </label>
+                <input id="drivingLicenceFile" type="file" name="drivingLicenceFile" className="hidden-file-input" onChange={handleChange} />
+
+                <label htmlFor="passportFile" className="file-input-wrapper">
+                  <span className="file-input-label">Passport</span>
+                  <span className="file-name-display">{form.passportFile ? form.passportFile.name : 'No file selected'}</span>
+                </label>
+                <input id="passportFile" type="file" name="passportFile" className="hidden-file-input" onChange={handleChange} />
+
+                <label htmlFor="utilityBillFile" className="file-input-wrapper">
+                  <span className="file-input-label">Utility Bill</span>
+                  <span className="file-name-display">{form.utilityBillFile ? form.utilityBillFile.name : 'No file selected'}</span>
+                </label>
+                <input id="utilityBillFile" type="file" name="utilityBillFile" className="hidden-file-input" onChange={handleChange} required />
+
+                <label htmlFor="photoFile" className="file-input-wrapper">
+                  <span className="file-input-label">Your Photo</span>
+                  <span className="file-name-display">{form.photoFile ? form.photoFile.name : 'No file selected'}</span>
+                </label>
+                <input id="photoFile" type="file" name="photoFile" className="hidden-file-input" onChange={handleChange} required />
+
                 {form.userType === 'PRIVILEGED' && (
-                  <label>Affiliation Doc: <input type="file" name="affiliationDocFile" onChange={handleChange} required /></label>
+                  <>
+                    <label htmlFor="affiliationDocFile" className="file-input-wrapper">
+                      <span className="file-input-label">Affiliation Doc</span>
+                      <span className="file-name-display">{form.affiliationDocFile ? form.affiliationDocFile.name : 'No file selected'}</span>
+                    </label>
+                    <input id="affiliationDocFile" type="file" name="affiliationDocFile" className="hidden-file-input" onChange={handleChange} required />
+                  </>
                 )}
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: '1rem' }}>
                   <button type="button" className="signup-btn" onClick={handlePrevious}>Previous</button>
                   <button className="signup-btn" type="submit">Next</button>
                 </div>
