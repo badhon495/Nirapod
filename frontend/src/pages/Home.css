@@ -648,7 +648,6 @@
 .photo-carousel-counter {
   position: absolute;
   bottom: 15px;
-  left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.6);
   color: white;

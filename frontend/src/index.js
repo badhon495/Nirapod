@@ -71,29 +71,6 @@ const AppWithProviders = () => {
   );
 };
 
-// Perform initial backend connectivity check
-
-// Kick off health check for backend on first load
-const checkBackendConnectivity = async () => {
-  let toastId;
-  let toastShown = false;
-  // Show loading toast only if backend does not respond within 1 second
-  const timer = setTimeout(() => {
-    toastId = toast.loading('Connecting to backend...');
-    toastShown = true;
-  }, 1000);
-  try {
-    await axios.get('/'); // Ping base URL for health check
-  } catch (error) {
-    // Optionally handle error
-  } finally {
-    clearTimeout(timer);
-    if (toastShown) toast.dismiss(toastId);
-  }
-};
-
-checkBackendConnectivity();
-
 // Configure axios defaults
 // Set the base URL for API requests
 const apiBaseUrl = process.env.NODE_ENV === 'production' 
@@ -107,16 +84,22 @@ axios.interceptors.request.use(
   (config) => {
     // Add timeout for better error handling
     config.timeout = 30000; // 30 seconds
-    // Add withCredentials for CORS
-    config.withCredentials = false; // Set to false for now to test
+    // Setup metadata for showing backend connectivity toast if slow
+    config.metadata = { timer: null, toastId: null, toastShown: false };
+    config.metadata.timer = setTimeout(() => {
+      config.metadata.toastId = toast.loading('Connecting to backend...', { position: 'top-right' });
+      config.metadata.toastShown = true;
+    }, 1000);
+     // Add withCredentials for CORS
+     config.withCredentials = false; // Set to false for now to test
     
-    // Add authentication identifier to requests if available
-    const identifier = localStorage.getItem('nirapod_identifier');
-    if (identifier) {
-      config.headers['X-User-Identifier'] = identifier;
-    }
-    
-    return config;
+     // Add authentication identifier to requests if available
+     const identifier = localStorage.getItem('nirapod_identifier');
+     if (identifier) {
+       config.headers['X-User-Identifier'] = identifier;
+     }
+     
+     return config;
   },
   (error) => {
     return Promise.reject(error);
@@ -125,8 +108,22 @@ axios.interceptors.request.use(
 
 // Add response interceptor for better error handling and authentication
 axios.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Clear metadata timer and dismiss toast if shown
+    const meta = response.config.metadata;
+    if (meta) {
+      clearTimeout(meta.timer);
+      if (meta.toastShown) toast.dismiss(meta.toastId);
+    }
+    return response;
+  },
   (error) => {
+    // Clear metadata timer and dismiss toast if shown for failed requests
+    const meta = error.config?.metadata;
+    if (meta) {
+      clearTimeout(meta.timer);
+      if (meta.toastShown) toast.dismiss(meta.toastId);
+    }
     if (error.code === 'ERR_NETWORK') {
       console.warn('Network error - API might be unavailable');
     }
@@ -152,6 +149,27 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Kick off health check for backend on first load
+const checkBackendConnectivity = async () => {
+  let toastId;
+  let toastShown = false;
+  // Show loading toast only if backend does not respond within 1 second
+  const timer = setTimeout(() => {
+    toastId = toast.loading('Connecting to backend...');
+    toastShown = true;
+  }, 1000);
+  try {
+    await axios.get('/'); // Ping base URL for health check
+  } catch (error) {
+    // Optionally handle error
+  } finally {
+    clearTimeout(timer);
+    if (toastShown) toast.dismiss(toastId);
+  }
+};
+
+checkBackendConnectivity();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<AppWithProviders />);
