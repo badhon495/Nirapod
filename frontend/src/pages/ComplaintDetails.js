@@ -262,29 +262,41 @@ function ComplaintDetails() {
         <div className="detail-row">
           <span className="detail-label">Photos :</span>
           <div className="detail-value">
-            <div className="photos-container">
-              {complaint.photos && complaint.photos.split(',').map((photo, idx) => {
-                let trimmed = photo.trim();
-                // Do not include /uploads in the image URL
-                if (trimmed.startsWith('/uploads/')) {
-                  trimmed = trimmed.replace('/uploads/', '');
-                }
-                const backendUrl = "http://localhost:8080";
-                const src = `${backendUrl}/${trimmed}`;
-                return (
-                  <img
-                    key={idx}
-                    src={src}
-                    alt={`complaint-photo-${idx}`}
-                    className="complaint-photo"
-                    onClick={() => {
-                      const photoArray = complaint.photos.split(',').map(p => p.trim());
-                      handleOpenPhotoViewer(photoArray, idx);
-                    }}
-                  />
-                );
-              })}
-            </div>
+            {/* Only show photos container if there are valid photos */}
+            {complaint.photos && (() => {
+              const photoArray = complaint.photos.split(',')
+                .map(p => p.trim())
+                .filter(p => p && p !== 'null' && p !== 'undefined' && p.length > 0);
+              
+              if (photoArray.length === 0) {
+                return <div className="no-photos-message">No photos uploaded</div>;
+              }
+              
+              return (
+                <div className="photos-container">
+                  {photoArray.map((photo, idx) => {
+                    let trimmed = photo.trim();
+                    // Do not include /uploads in the image URL
+                    if (trimmed.startsWith('/uploads/')) {
+                      trimmed = trimmed.replace('/uploads/', '');
+                    }
+                    const backendUrl = "http://localhost:8080";
+                    const src = `${backendUrl}/${trimmed}`;
+                    return (
+                      <img
+                        key={idx}
+                        src={src}
+                        alt={`complaint-photo-${idx}`}
+                        className="complaint-photo"
+                        onClick={() => {
+                          handleOpenPhotoViewer(photoArray, idx);
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              );
+            })() || <div className="no-photos-message">No photos uploaded</div>}
           </div>
         </div>
         {/* Current Status */}

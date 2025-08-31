@@ -27,7 +27,9 @@ const PostCard = React.memo(({
   onOpenPhotoViewer 
 }) => {
   const isFollowed = followed.includes(post.trackingId);
-  const photos = post.uploadPhotos ? post.uploadPhotos.split(',').filter(p => p.trim()) : [];
+  const photos = post.uploadPhotos ? post.uploadPhotos.split(',')
+    .map(p => p.trim())
+    .filter(p => p && p !== 'null' && p !== 'undefined' && p.length > 0) : [];
   const currentIndex = currentPhotoIndex[post.trackingId] || 0;
 
   return (
@@ -297,7 +299,9 @@ function Home() {
       const post = posts.find(p => p.trackingId === trackingId);
       if (!post?.uploadPhotos) return prev;
       
-      const photos = post.uploadPhotos.split(',').filter(p => p.trim());
+      const photos = post.uploadPhotos.split(',')
+        .map(p => p.trim())
+        .filter(p => p && p !== 'null' && p !== 'undefined' && p.length > 0);
       const currentIndex = prev[trackingId] || 0;
       
       let newIndex;

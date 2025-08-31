@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ComplaintService from './ComplaintService';
 import axios from 'axios';
 import './Home.css';
@@ -18,13 +18,6 @@ function Home() {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [openComment, setOpenComment] = useState(null);
-  const [currentCommentPost, setCurrentCommentPost] = useState(null);
-  const [commentInput, setCommentInput] = useState('');
-  const [commentUserNames, setCommentUserNames] = useState({});
-  const [openPhotos, setOpenPhotos] = useState(null);
-  const [currentPhotoPost, setCurrentPhotoPost] = useState(null);
-  const [photoFiles, setPhotoFiles] = useState([]);
   const [openReport, setOpenReport] = useState(null);
   const [followed, setFollowed] = useState([]);
   const [filterPanelOpen, setFilterPanelOpen] = useState(false);
@@ -35,6 +28,7 @@ function Home() {
   const filterBtnRef = useRef(null);
   const filterPanelRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Fetch posts with filters and pagination
   const fetchPosts = useCallback(async (reset = false) => {
@@ -112,7 +106,7 @@ function Home() {
   }, [filterPanelOpen]);
 
   useEffect(() => {
-    if (openComment || openPhotos || openReport || photoViewer.isOpen) {
+    if (openReport || photoViewer.isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
@@ -121,7 +115,7 @@ function Home() {
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [openComment, openPhotos, openReport, photoViewer.isOpen]);
+  }, [openReport, photoViewer.isOpen]);
 
   // Keyboard navigation for photo viewer
   useEffect(() => {
@@ -163,34 +157,6 @@ function Home() {
     if (node) observer.current.observe(node);
   }, [loading, hasMore]);
 
-  // Fetch user names for all NIDs or emails in comments
-  const fetchCommentUserNames = async (commentObj) => {
-    const keys = Object.keys(commentObj || {});
-    const newNames = {};
-    await Promise.all(keys.map(async key => {
-      if (!commentUserNames[key]) {
-        try {
-          // Try as NID first
-          let res = await axios.get(`/api/user/by-identifier?value=${key}`);
-          if (res.data && res.data.name) {
-            newNames[key] = res.data.name;
-          } else {
-            // Fallback: try as email
-            res = await axios.get(`/api/user/search`, { params: { email: key } });
-            if (res.data && res.data.length > 0 && res.data[0].name) {
-              newNames[key] = res.data[0].name;
-            } else {
-              newNames[key] = key;
-            }
-          }
-        } catch {
-          newNames[key] = key;
-        }
-      }
-    }));
-    setCommentUserNames(prev => ({ ...prev, ...newNames }));
-  };
-
   // Button handlers
   const handleFollow = async (trackingId) => {
     if (!userNid) return;
@@ -212,113 +178,14 @@ function Home() {
     }
   };
 
-  const handleOpenComment = async (trackingId) => {
-    // Find the current post
-    const currentPost = posts.find(p => p.trackingId === trackingId);
-    setCurrentCommentPost(currentPost);
-    setOpenComment(trackingId);
-    setCommentInput('');
-    // Fetch latest post from backend for up-to-date comments
-    try {
-      const res = await axios.get(`/api/complaint/${trackingId}`);
-      let commentObj = {};
-      try {
-        commentObj = res.data.comment ? JSON.parse(res.data.comment) : {};
-      } catch { commentObj = {}; }
-      fetchCommentUserNames(commentObj);
-      // Update the post in the posts state so the popup shows the latest comments
-      setPosts(prevPosts => prevPosts.map(p => p.trackingId === trackingId ? { ...p, comment: res.data.comment } : p));
-      // Also update the current comment post
-      setCurrentCommentPost(prev => prev ? { ...prev, comment: res.data.comment } : null);
-    } catch {
-      // fallback to local state if fetch fails
-      const complaint = posts.find(p => p.trackingId === trackingId);
-      let commentObj = {};
-      try {
-        commentObj = complaint.comment ? JSON.parse(complaint.comment) : {};
-      } catch { commentObj = {}; }
-      fetchCommentUserNames(commentObj);
-    }
-  };
-
-  const handleAddComment = async (trackingId) => {
-    if (!userNid || !commentInput.trim()) return;
-    
-    try {
-      // First get the latest version of the complaint
-      const complaintResponse = await axios.get(`/api/complaint/${trackingId}`);
-      const complaint = complaintResponse.data;
-      
-      // Parse existing comments
-      let commentObj = {};
-      try {
-        commentObj = complaint.comment ? JSON.parse(complaint.comment) : {};
-      } catch (e) {
-        commentObj = {};
-      }
-      
-      // Add new comment
-      commentObj[userNid] = commentInput;
-      
-      // Update complaint with new comment
-      await axios.put(`/api/complaint/update/${trackingId}`, {
-        ...complaint,
-        comment: JSON.stringify(commentObj)
-      });
-
-      // Update local state
-      setPosts(prevPosts => 
-        prevPosts.map(p => 
-          p.trackingId === trackingId 
-            ? { ...p, comment: JSON.stringify(commentObj) }
-            : p
-        )
-      );
-
-      // Update the current comment post with new comments
-      setCurrentCommentPost(prev => prev ? { ...prev, comment: JSON.stringify(commentObj) } : null);
-
-      // Clear input but keep comment overlay open
-      setCommentInput('');
-      // Don't close the comment overlay - user can manually close it when done
-
-    } catch (err) {
-      console.error('Error adding comment:', err);
-      alert('Failed to add comment. Please try again.');
-    }
+  const handleOpenComment = (trackingId) => {
+    // Navigate to the dedicated comments page
+    navigate(`/post/${trackingId}/comments`);
   };
 
   const handleOpenPhotos = (trackingId) => {
-    // Find the current post
-    const currentPost = posts.find(p => p.trackingId === trackingId);
-    setCurrentPhotoPost(currentPost);
-    setOpenPhotos(trackingId);
-    setPhotoFiles([]);
-  };
-
-  const handleUploadPhotos = async (trackingId) => {
-    if (!userNid || photoFiles.length === 0) return;
-    const formData = new FormData();
-    formData.append('trackingId', trackingId);
-    formData.append('nid', userNid);
-    photoFiles.forEach(f => formData.append('photos', f));
-    await axios.post('/api/complaint/upload-photos', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-    // Fetch the latest upload photos and update in state
-    try {
-      const res = await axios.get(`/api/complaint/${trackingId}/upload-photos`);
-      setPosts(prevPosts =>
-        prevPosts.map(p =>
-          p.trackingId === trackingId ? { ...p, uploadPhotos: res.data.uploadPhotos.join(',') } : p
-        )
-      );
-      // Update the current photo post to reflect the new uploaded photos
-      setCurrentPhotoPost(prev => prev ? { ...prev, uploadPhotos: res.data.uploadPhotos.join(',') } : null);
-    } catch {
-      // Optionally handle error
-    }
-    // Clear the file input but keep the photo gallery open
-    setPhotoFiles([]);
-    // Keep openPhotos and currentPhotoPost open so the gallery stays visible
+    // Navigate to the dedicated photos page
+    navigate(`/post/${trackingId}/photos`);
   };
 
   const handleOpenReport = (trackingId) => {
@@ -356,24 +223,11 @@ function Home() {
       };
     });
     
-    // Close photo gallery overlay temporarily to prevent layering issues
-    // But keep currentPhotoPost so we can reopen it later
-    if (openPhotos) {
-      setOpenPhotos(null);
-      // Don't clear currentPhotoPost here - we need it to reopen the gallery
-    }
-    
     setPhotoViewer({ isOpen: true, photos: processedPhotos, currentIndex: index });
   };
 
   const handleClosePhotoViewer = () => {
     setPhotoViewer({ isOpen: false, photos: [], currentIndex: 0 });
-    
-    // Reopen the photo gallery if user was viewing gallery photos
-    // This ensures the gallery stays open when closing the photo viewer
-    if (currentPhotoPost) {
-      setOpenPhotos(currentPhotoPost.trackingId);
-    }
   };
 
   const handleNextPhoto = () => {
@@ -602,7 +456,10 @@ function Home() {
             ) : (
               posts.map((post, idx) => {
               const isLast = idx === posts.length - 1;
-              const photoArr = post.photos ? post.photos.split(',').map(p => p.trim()).filter(Boolean) : [];
+              // Filter out empty, null, undefined, or whitespace-only photo entries
+              const photoArr = post.photos ? post.photos.split(',')
+                .map(p => p.trim())
+                .filter(p => p && p !== 'null' && p !== 'undefined' && p.length > 0) : [];
               return (
                 <div key={post.trackingId} className="social-post-card" ref={isLast ? lastPostRef : null}>
                   {/* Post Tags */}
@@ -895,152 +752,6 @@ function Home() {
         </div>
       )}
 
-      {/* Comment Viewer Modal */}
-      {openComment && currentCommentPost && (
-        <div className="comment-viewer-overlay" onClick={() => { setOpenComment(null); setCurrentCommentPost(null); }}>
-          <div className="comment-viewer-content" onClick={(e) => e.stopPropagation()}>
-            <button className="comment-viewer-close" onClick={() => { setOpenComment(null); setCurrentCommentPost(null); }}>
-              ×
-            </button>
-            <div className="comment-viewer-header">
-              <h3>Comments</h3>
-            </div>
-            <div className="comment-section">
-              {(() => {
-                let commentObj = {};
-                try {
-                  commentObj = currentCommentPost.comment ? JSON.parse(currentCommentPost.comment) : {};
-                } catch { commentObj = {}; }
-                const keys = Object.keys(commentObj);
-                if (keys.length === 0) return <div className="no-comments">No comments yet. Be the first to comment!</div>;
-                return keys.map(key => (
-                  <div key={key} className="comment-item">
-                    <div 
-                      className="comment-avatar"
-                      style={{
-                        background: (() => {
-                          const name = commentUserNames[key] || key;
-                          const colors = [
-                            'linear-gradient(135deg, #667eea, #764ba2)',
-                            'linear-gradient(135deg, #f093fb, #f5576c)',
-                            'linear-gradient(135deg, #4facfe, #00f2fe)',
-                            'linear-gradient(135deg, #a8edea, #fed6e3)',
-                            'linear-gradient(135deg, #ffecd2, #fcb69f)',
-                            'linear-gradient(135deg, #667eea, #764ba2)',
-                            'linear-gradient(135deg, #ff9a9e, #fecfef)',
-                            'linear-gradient(135deg, #a18cd1, #fbc2eb)',
-                            'linear-gradient(135deg, #fad0c4, #ffd1ff)',
-                            'linear-gradient(135deg, #84fab0, #8fd3f4)'
-                          ];
-                          let hash = 0;
-                          for (let i = 0; i < name.length; i++) {
-                            hash = name.charCodeAt(i) + ((hash << 5) - hash);
-                          }
-                          return colors[Math.abs(hash) % colors.length];
-                        })()
-                      }}
-                    >
-                      {(() => {
-                        const name = commentUserNames[key] || key;
-                        const initials = name.split(' ')
-                          .map(word => word.charAt(0))
-                          .join('')
-                          .toUpperCase()
-                          .slice(0, 2);
-                        return initials || 'AN';
-                      })()}
-                    </div>
-                    <div className="comment-content">
-                      <div className="comment-author">{commentUserNames[key] || key}</div>
-                      <div className="comment-text">{commentObj[key]}</div>
-                    </div>
-                  </div>
-                ));
-              })()}
-            </div>
-            <div className="comment-input-section">
-              <textarea 
-                value={commentInput} 
-                onChange={e => setCommentInput(e.target.value)} 
-                className="comment-textarea" 
-                placeholder="Write your comment..." 
-              />
-              <div className="comment-actions">
-                <button onClick={() => handleAddComment(currentCommentPost.trackingId)} className="btn btn-primary">
-                  Submit Comment
-                </button>
-                <button onClick={() => { setOpenComment(null); setCurrentCommentPost(null); }} className="btn btn-secondary">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Photo Gallery Modal */}
-      {openPhotos && currentPhotoPost && (
-        <div className="photo-gallery-overlay" onClick={() => { setOpenPhotos(null); setCurrentPhotoPost(null); }}>
-          <div className="photo-gallery-content" onClick={(e) => e.stopPropagation()}>
-            <button className="photo-gallery-close" onClick={() => { setOpenPhotos(null); setCurrentPhotoPost(null); }}>
-              ×
-            </button>
-            <div className="photo-gallery-header">
-              <h3>User Uploaded Photos</h3>
-            </div>
-            <div className="photo-gallery-main">
-              {(() => {
-                // Show upload photos instead of original complaint photos
-                const uploadPhotoArr = currentPhotoPost.uploadPhotos ? currentPhotoPost.uploadPhotos.split(',').map(p => p.trim()).filter(Boolean) : [];
-                console.log('Upload photos:', currentPhotoPost.uploadPhotos);
-                console.log('Upload photo array:', uploadPhotoArr);
-                
-                if (uploadPhotoArr.length === 0) {
-                  return (
-                    <div className="no-photos-message">
-                      <p>No user-uploaded photos yet. Use the upload button below to add photos.</p>
-                    </div>
-                  );
-                }
-                
-                return uploadPhotoArr.map((p, i) => (
-                  <img 
-                    key={i} 
-                    src={p.startsWith('http') ? p : `http://localhost:8080/uploads/${p.replace('/uploads/', '')}`} 
-                    alt={`Uploaded Photo ${i + 1}`} 
-                    className="gallery-image"
-                    onClick={() => handleOpenPhotoViewer(uploadPhotoArr, i)}
-                    onError={(e) => {
-                      // If Cloudinary URL fails, try localhost fallback
-                      if (p.startsWith('http') && !e.target.src.includes('localhost')) {
-                        const fallbackSrc = `http://localhost:8080/uploads/${p.replace('/uploads/', '')}`;
-                        e.target.src = fallbackSrc;
-                      }
-                    }}
-                  />
-                ));
-              })()}
-            </div>
-            <div className="photo-upload-section">
-              <input 
-                type="file" 
-                multiple 
-                accept="image/*"
-                onChange={e => setPhotoFiles(Array.from(e.target.files))} 
-                className="file-input"
-              />
-              <div className="photo-actions">
-                <button onClick={() => handleUploadPhotos(currentPhotoPost.trackingId)} className="btn btn-primary">
-                  Upload Photos
-                </button>
-                <button onClick={() => { setOpenPhotos(null); setCurrentPhotoPost(null); }} className="btn btn-secondary">
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

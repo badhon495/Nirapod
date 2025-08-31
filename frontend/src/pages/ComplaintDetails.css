@@ -199,6 +199,17 @@
   gap: 1rem;
 }
 
+.no-photos-message {
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 0.9rem;
+  padding: 1rem;
+  text-align: center;
+  background: rgba(148, 163, 184, 0.1);
+  border-radius: 8px;
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+}
+
 .complaint-photo {
   width: 180px;
   height: 180px;

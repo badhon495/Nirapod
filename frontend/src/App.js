@@ -20,6 +20,8 @@ const Tracker = lazy(() => import('./pages/Tracker'));
 const ComplaintList = lazy(() => import('./pages/ComplaintList').then(module => ({ default: module.default })));
 const UserComplaintList = lazy(() => import('./pages/ComplaintList').then(module => ({ default: module.UserComplaintList })));
 const ComplaintDetails = lazy(() => import('./pages/ComplaintDetails'));
+const PostComments = lazy(() => import('./pages/PostComments'));
+const PostPhotos = lazy(() => import('./pages/PostPhotos'));
 const Investigate = lazy(() => import('./pages/Investigate'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Notifications = lazy(() => import('./pages/Notifications'));
@@ -79,6 +81,16 @@ function App() {
             <Route path="/complaint/:id" element={
               <ProtectedRoute>
                 <ComplaintDetails />
+              </ProtectedRoute>
+            } />
+            <Route path="/post/:trackingId/comments" element={
+              <ProtectedRoute>
+                <PostComments />
+              </ProtectedRoute>
+            } />
+            <Route path="/post/:trackingId/photos" element={
+              <ProtectedRoute>
+                <PostPhotos />
               </ProtectedRoute>
             } />
             <Route path="/profile" element={
