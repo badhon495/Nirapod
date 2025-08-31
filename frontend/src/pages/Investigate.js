@@ -43,12 +43,9 @@ function Investigate() {
   const renderPhoto = (photoPath, alt = 'Photo') => {
     if (!photoPath) return null;
     
-    let photo = photoPath;
-    if (photo.startsWith('/uploads/')) {
-      photo = photo.replace('/uploads/', '');
-    }
-    const backendUrl = 'http://localhost:8080';
-    const src = `${backendUrl}/${photo}`;
+    // If it's a full URL (Cloudinary), use it directly
+    // If it's a relative path, add the backend URL
+    const src = photoPath.startsWith('http') ? photoPath : `http://localhost:8080/${photoPath.replace('/uploads/', '')}`;
     
     return (
       <img 
@@ -65,12 +62,9 @@ function Investigate() {
       return <span className="document-unavailable">Not Available</span>;
     }
     
-    let photo = photoPath;
-    if (photo.startsWith('/uploads/')) {
-      photo = photo.replace('/uploads/', '');
-    }
-    const backendUrl = 'http://localhost:8080';
-    const src = `${backendUrl}/${photo}`;
+    // If it's a full URL (Cloudinary), use it directly
+    // If it's a relative path, add the backend URL
+    const src = photoPath.startsWith('http') ? photoPath : `http://localhost:8080/${photoPath.replace('/uploads/', '')}`;
     
     return (
       <a 

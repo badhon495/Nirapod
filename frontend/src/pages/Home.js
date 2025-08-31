@@ -682,10 +682,14 @@ function Home() {
             )}
             
             {!hasMore && !loading && posts.length === 0 && (
-              <div className="empty-state">
-                <div className="empty-icon">📝</div>
-                <h3>No posts found</h3>
-                <p>Try adjusting your filters or check back later for new posts.</p>
+              <div className="empty-state-container">
+                <div className="empty-state-icon">📝</div>
+                <h3 className="empty-state-title">No Posts Found</h3>
+                <p className="empty-state-message">
+                  There are currently no posts available on the timeline.
+                  <br />
+                  Try adjusting your filters or check back later for new posts.
+                </p>
               </div>
             )}
           </div>

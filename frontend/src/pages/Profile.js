@@ -101,7 +101,7 @@ function Profile() {
           <div className="profile-photo-container">
             {user.userPhoto && user.userPhoto !== 'null' && user.userPhoto !== '' ? (
               <img
-                src={user.userPhoto.startsWith('/uploads/') ? `http://localhost:8080/${user.userPhoto.replace('/uploads/', '')}` : `http://localhost:8080/${user.userPhoto}`}
+                src={user.userPhoto}
                 alt="Profile"
                 className="profile-photo"
               />

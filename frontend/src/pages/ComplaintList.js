@@ -201,12 +201,19 @@ const ComplaintList = () => {
             </div>
             {filteredComplaints.length === 0 ? (
                 <div className="empty-state-container">
-                    <div className="empty-state-icon">🤷‍♂️</div>
+                    <div className="empty-state-icon">📋</div>
                     <h3 className="empty-state-title">No Complaints Found</h3>
                     <p className="empty-state-message">
-                        It looks like there are no complaints matching your criteria.
-                        <br />
-                        Try adjusting your filters or search term.
+                        {complaints.length === 0 
+                            ? "There are currently no complaints to review in your department."
+                            : "It looks like there are no complaints matching your criteria."
+                        }
+                        {complaints.length > 0 && (
+                            <>
+                                <br />
+                                Try adjusting your filters or search term.
+                            </>
+                        )}
                     </p>
                 </div>
             ) : (

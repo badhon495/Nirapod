@@ -181,10 +181,11 @@ function ComplaintDetails() {
       <div className="complaint-detail-card">
         {/* Centered user photo at the top */}
         {complaint.userPhoto && (() => {
-          let photo = complaint.userPhoto;
-          if (photo.startsWith('/uploads/')) photo = photo.replace('/uploads/', '');
-          const backendUrl = 'http://localhost:8080';
-          const src = `${backendUrl}/${photo}`;
+          // If it's a full URL (Cloudinary), use it directly
+          // If it's a relative path, add the backend URL
+          const src = complaint.userPhoto.startsWith('http') ? 
+            complaint.userPhoto : 
+            `http://localhost:8080/${complaint.userPhoto.replace('/uploads/', '')}`;
           return (
             <div className="user-photo-container">
               <img src={src} alt="User" className="user-photo" />
