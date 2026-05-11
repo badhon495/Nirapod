@@ -8,6 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StatusBadge, UrgencyBadge } from "@/components/complaint/StatusBadge";
 import { PhotoGallery } from "@/components/complaint/PhotoGallery";
+import { CommentSection } from "@/components/complaint/CommentSection";
+import { FollowButton } from "@/components/complaint/FollowButton";
+import { ReportModal } from "@/components/complaint/ReportModal";
 import { useComplaint } from "@/hooks/useComplaints";
 import { useSession } from "next-auth/react";
 
@@ -168,6 +171,18 @@ export function ComplaintDetailView({ id }: Props) {
           </ol>
         </div>
       )}
+
+      {/* Social actions */}
+      {session && (
+        <div className="flex items-center gap-2 pt-2">
+          <FollowButton complaintId={complaint.id} />
+          {session.user?.id !== complaint.reporterId && (
+            <ReportModal complaintId={complaint.id} />
+          )}
+        </div>
+      )}
+
+      <CommentSection complaintId={complaint.id} />
     </div>
   );
 }

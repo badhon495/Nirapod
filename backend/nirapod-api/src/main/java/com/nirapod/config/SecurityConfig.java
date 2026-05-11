@@ -35,9 +35,10 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_PATHS = {
             "/api/v1/auth/**",
-            "/api/v1/complaints/track/**",   // public complaint tracking (no auth)
-            "/api/v1/complaints",             // public feed GET (auth optional — controller checks role)
-            "/api/v1/complaints/{id}",        // public complaint detail (auth optional)
+            "/api/v1/complaints/track/**",          // public complaint tracking (no auth)
+            "/api/v1/complaints",                   // public feed GET (auth optional)
+            "/api/v1/complaints/{id}",              // public complaint detail (auth optional)
+            "/api/v1/complaints/{id}/comments",     // read comments (public, auth optional)
             "/actuator/health",
             "/v3/api-docs/**",
             "/swagger-ui/**",

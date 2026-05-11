@@ -29,6 +29,7 @@ public class ComplaintService {
     private final ComplaintStatusHistoryRepository statusHistoryRepository;
     private final UserRepository userRepository;
     private final AuditService auditService;
+    private final NotificationService notificationService;
 
     @Transactional
     @CacheEvict(value = "complaints", allEntries = true)
@@ -92,7 +93,6 @@ public class ComplaintService {
         return page.map(ComplaintSummaryResponse::from);
     }
 
-    // Authority feed — sees all in their category, not just public
     @Transactional(readOnly = true)
     public Page<ComplaintSummaryResponse> getAuthorityFeed(ComplaintCategory category, ComplaintStatus status,
                                                              Pageable pageable) {
@@ -152,7 +152,9 @@ public class ComplaintService {
         statusHistoryRepository.save(history);
 
         auditService.log(updaterId, "COMPLAINT_STATUS_UPDATED", "COMPLAINT", complaintId, ipAddress, null, null);
-        return ComplaintDetailResponse.from(complaintRepository.save(complaint));
+        ComplaintDetailResponse response = ComplaintDetailResponse.from(complaintRepository.save(complaint));
+        notificationService.notifyStatusChange(complaint, oldStatus.name(), req.status().name());
+        return response;
     }
 
     @Transactional
@@ -182,7 +184,6 @@ public class ComplaintService {
             throw ApiException.forbidden("Not authorized to delete this complaint");
         }
 
-        // Only allow deletion if still unsolved (or if admin)
         if (!isAdmin && complaint.getStatus() != ComplaintStatus.UNSOLVED) {
             throw ApiException.badRequest("Cannot delete a complaint that is already in progress or solved");
         }
