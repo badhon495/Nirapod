@@ -71,6 +71,10 @@ google:
   client:
     id: ${GOOGLE_CLIENT_ID}
 
+app:
+  admin:
+    email: ${ADMIN_EMAIL:}
+
 management:
   endpoints:
     web:

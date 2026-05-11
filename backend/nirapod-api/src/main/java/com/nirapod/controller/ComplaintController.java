@@ -147,6 +147,21 @@ public class ComplaintController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/photos")
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "Add a photo to a complaint (evidence flag for authority uploads)")
+    public ResponseEntity<ComplaintPhotoResponse> addPhoto(
+            @PathVariable UUID id,
+            @Valid @RequestBody AddPhotoRequest req,
+            @AuthenticationPrincipal UserDetails principal,
+            HttpServletRequest httpReq) {
+        UUID userId = UUID.fromString(principal.getUsername());
+        UserRole role = extractRole(principal);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(complaintService.addPhoto(id, userId, role, req.filePublicId(), req.isEvidence(), httpReq.getRemoteAddr()));
+    }
+
     private UserRole extractRole(UserDetails principal) {
         return principal.getAuthorities().stream()
             .findFirst()

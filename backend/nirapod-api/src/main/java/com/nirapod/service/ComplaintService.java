@@ -192,6 +192,29 @@ public class ComplaintService {
         complaintRepository.delete(complaint);
     }
 
+    @Transactional
+    public ComplaintPhotoResponse addPhoto(UUID complaintId, UUID userId, UserRole role,
+                                            String filePublicId, boolean isEvidence, String ipAddress) {
+        Complaint complaint = complaintRepository.findByIdWithUser(complaintId)
+            .orElseThrow(() -> ApiException.notFound("Complaint not found"));
+
+        if (isEvidence) {
+            enforceWriteAccess(complaint, userId, role);
+        } else {
+            enforceReadAccess(complaint, userId, role);
+        }
+
+        User uploader = userRepository.findById(userId).orElseThrow();
+        ComplaintPhoto photo = new ComplaintPhoto();
+        photo.setComplaint(complaint);
+        photo.setFilePublicId(filePublicId);
+        photo.setUploadedBy(uploader);
+        photo.setEvidence(isEvidence);
+
+        auditService.log(userId, "PHOTO_ADDED", "COMPLAINT", complaintId, ipAddress, null, null);
+        return ComplaintPhotoResponse.from(photoRepository.save(photo));
+    }
+
     private void enforceReadAccess(Complaint complaint, UUID requesterId, UserRole role) {
         if (complaint.isPublic()) return;
         if (role == UserRole.ADMIN) return;

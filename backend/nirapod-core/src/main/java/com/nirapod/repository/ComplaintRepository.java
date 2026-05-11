@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,4 +56,17 @@ public interface ComplaintRepository extends JpaRepository<Complaint, UUID> {
            countQuery = "SELECT COUNT(c) FROM Complaint c WHERE c.category = :category AND c.status = :status")
     Page<Complaint> findAllByCategoryAndStatus(@Param("category") ComplaintCategory category,
                                                @Param("status") ComplaintStatus status, Pageable pageable);
+
+    long countByStatus(ComplaintStatus status);
+    long countByCategory(ComplaintCategory category);
+
+    @Query("SELECT c.category, COUNT(c) FROM Complaint c GROUP BY c.category")
+    List<Object[]> countGroupByCategory();
+
+    @Query("SELECT c.district, COUNT(c) FROM Complaint c GROUP BY c.district ORDER BY COUNT(c) DESC")
+    List<Object[]> countGroupByDistrict();
+
+    @Query("SELECT c.district, c.category, COUNT(c) FROM Complaint c WHERE c.createdAt >= :from AND c.createdAt <= :to GROUP BY c.district, c.category")
+    List<Object[]> analyticsGroupByDistrictAndCategory(@Param("from") java.time.OffsetDateTime from,
+                                                        @Param("to") java.time.OffsetDateTime to);
 }

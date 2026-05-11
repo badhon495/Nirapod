@@ -35,6 +35,16 @@ export async function Navbar() {
               Live Chat
             </Link>
           )}
+          {session && ["POLICE","FIRE","CITY","ANIMAL"].includes(session.user?.role ?? "") && (
+            <Link href="/queue" className="text-foreground/70 transition-colors duration-150 hover:text-foreground">
+              Queue
+            </Link>
+          )}
+          {session?.user?.role === "ADMIN" && (
+            <Link href="/dashboard" className="text-foreground/70 transition-colors duration-150 hover:text-foreground">
+              Admin
+            </Link>
+          )}
         </nav>
 
         <NavActions session={session} />
