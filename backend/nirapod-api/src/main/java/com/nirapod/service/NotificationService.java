@@ -26,6 +26,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
+    private final NotificationWebSocketService wsService;
 
     @Transactional(readOnly = true)
     public Page<NotificationResponse> getNotifications(UUID userId, Pageable pageable) {
@@ -107,6 +108,7 @@ public class NotificationService {
             n.setMessage(message);
             n.setComplaint(complaint);
             notificationRepository.save(n);
+            wsService.pushToUser(userId, NotificationResponse.from(n));
         } catch (Exception e) {
             log.error("Failed to create notification for user={} type={}: {}", userId, type, e.getMessage());
         }

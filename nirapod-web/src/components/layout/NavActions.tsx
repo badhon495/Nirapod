@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { Bell, User, LogOut, Plus, Menu } from "lucide-react";
+import { Bell, User, LogOut, Plus, Menu, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { useUnreadCount } from "@/hooks/useNotifications";
+import { useUnreadCount, useNotificationSocket } from "@/hooks/useNotifications";
 import type { Session } from "next-auth";
 
 interface Props {
@@ -24,6 +23,7 @@ function UnreadBadge() {
 }
 
 function NotificationBell() {
+  useNotificationSocket();
   const { data } = useUnreadCount();
   const count = data?.count ?? 0;
 
@@ -106,6 +106,10 @@ export function MobileBottomNav({ session }: Props) {
           <UnreadBadge />
         </span>
         <span>Alerts</span>
+      </Link>
+      <Link href="/livechat" className="flex flex-1 flex-col items-center py-3 text-xs text-muted-foreground hover:text-foreground transition-colors duration-150">
+        <MessageSquare size={20} aria-hidden="true" />
+        <span>Chat</span>
       </Link>
       <Link href="/profile" className="flex flex-1 flex-col items-center py-3 text-xs text-muted-foreground hover:text-foreground transition-colors duration-150">
         <User size={20} aria-hidden="true" />

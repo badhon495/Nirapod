@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import { NavActions } from "./NavActions";
-import { Bell, Shield } from "lucide-react";
+import { Shield } from "lucide-react";
 
 export async function Navbar() {
   const session = await auth();
@@ -28,6 +28,11 @@ export async function Navbar() {
           {session && (
             <Link href="/create-complaint" className="text-foreground/70 transition-colors duration-150 hover:text-foreground">
               Report
+            </Link>
+          )}
+          {session && (
+            <Link href="/livechat" className="text-foreground/70 transition-colors duration-150 hover:text-foreground">
+              Live Chat
             </Link>
           )}
         </nav>

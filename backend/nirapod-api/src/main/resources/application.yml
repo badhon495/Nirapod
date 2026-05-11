@@ -59,6 +59,9 @@ app:
     allowed-origins:
       - ${FRONTEND_URL:http://localhost:3000}
 
+  websocket:
+    allowed-origins: ${FRONTEND_URL:http://localhost:3000}
+
 cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}

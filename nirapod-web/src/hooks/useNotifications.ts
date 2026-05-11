@@ -6,9 +6,12 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useCallback } from "react";
 import api from "@/lib/axios";
 import type { Notification } from "@/types/notification";
 import type { PageResponse } from "@/types/complaint";
+import { useWebSocket } from "./useWebSocket";
+import { useSession } from "next-auth/react";
 
 export const notificationKeys = {
   all: ["notifications"] as const,
@@ -40,8 +43,27 @@ export function useUnreadCount() {
       );
       return data;
     },
-    refetchInterval: 30_000,
+    // no polling — WebSocket push triggers invalidation via useNotificationSocket
   });
+}
+
+/** Subscribe to real-time notification pushes. Call this once at layout level. */
+export function useNotificationSocket() {
+  const { data: session } = useSession();
+  const qc = useQueryClient();
+
+  const handleNotification = useCallback(
+    (_notification: Notification) => {
+      qc.invalidateQueries({ queryKey: notificationKeys.unreadCount() });
+      qc.invalidateQueries({ queryKey: notificationKeys.pages() });
+    },
+    [qc]
+  );
+
+  const userId = (session?.user as { id?: string } | undefined)?.id ?? null;
+  const destination = userId ? `/user/${userId}/queue/notifications` : null;
+
+  useWebSocket<Notification>(destination, handleNotification);
 }
 
 export function useMarkAllRead() {
