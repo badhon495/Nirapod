@@ -10,6 +10,10 @@ spring:
       maximum-pool-size: ${HIKARI_MAX_POOL_SIZE:5}
       minimum-idle: 2
       connection-timeout: 30000
+      idle-timeout: 600000       # 10 min — reclaim idle connections before Supabase/Neon times out
+      max-lifetime: 1800000      # 30 min — rotate before DB-side keepalive limit
+      keepalive-time: 60000      # ping idle connections every 60s
+      leak-detection-threshold: 5000  # log if connection not returned within 5s
 
   jpa:
     hibernate:
@@ -84,6 +88,12 @@ management:
     health:
       show-details: never
 
+sentry:
+  dsn: ${SENTRY_DSN_BACKEND:}
+  environment: ${SENTRY_ENVIRONMENT:development}
+  traces-sample-rate: 0.1   # 10% of transactions — free tier: 5k errors/month
+  send-default-pii: false
+
 springdoc:
   api-docs:
     path: /v3/api-docs
@@ -96,3 +106,27 @@ logging:
     com.nirapod: INFO
     org.springframework.security: WARN
     org.flywaydb: INFO
+    com.zaxxer.hikari: WARN
+    org.hibernate.SQL: WARN
+    # Set to DEBUG locally to see slow queries: logging.level.org.hibernate.SQL=DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    hikari:
+      maximum-pool-size: ${HIKARI_MAX_POOL_SIZE:5}  # Supabase/Neon free: 20 pooled, keep headroom
+  jpa:
+    show-sql: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+logging:
+  level:
+    com.nirapod: WARN
+    org.springframework.security: WARN
+    org.flywaydb: WARN

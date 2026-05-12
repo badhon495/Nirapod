@@ -2,11 +2,12 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import Link from "next/link";
-import { LayoutDashboard, Users, ClipboardList, Search, Flag } from "lucide-react";
+import { LayoutDashboard, Users, ClipboardList, Search, Flag, BarChart2 } from "lucide-react";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/users", label: "Users", icon: Users },
+  { href: "/analytics", label: "Analytics", icon: BarChart2 },
   { href: "/reports", label: "Reports", icon: Flag },
   { href: "/audit", label: "Audit Log", icon: ClipboardList },
   { href: "/investigate", label: "Investigate", icon: Search },
