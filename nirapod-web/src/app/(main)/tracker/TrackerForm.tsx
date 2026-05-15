@@ -136,8 +136,8 @@ export function TrackerForm() {
             </>
           )}
 
-          <Button variant="outline" size="sm" asChild className="w-full">
-            <Link href={`/complaint/${complaint.id}`}>View full details</Link>
+          <Button variant="outline" size="sm" render={<Link href={`/complaint/${complaint.id}`} />} className="w-full">
+            View full details
           </Button>
         </div>
       )}

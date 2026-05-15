@@ -2,132 +2,156 @@
 
 # Nirapod
 
-![React](https://img.shields.io/badge/React-18+-61DAFB?style=flat-square&logo=react)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-6DB33F?style=flat-square&logo=spring-boot)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-316192?style=flat-square&logo=postgresql)
-![Maven](https://img.shields.io/badge/Maven-C71A36?style=flat-square&logo=apache-maven)
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=next.js)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-6DB33F?style=flat-square&logo=spring-boot)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?style=flat-square&logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker)
 
-This is a full-stack social media-inspired web application built to make communities safer and more connected. It empowers users to raise their voices by reporting local issues with descriptions, images, and live locations, while trusted authorities like police or fire services can respond and take action in real time. Complaints are shared in a familiar social feed where others can engage, support, and contribute. With live chat and location sharing, the platform fosters quick, transparent, and meaningful communication. Built with Spring Boot and React, it combines functionality with purpose—bridging the gap between citizens and responders when it matters most.
+A Bangladesh-focused civic engagement platform where citizens report local issues to relevant authorities — police, fire service, city corporation, animal welfare. Authorities respond, update status, and communicate transparently with the public.
 
 </div>
 
-## Project Structure
+---
 
-- backend/  (Spring Boot backend)
-- frontend/ (React frontend)
-- db_creation.sh (Postgres DB setup)
+## Quick Start (Docker — Recommended)
 
+### Prerequisites
 
-## Installation and Setup
+- [Docker](https://docs.docker.com/get-docker/) with Docker Compose
+- Your user must be in the `docker` group:
+  ```bash
+  sudo usermod -aG docker $USER
+  newgrp docker
+  ```
 
-First, you need to clone the repository:
+### 1. Clone the repo
 
 ```bash
 git clone https://github.com/badhon495/Nirapod.git
 cd Nirapod
 ```
 
- Install the required dependencies for both backend and frontend:
+### 2. Set up environment variables
+
 ```bash
+cp .env.example .env
+```
+
+Open `.env` and fill in the required values:
+
+```bash
+# Generate these two secrets (run each command separately):
+openssl rand -base64 32   # paste as JWT_SECRET
+openssl rand -base64 32   # paste as AUTH_SECRET
+```
+
+| Variable | Required | Notes |
+|---|---|---|
+| `JWT_SECRET` | Yes | Min 32 chars — generate with `openssl rand -base64 32` |
+| `AUTH_SECRET` | Yes | Min 32 chars — generate with `openssl rand -base64 32` |
+| `GOOGLE_CLIENT_ID` | Optional | Needed for Google OAuth login |
+| `GOOGLE_CLIENT_SECRET` | Optional | Needed for Google OAuth login |
+| `MAIL_USERNAME` | Optional | Gmail address for OTP emails |
+| `MAIL_PASSWORD` | Optional | Gmail [App Password](https://myaccount.google.com/apppasswords), not account password |
+| `CLOUDINARY_*` | Optional | For photo uploads — get from [cloudinary.com/console](https://cloudinary.com/console) |
+
+> Without optional vars, OAuth login and photo uploads won't work, but core complaint reporting still functions.
+
+### 3. Build and run
+
+```bash
+docker compose up --build
+```
+
+First build takes ~3–5 minutes (Maven + npm). Subsequent starts are fast.
+
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:8080 |
+| API Docs (Swagger) | http://localhost:8080/swagger-ui.html |
+| MinIO Console | http://localhost:9001 (user: `minioadmin` / pass: `minioadmin`) |
+
+### 4. Stop
+
+```bash
+docker compose down          # stop containers, keep data
+docker compose down -v       # stop containers, delete all data (clean slate)
+```
+
+---
+
+## Project Structure
+
+```
+Nirapod/
+├── backend/                 # Spring Boot 3.5 (Java 21)
+│   ├── nirapod-core/        # Shared models and repositories
+│   ├── nirapod-api/         # REST API, services, controllers
+│   └── Dockerfile
+├── nirapod-web/             # Next.js 16 frontend
+│   └── Dockerfile
+├── docker-compose.yml       # Postgres + Redis + MinIO + backend + frontend
+└── .env.example             # Environment variable template
+```
+
+---
+
+## Local Development (Without Docker)
+
+Use this when you want hot reload for active development.
+
+### Step 1 — Start infrastructure only
+
+```bash
+docker compose up postgres redis minio
+```
+
+### Step 2 — Run the backend
+
+Requires Java 21 and Maven.
+
+```bash
+cd backend
+# Copy and edit the config
+cp src/main/resources/application.properties.example src/main/resources/application.properties
+# Edit application.properties with your local DB/Redis/mail credentials
+
+# Run
+mvn spring-boot:run
+```
+
+Backend starts at http://localhost:8080
+
+### Step 3 — Run the frontend
+
+Requires Node.js 20+.
+
+```bash
+cd nirapod-web
 npm install
-```   
+npm run dev
+```
 
-### Backend Setup (Spring Boot)
+Frontend starts at http://localhost:3000 with hot reload.
 
-1. Navigate to backend directory:
-   ```bash
-   cd backend
-   ```
-2. Copy the example environment file:
-   ```bash
-   cp src/main/resources/application.properties.example src/main/resources/application.properties
-   ```
-3. Edit `application.properties` to set your database, email, and Google credentials.
-4. Build the project (requires Java 17+ and Maven):
-   ```bash
-   mvn clean install
-   ```
-5. Run the backend:
-   ```bash
-   mvn spring-boot:run
-   ```
-6. The backend will run on `http://localhost:8080` by default.
+---
 
+## Environment Notes
 
-### Frontend Setup (React)
+- Set `SPRING_PROFILES_ACTIVE=dev` in `.env` for local dev (less strict config validation)
+- Google OAuth requires redirect URI `http://localhost:3000/api/auth/callback/google` registered in [Google Cloud Console](https://console.cloud.google.com/)
+- MinIO acts as a local S3 replacement; Cloudinary is only needed for production deployments
 
-1. Navigate to frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Copy the example environment file:
-   ```bash
-   cp .env.example .env
-   ```
-3. Edit the `.env` file to set your environment variables.
-4. Start the frontend (dependencies are already installed from root):
-   ```bash
-   npm start
-   ```
-5. The frontend will run on `http://localhost:3000` by default.
-
-
-### Live Chat Setup
-
-1. Navigate to backend directory:
-   ```bash
-   cd backend
-   ```
-2. Start the live chat server (ws package is already installed from root):
-   ```bash
-   node livechat-server.js
-   ```
-
-
-## Database Setup
-
-1. Ensure PostgreSQL is running and accessible with the credentials in `db_creation.sh`.
-2. Run the script:
-   ```bash
-   ./db_creation.sh
-   ```
-
-
-## Environment Configuration
-
-To set up your environment variables and configuration files:
-
-1. **Backend application.properties**
-   - Copy the example file to create your actual config:
-     ```bash
-     cp backend/src/main/resources/application.properties.example backend/src/main/resources/application.properties
-     ```
-   - Edit `application.properties` and fill in your real database, email, and Google credentials.
-
-2. **Frontend .env file**
-   - Copy the example file to create your actual .env:
-     ```bash
-     cp frontend/.env.example frontend/.env
-     ```
-   - Edit `.env` and fill in your real secrets and environment variables.
-
-
-## Notes
-- Update backend `application.properties` for DB credentials if needed.
-- File uploads will be stored in the backend (see backend config for details).
-- For production, configure environment variables and secure credentials.
-- Get the Google APP ID and APP SECRET from the Google Developer Console and set them in the frontend `.env` file and backend `application.properties`.
-- For mail service, you can use any SMTP server. The example uses Gmail, but you can replace it with your own SMTP server details in the `application.properties` file.
-- Ensure you have the required permissions for file uploads and location sharing in your browser settings.
-
+---
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT — see [LICENSE](LICENSE) for details.
 
 ---
 

@@ -1,0 +1,11 @@
+/app/nirapod-api/src/test/java/com/nirapod/arch/ArchitectureTest.java
+/app/nirapod-api/src/test/java/com/nirapod/controller/AbstractIntegrationTest.java
+/app/nirapod-api/src/test/java/com/nirapod/controller/AdminControllerIT.java
+/app/nirapod-api/src/test/java/com/nirapod/controller/AuthControllerIT.java
+/app/nirapod-api/src/test/java/com/nirapod/controller/ComplaintControllerIT.java
+/app/nirapod-api/src/test/java/com/nirapod/security/JwtServiceTest.java
+/app/nirapod-api/src/test/java/com/nirapod/service/AuthServiceTest.java
+/app/nirapod-api/src/test/java/com/nirapod/service/CommentServiceTest.java
+/app/nirapod-api/src/test/java/com/nirapod/service/ComplaintServiceTest.java
+/app/nirapod-api/src/test/java/com/nirapod/service/FollowServiceTest.java
+/app/nirapod-api/src/test/java/com/nirapod/service/OtpServiceTest.java

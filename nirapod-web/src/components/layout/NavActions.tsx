@@ -28,18 +28,16 @@ function NotificationBell() {
   const count = data?.count ?? 0;
 
   return (
-    <Button variant="ghost" size="icon" asChild aria-label={`Notifications${count > 0 ? `, ${count} unread` : ""}`}>
-      <Link href="/notifications" className="relative">
-        <Bell size={18} aria-hidden="true" />
-        {count > 0 && (
-          <span
-            className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground"
-            aria-hidden="true"
-          >
-            {count > 9 ? "9+" : count}
-          </span>
-        )}
-      </Link>
+    <Button variant="ghost" size="icon" render={<Link href="/notifications" className="relative" />} aria-label={`Notifications${count > 0 ? `, ${count} unread` : ""}`}>
+      <Bell size={18} aria-hidden="true" />
+      {count > 0 && (
+        <span
+          className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground"
+          aria-hidden="true"
+        >
+          {count > 9 ? "9+" : count}
+        </span>
+      )}
     </Button>
   );
 }
@@ -48,11 +46,11 @@ export function NavActions({ session }: Props) {
   if (!session) {
     return (
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href="/login">Sign in</Link>
+        <Button variant="ghost" size="sm" render={<Link href="/login" />}>
+          Sign in
         </Button>
-        <Button size="sm" asChild>
-          <Link href="/signup">Sign up</Link>
+        <Button size="sm" render={<Link href="/signup" />}>
+          Sign up
         </Button>
       </div>
     );
@@ -60,17 +58,13 @@ export function NavActions({ session }: Props) {
 
   return (
     <div className="flex items-center gap-1">
-      <Button variant="ghost" size="sm" asChild className="hidden md:flex">
-        <Link href="/create-complaint" aria-label="Report new complaint">
-          <Plus size={16} aria-hidden="true" />
-          Report
-        </Link>
+      <Button variant="ghost" size="sm" render={<Link href="/create-complaint" />} aria-label="Report new complaint" className="hidden md:flex">
+        <Plus size={16} aria-hidden="true" />
+        Report
       </Button>
       <NotificationBell />
-      <Button variant="ghost" size="icon" asChild aria-label="My profile">
-        <Link href="/profile">
-          <User size={18} aria-hidden="true" />
-        </Link>
+      <Button variant="ghost" size="icon" render={<Link href="/profile" />} aria-label="My profile">
+        <User size={18} aria-hidden="true" />
       </Button>
       <Button
         variant="ghost"

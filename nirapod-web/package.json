@@ -16,7 +16,7 @@
     "bundle-size": "ANALYZE=true next build 2>&1 | tee /tmp/bundle-analysis.txt"
   },
   "dependencies": {
-    "@sentry/nextjs": "^9.18.0",
+    "@sentry/nextjs": "^10.0.0",
     "@base-ui/react": "^1.4.1",
     "@hookform/resolvers": "^5.2.2",
     "@stomp/stompjs": "^7.3.0",
@@ -72,7 +72,7 @@
     "vitest": "^3.2.4",
     "@lhci/cli": "^0.14.0",
     "axe-playwright": "^2.0.3",
-    "bundlesize": "^0.18.2"
+    "bundlesize2": "^0.0.35"
   },
   "bundlesize": [
     {

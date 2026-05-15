@@ -14,4 +14,4 @@ RUN addgroup -S nirapod && adduser -S nirapod -G nirapod
 COPY --from=builder /app/nirapod-api/target/*.jar app.jar
 USER nirapod
 EXPOSE 8080
-ENTRYPOINT ["java", "-XX:+UseVirtualThreads", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

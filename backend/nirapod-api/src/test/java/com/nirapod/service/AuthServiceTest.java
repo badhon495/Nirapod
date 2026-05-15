@@ -149,7 +149,7 @@ class AuthServiceTest {
         when(userRepository.findByEmail(req.getEmail())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(req.getPassword(), user.getPasswordHash())).thenReturn(true);
         when(jwtService.generateAccessToken(any(), any())).thenReturn("access-token");
-        when(refreshTokenService.create(any())).thenReturn("refresh-token");
+        when(refreshTokenService.issue(any())).thenReturn("refresh-token");
 
         TokenResponse result = authService.login(req, response);
 

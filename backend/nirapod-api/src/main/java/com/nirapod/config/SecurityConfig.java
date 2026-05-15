@@ -30,7 +30,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final RateLimitFilter rateLimitFilter;
 
-    @Value("${app.cors.allowed-origins}")
+    @Value("#{'${app.cors.allowed-origins}'.split(',')}")
     private List<String> allowedOrigins;
 
     private static final String[] PUBLIC_PATHS = {

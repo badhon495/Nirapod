@@ -65,7 +65,7 @@ export const complaintStep1Schema = z.object({
   urgency: complaintUrgencySchema,
   title: z.string().min(5, "Title must be at least 5 characters").max(500),
   details: z.string().min(20, "Details must be at least 20 characters").max(5000),
-  isPublic: z.boolean().default(true),
+  isPublic: z.boolean(),
 });
 
 export const complaintStep2Schema = z.object({
@@ -77,8 +77,8 @@ export const complaintStep2Schema = z.object({
 });
 
 export const complaintStep3Schema = z.object({
-  tags: z.array(z.string().max(100)).max(10).default([]),
-  photoPublicIds: z.array(z.string()).max(5).default([]),
+  tags: z.array(z.string().max(100)).max(10),
+  photoPublicIds: z.array(z.string()).max(5),
 });
 
 export const complaintSchema = complaintStep1Schema

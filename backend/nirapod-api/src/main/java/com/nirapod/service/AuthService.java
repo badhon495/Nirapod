@@ -56,7 +56,7 @@ public class AuthService {
 
         String otp = otpService.generateAndStore(req.getEmail());
         emailService.sendOtp(req.getEmail(), otp);
-        auditService.log(null, "USER_SIGNUP", "USER", user.getId(), null, null, null);
+        auditService.log((User) null, "USER_SIGNUP", "USER", user.getId(), null, null, null);
     }
 
     public void sendOtp(String email) {
