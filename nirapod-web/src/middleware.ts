@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/signup", "/tracker", "/api/auth"];
+const PUBLIC_PATHS = ["/login", "/signup", "/forgot-password", "/tracker", "/api/auth"];
 const AUTH_ONLY_PATHS = ["/home", "/create-complaint", "/profile", "/notifications", "/livechat"];
 const ADMIN_PATHS = ["/admin"];
 const AUTHORITY_PATHS = ["/authority"];

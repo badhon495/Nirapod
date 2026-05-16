@@ -147,6 +147,7 @@ public class AuthService {
 
         return TokenResponse.builder()
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .tokenType("Bearer")
                 .expiresIn(900)
                 .userId(user.getId().toString())

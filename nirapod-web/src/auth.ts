@@ -25,6 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: data.name,
             email: credentials.email as string,
             accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
             role: data.role,
             expiresIn: data.expiresIn,
           };
@@ -43,6 +44,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user, account }) {
       if (user) {
         token.accessToken = (user as any).accessToken;
+        token.refreshToken = (user as any).refreshToken;
         token.role = (user as any).role;
         token.userId = user.id;
         token.accessTokenExpires = Date.now() + ((user as any).expiresIn ?? 900) * 1000;
@@ -55,6 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
           const data = res.data;
           token.accessToken = data.accessToken;
+          token.refreshToken = data.refreshToken;
           token.role = data.role;
           token.userId = data.userId;
           token.accessTokenExpires = Date.now() + data.expiresIn * 1000;
@@ -63,21 +66,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       }
 
-      if (token.accessTokenExpires && Date.now() < (token.accessTokenExpires as number)) {
+      if (token.accessToken && token.accessTokenExpires && Date.now() < (token.accessTokenExpires as number)) {
         return token;
       }
 
-      // Refresh access token
+      // Refresh access token using stored refresh token (server-side — no cookies available)
       try {
         const res = await axios.post(
           `${API_URL}/api/v1/auth/refresh`,
           {},
-          { withCredentials: true }
+          {
+            headers: token.refreshToken
+              ? { Cookie: `refresh_token=${token.refreshToken}` }
+              : {},
+          }
         );
         const data = res.data;
         return {
           ...token,
           accessToken: data.accessToken,
+          refreshToken: data.refreshToken ?? token.refreshToken,
           accessTokenExpires: Date.now() + data.expiresIn * 1000,
         };
       } catch {
