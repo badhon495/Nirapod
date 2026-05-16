@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, X, ImagePlus, Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -191,8 +192,14 @@ function Step2({ form }: { form: ReturnType<typeof useForm<ComplaintStep2Input>>
   );
 }
 
+type PhotoEntry = { publicId: string; previewUrl: string };
+
 function Step3({ form }: { form: ReturnType<typeof useForm<ComplaintStep3Input>> }) {
   const [tagInput, setTagInput] = useState("");
+  const [photos, setPhotos] = useState<PhotoEntry[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { data: session } = useSession();
   const { watch, setValue } = form;
   const tags = watch("tags") ?? [];
 
@@ -206,6 +213,52 @@ function Step3({ form }: { form: ReturnType<typeof useForm<ComplaintStep3Input>>
 
   const removeTag = (tag: string) => {
     setValue("tags", tags.filter((t) => t !== tag), { shouldValidate: true });
+  };
+
+  const handleFiles = async (files: FileList | null) => {
+    if (!files) return;
+    const remaining = 5 - photos.length;
+    const toUpload = Array.from(files).slice(0, remaining);
+    if (toUpload.length === 0) return;
+
+    const token = session?.accessToken;
+    if (!token) {
+      toast.error("Session expired. Please refresh the page.");
+      return;
+    }
+
+    const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+
+    setUploading(true);
+    const results: PhotoEntry[] = [];
+    for (const file of toUpload) {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch(`${apiBase}/api/v1/files/upload?folder=complaints`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+        if (!res.ok) throw new Error(`${res.status}`);
+        const data: { publicId: string } = await res.json();
+        results.push({ publicId: data.publicId, previewUrl: URL.createObjectURL(file) });
+      } catch {
+        toast.error(`Failed to upload ${file.name}`);
+      }
+    }
+    setUploading(false);
+
+    const updated = [...photos, ...results];
+    setPhotos(updated);
+    setValue("photoPublicIds", updated.map((p) => p.publicId), { shouldValidate: true });
+  };
+
+  const removePhoto = (idx: number) => {
+    URL.revokeObjectURL(photos[idx].previewUrl);
+    const updated = photos.filter((_, i) => i !== idx);
+    setPhotos(updated);
+    setValue("photoPublicIds", updated.map((p) => p.publicId), { shouldValidate: true });
   };
 
   return (
@@ -255,11 +308,53 @@ function Step3({ form }: { form: ReturnType<typeof useForm<ComplaintStep3Input>>
       <div>
         <Label>Photos</Label>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Photo uploads coming in Phase 3. You can add up to 5 photos after submission.
+          Up to 5 photos (JPEG, PNG, WebP — max 10 MB each).
         </p>
-        <div className="mt-2 rounded-md border border-dashed p-8 text-center text-sm text-muted-foreground">
-          Photo upload not yet available
-        </div>
+
+        {photos.length > 0 && (
+          <div className="mt-2 grid grid-cols-5 gap-2">
+            {photos.map((p, i) => (
+              <div key={p.publicId} className="relative aspect-square rounded-md overflow-hidden border">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.previewUrl} alt="" className="h-full w-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removePhoto(i)}
+                  aria-label="Remove photo"
+                  className="absolute top-0.5 right-0.5 rounded-full bg-black/60 p-0.5 text-white hover:bg-black/80"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {photos.length < 5 && (
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              className="hidden"
+              onChange={(e) => handleFiles(e.target.files)}
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="mt-2 w-full rounded-md border border-dashed p-6 flex flex-col items-center gap-2 text-sm text-muted-foreground hover:bg-muted/50 transition-colors duration-150 disabled:opacity-50"
+            >
+              {uploading ? (
+                <Loader2 size={20} className="animate-spin" />
+              ) : (
+                <ImagePlus size={20} />
+              )}
+              {uploading ? "Uploading…" : `Add photos (${photos.length}/5)`}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
